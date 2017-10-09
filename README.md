@@ -1,2 +1,6 @@
-# BL2-More-Players-COOP-Patch
-A patch for Borderlands 2 to fix 5+ players COOP
+# BL2-MP-Mods
+- CoopPatch - A patch for Borderlands 2 to fix 5+ players COOP
+- BattleRoyale - WIP
+- Patcher - Planned
+- Dedicated Server - Planned
+- Raid - Planned
