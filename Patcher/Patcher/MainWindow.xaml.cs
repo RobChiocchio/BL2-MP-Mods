@@ -90,10 +90,14 @@ namespace Patcher
         {
             DirectoryInfo inputDir = new DirectoryInfo(textBoxInputDir.Text); //convert to directory
             DirectoryInfo outputDir = new DirectoryInfo(textBoxOutputDir.Text); //convert to directory
-            DirectoryInfo bl2 = new DirectoryInfo("/Binaries/Win32/Borderlands2.exe"); //bl2 = path to Borderlands2.exe
-            DirectoryInfo upk = new DirectoryInfo("/WillowGame/CookedPCConsole/Engine.upk"); // engine = path to Engine.upk
+            DirectoryInfo iBL2 = new DirectoryInfo(inputDir + "/Binaries/Win32/Borderlands2.exe"); //bl2 = path to Borderlands2.exe
+            DirectoryInfo oBL2 = new DirectoryInfo(outputDir + "/Binaries/Win32/Borderlands2.exe"); //bl2 = path to Borderlands2.exe
+            DirectoryInfo iUPK = new DirectoryInfo(inputDir + "/WillowGame/CookedPCConsole/Engine.upk"); // engine = path to Engine.upk
+            DirectoryInfo oUPK = new DirectoryInfo(outputDir + "/WillowGame/CookedPCConsole/Engine.upk"); // engine = path to Engine.upk
 
-            if (File.Exists(inputDir + bl2.FullName)) //if borderlands2.exe exists
+            String decompress = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "decompress.exe");
+
+            if (File.Exists(iBL2.FullName)) //if borderlands2.exe exists
             {
                 // -- COPY INPUT TO OUTPUT --
                 try
@@ -103,26 +107,35 @@ namespace Patcher
                 }
                 catch (IOException)
                 {
-                    Popup.Show("Error: ");
+                    //log
                 }
 
                 // -- COPY PATCHES TO BINARIES --
-                File.Copy("../CoopPatch/cooppatch.txt", outputDir + "/Binaries/cooppatch.txt", false);
+                //File.Copy("../CoopPatch/cooppatch.txt", outputDir + "/Binaries/cooppatch.txt", false);
 
                 // -- RENAME UPK AND DECOMPRESSEDSIZE --
-                System.IO.File.Move(outputDir + upk.FullName, outputDir + upk.FullName + ".bak"); //backup Engine.upk
-                System.IO.File.Move(outputDir + upk.FullName + ".uncompressed_size", outputDir + upk.FullName + ".uncompressed_size.bak"); //backup Engine.upk.uncompressed_size
+                try //incase it's already moved
+                {
+                    System.IO.File.Move(oUPK.FullName, oUPK.FullName + ".bak"); //backup Engine.upk
+                    System.IO.File.Move(oUPK.FullName + ".uncompressed_size", oUPK.FullName + ".uncompressed_size.bak"); //backup Engine.upk.uncompressed_size
+                }
+                catch (IOException)
+                {
+                    //log
+                }
 
                 // -- DECOMPRESS UPK --
-                System.Diagnostics.Process.Start(System.Reflection.Assembly.GetEntryAssembly().Location + "decompress.exe", "-game=border -out=" + outputDir + "/WillowGame/CookedPCConsole/ " + inputDir + upk.FullName); //decompress Engine.UPK
+                var decompressing = System.Diagnostics.Process.Start(decompress, "-game=border -out=" + outputDir + "/WillowGame/CookedPCConsole/ " + iUPK.FullName); //decompress Engine.UPK
+                decompressing.WaitForExit(); //wait for decompress.exe to finish
 
                 // -- HEX EDIT UPK --
-                var streamUPK = new FileStream(outputDir + upk.FullName, FileMode.Open, FileAccess.ReadWrite);
+                var streamUPK = new FileStream(oUPK.FullName, FileMode.Open, FileAccess.ReadWrite);
                 //streamUPK.Position;
-                //streamUPK.Write([0xff, 0xff, 0xff, 0xff], );
+                Byte[] replaceUPK = { 0x04, 0x3A, 0x53, 0x38, 0x00, 0x00, 0x04, 0x47 };
+                streamUPK.Write(replaceUPK, 4164347, 12);
 
                 // -- HEX EDIT BORDERLANDS2.EXE --
-                var streamBL2 = new FileStream(outputDir + bl2.FullName, FileMode.Open, FileAccess.ReadWrite);
+                var streamBL2 = new FileStream(oBL2.FullName, FileMode.Open, FileAccess.ReadWrite);
                 streamBL2.Position = 0x004F2590;
                 streamBL2.WriteByte(0xff);
                 for (long i = 0x01B94B0C; i <= 0x01B94B10; i++)
