@@ -1,0 +1,5 @@
+exec NoSpawnLimit.txt
+exec PVPclient.txt
+exec COOPpatch.txt
+
+set WillowGame.WillowGameInfo bIgnoreFriendlyFire false
