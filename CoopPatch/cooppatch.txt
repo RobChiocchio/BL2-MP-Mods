@@ -5,7 +5,7 @@ set GameInfo MaxPlayersAllowed 64
 set GameInfo MaxSpectators 64
 set GameInfo MaxSpectatorsAllowed 64
 
-set WillowCoopGameInfo NumPlayers 3
+#set WillowCoopGameInfo NumPlayers 3
 
 set UIGameInfoSummary bIsTeamGame true
 
