@@ -1,4 +1,4 @@
-#mutate DisablePure
+#set WillowOnlineGameSettings NumPublicConnections 64
 
 set GameInfo MaxPlayers 64
 set GameInfo MaxPlayersAllowed 64
