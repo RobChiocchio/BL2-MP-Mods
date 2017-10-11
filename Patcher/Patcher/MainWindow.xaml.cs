@@ -18,7 +18,7 @@ using WinForms = System.Windows.Forms;
 using Popup = System.Windows.MessageBox;
 using System.IO;
 
-namespace Patcher
+namespace CoopPatcher
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -30,7 +30,7 @@ namespace Patcher
             InitializeComponent();
         }
 
-        static Microsoft.Win32.RegistryKey b2il = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64).OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App 49520"); //get BL2 install dir from registry
+        static Microsoft.Win32.RegistryKey InstallLocation = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64).OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App 49520"); //get BL2 install dir from registry
 
         public static void CopyFilesRecursively(DirectoryInfo source, DirectoryInfo target) //This function is taken straight from stackoverflow thanks to Konrad Rudolph. Rewrite
         {
@@ -43,53 +43,10 @@ namespace Patcher
                 file.CopyTo(System.IO.Path.Combine(target.FullName, file.Name));
         }
 
-        private void textBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
-
-        private void button1_Click(object sender, RoutedEventArgs e) //choose input directory button
-        {
-            var fileDialog = new System.Windows.Forms.OpenFileDialog();
-            var result = fileDialog.ShowDialog();
-            switch (result)
-            {
-                case System.Windows.Forms.DialogResult.OK:
-                    var file = fileDialog.FileName;
-                    textBoxInputDir.Text = file;
-                    textBoxInputDir.ToolTip = file;
-                    break;
-                case System.Windows.Forms.DialogResult.Cancel:
-                default:
-                    textBoxInputDir.Text = null;
-                    textBoxInputDir.ToolTip = null;
-                    break;
-            }
-        }
-
-        private void button2_Click(object sender, RoutedEventArgs e) //choose output directory button
-        {
-            var fileDialog = new System.Windows.Forms.OpenFileDialog();
-            var result = fileDialog.ShowDialog();
-            switch (result)
-            {
-                case System.Windows.Forms.DialogResult.OK:
-                    var file = fileDialog.FileName;
-                    textBoxOutputDir.Text = file;
-                    textBoxOutputDir.ToolTip = file;
-                    break;
-                case System.Windows.Forms.DialogResult.Cancel:
-                default:
-                    textBoxOutputDir.Text = null;
-                    textBoxOutputDir.ToolTip = null;
-                    break;
-            }
-        }
-
         private void button_Click(object sender, RoutedEventArgs e) // patch borderlands2
         {
-            DirectoryInfo inputDir = new DirectoryInfo(textBoxInputDir.Text); //convert to directory
-            DirectoryInfo outputDir = new DirectoryInfo(textBoxOutputDir.Text); //convert to directory
+            DirectoryInfo inputDir = new DirectoryInfo(InstallLocation.GetValue("InstallLocation") as string); //convert to directory
+            DirectoryInfo outputDir = new DirectoryInfo(inputDir + "/server"); //convert to directory
             DirectoryInfo iBL2 = new DirectoryInfo(inputDir + "/Binaries/Win32/Borderlands2.exe"); //bl2 = path to Borderlands2.exe
             DirectoryInfo oBL2 = new DirectoryInfo(outputDir + "/Binaries/Win32/Borderlands2.exe"); //bl2 = path to Borderlands2.exe
             DirectoryInfo iUPK = new DirectoryInfo(inputDir + "/WillowGame/CookedPCConsole/Engine.upk"); // engine = path to Engine.upk
