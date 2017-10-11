@@ -1,2 +1,2 @@
-*Player Instructions*
-coming soon
+## Player Instructions
+- Put the thing in the thing
