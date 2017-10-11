@@ -18,7 +18,7 @@ using WinForms = System.Windows.Forms;
 using Popup = System.Windows.MessageBox;
 using System.IO;
 
-namespace CoopPatcher
+namespace Patcher
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -31,6 +31,7 @@ namespace CoopPatcher
         }
 
         static Microsoft.Win32.RegistryKey InstallLocation = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64).OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App 49520"); //get BL2 install dir from registry
+
 
         public static void CopyFilesRecursively(DirectoryInfo source, DirectoryInfo target) //This function is taken straight from stackoverflow thanks to Konrad Rudolph. Rewrite
         {
@@ -52,9 +53,11 @@ namespace CoopPatcher
             DirectoryInfo iUPK = new DirectoryInfo(inputDir + "/WillowGame/CookedPCConsole/Engine.upk"); // engine = path to Engine.upk
             DirectoryInfo oUPK = new DirectoryInfo(outputDir + "/WillowGame/CookedPCConsole/Engine.upk"); // engine = path to Engine.upk
 
+        Popup.Show(inputDir.FullName);
+
             String decompress = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "decompress.exe");
 
-            if (File.Exists(iBL2.FullName)) //if borderlands2.exe exists
+            if (0==1)//File.Exists(iBL2.FullName)) //if borderlands2.exe exists
             {
                 // -- COPY INPUT TO OUTPUT --
                 try
