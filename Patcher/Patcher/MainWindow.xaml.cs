@@ -48,10 +48,10 @@ namespace Patcher
             var fileDialog = new System.Windows.Forms.OpenFileDialog();
             fileDialog.Filter = "Borderlands|*.exe";
             fileDialog.Title = "Open Borderlands2.exe";
-            fileDialog.InitialDirectory = "C:\\Program Files (x86)\\Steam\\SteamApps\\common\\Borderlands 2\\Binaries\\Win32"; //I guess this isnt working
+            fileDialog.InitialDirectory = @"C:\\Program Files (x86)\\Steam\\SteamApps\\common\\Borderlands 2\\Binaries\\Win32"; //I guess this isnt working
             fileDialog.RestoreDirectory = true; //this either
             var result = fileDialog.ShowDialog();
-            string path = "C:\\";
+            string path = @"C:\\";
             switch (result)
             {
                 case System.Windows.Forms.DialogResult.OK:
@@ -62,11 +62,11 @@ namespace Patcher
                     break;
             }
             DirectoryInfo iBL2 = new DirectoryInfo(path); //bl2 = path to Borderlands2.exe
-            DirectoryInfo inputDir = new DirectoryInfo(iBL2 + "..\\..\\"); //convert to directory
-            DirectoryInfo outputDir = new DirectoryInfo(inputDir + "\\server"); //convert to directory
-            DirectoryInfo oBL2 = new DirectoryInfo(outputDir + "\\Binaries\\Win32\\Borderlands2.exe"); 
-            DirectoryInfo iUPK = new DirectoryInfo(inputDir + "\\WillowGame\\CookedPCConsole\\Engine.upk"); // engine = path to Engine.upk
-            DirectoryInfo oUPK = new DirectoryInfo(outputDir + "\\WillowGame\\CookedPCConsole\\Engine.upk"); // engine = path to Engine.upk
+            DirectoryInfo inputDir = new DirectoryInfo(iBL2 + @"..\\..\\..\\..\\"); //convert to directory - IDK why I need more ..\\s then I actually should but it works so who cares
+            DirectoryInfo outputDir = new DirectoryInfo(inputDir + @"\\server"); //convert to directory
+            DirectoryInfo oBL2 = new DirectoryInfo(outputDir + @"\\Binaries\\Win32\\Borderlands2.exe");
+            DirectoryInfo iUPK = new DirectoryInfo(inputDir + @"\\WillowGame\\CookedPCConsole\\Engine.upk"); // engine = path to Engine.upk
+            DirectoryInfo oUPK = new DirectoryInfo(outputDir + @"\\WillowGame\\CookedPCConsole\\Engine.upk"); // engine = path to Engine.upk
 
             String decompress = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "decompress.exe");
 
@@ -80,15 +80,13 @@ namespace Patcher
                 }
                 catch (IOException)
                 {
-                    //log
+                    Popup.Show("ERROR: Cannot copy Borderlands. Does it already exist?");
                 }
 
                 // -- COPY PATCHES TO BINARIES -- 
                 using (WebClient myWebClient = new WebClient()) //download file
                 {
-                    var patchFile = "https://raw.githubusercontent.com/RobethX/BL2-MP-Mods/master/CoopPatch/cooppatch.txt";
-                    // Download the Web resource and save it into the current filesystem folder.
-                    myWebClient.DownloadFile(patchFile, outputDir.FullName + "\\Binaries\\cooppatch.txt");
+                    myWebClient.DownloadFile("https://raw.githubusercontent.com/RobethX/BL2-MP-Mods/master/CoopPatch/cooppatch.txt", outputDir.FullName + @"\Binaries\cooppatch.txt");
                 }
 
                 // -- RENAME UPK AND DECOMPRESSEDSIZE --
@@ -103,7 +101,7 @@ namespace Patcher
                 }
 
                 // -- DECOMPRESS UPK --
-                var decompressing = System.Diagnostics.Process.Start(decompress, "-game=border -out=" + outputDir + "/WillowGame/CookedPCConsole/ " + iUPK.FullName); //decompress Engine.UPK
+                var decompressing = System.Diagnostics.Process.Start(decompress, "-game=border -out=" + outputDir + @"\\WillowGame\\CookedPCConsole\\ " + iUPK.FullName); //decompress Engine.UPK
                 decompressing.WaitForExit(); //wait for decompress.exe to finish
 
                 // -- HEX EDIT UPK --
@@ -128,7 +126,7 @@ namespace Patcher
                 // -- CREATE SHORTCUT --
                 WshShell shell = new WshShell();
                 IWshRuntimeLibrary.IWshShortcut shortcut = shell.CreateShortcut(
-    Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\Borderlands 2 COOP.lnk") as IWshRuntimeLibrary.IWshShortcut;
+    Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\\Borderlands 2 COOP.lnk") as IWshRuntimeLibrary.IWshShortcut;
                 shortcut.Arguments = "-log -codermode -debug -nosplash";
                 shortcut.TargetPath = oBL2.FullName;
                 shortcut.WindowStyle = 1;
@@ -140,7 +138,7 @@ namespace Patcher
                 // -- ENABLE CONSOLE -- RIPPED STRAIGHT FROM BUGWORM's BORDERLANDS2PATCHER!!!!!
                 try
                 {
-                    string tmppath = "\\my games\\borderlands 2\\willowgame\\Config\\WillowInput.ini";
+                    string tmppath = @"\\my games\\borderlands 2\\willowgame\\Config\\WillowInput.ini";
                     string iniPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + tmppath;
                     string[] temp = System.IO.File.ReadAllLines(path);
                     int i;
