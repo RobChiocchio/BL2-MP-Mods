@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Forms;
 using IWshRuntimeLibrary;
+using System.Net;
 
 using WinForms = System.Windows.Forms;
 using Popup = System.Windows.MessageBox;
@@ -82,8 +83,14 @@ namespace Patcher
                     //log
                 }
 
-                // -- COPY PATCHES TO BINARIES --
-                //File.Copy("../CoopPatch/cooppatch.txt", outputDir + "/Binaries/cooppatch.txt", false);
+                // -- COPY PATCHES TO BINARIES -- 
+                using (WebClient myWebClient = new WebClient()) //download file
+                {
+                    var patchFile = "https://raw.githubusercontent.com/RobethX/BL2-MP-Mods/master/CoopPatch/cooppatch.txt";
+                    // Download the Web resource and save it into the current filesystem folder.
+                    myWebClient.DownloadFile(patchFile, outputDir.FullName + "\\Binaries\\cooppatch.txt");
+                }
+                System.IO.File.Copy("..\\CoopPatch\\cooppatch.txt", outputDir + "\\Binaries", false);
 
                 // -- RENAME UPK AND DECOMPRESSEDSIZE --
                 try //incase it's already moved
