@@ -69,7 +69,7 @@ namespace Patcher
 
             String decompress = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "decompress.exe");
 
-            if (0==1)//File.Exists(iBL2.FullName)) //if borderlands2.exe exists
+            if (File.Exists(iBL2.FullName)) //if borderlands2.exe exists
             {
                 // -- COPY INPUT TO OUTPUT --
                 try
