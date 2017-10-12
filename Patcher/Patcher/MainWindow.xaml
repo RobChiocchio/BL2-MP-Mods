@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Patcher"
         mc:Ignorable="d"
-        Title="Robeth's BL2 Patcher" Height="147" Width="205" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center" ResizeMode="NoResize" Cursor="Arrow">
-    <Grid RenderTransformOrigin="0.461,0.677" HorizontalAlignment="Left" Width="199" Height="114" VerticalAlignment="Top">
+        Title="Robeth's BL2 Patcher" Height="80" Width="205" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center" ResizeMode="NoResize" Cursor="Arrow">
+    <Grid RenderTransformOrigin="0.461,0.677" HorizontalAlignment="Left" Width="199">
         <Grid.RowDefinitions>
             <RowDefinition/>
             <RowDefinition Height="0*"/>
@@ -14,9 +14,6 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200"/>
         </Grid.ColumnDefinitions>
-        <CheckBox x:Name="checkBoxConsole" Content="Enable console" Margin="10,33,62,0" Checked="checkBox_Checked" IsChecked="True" Height="23" VerticalAlignment="Top"/>
-        <CheckBox x:Name="checkBoxShortcut" Content="Place shortcut on desktop" Margin="10,10,1,0" Checked="checkBox1_Checked" IsChecked="True" Height="23" VerticalAlignment="Top"/>
-        <CheckBox x:Name="checkBoxDebug" Content="Enable debugging" Margin="10,56,62,0" RenderTransformOrigin="0.48,1.461" Checked="checkBox2_Checked" Height="19" VerticalAlignment="Top"/>
-        <Button x:Name="buttonPatch" Content="Patch Borderlands 2" Margin="10,80,22,0" Click="button_Click" Height="20" VerticalAlignment="Top"/>
+        <Button x:Name="buttonPatch" Content="Patch Borderlands 2" Margin="10,10,22,0" Click="button_Click" Height="20" VerticalAlignment="Top"/>
     </Grid>
 </Window>

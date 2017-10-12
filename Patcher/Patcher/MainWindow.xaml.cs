@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Forms;
+using IWshRuntimeLibrary;
 
 using WinForms = System.Windows.Forms;
 using Popup = System.Windows.MessageBox;
@@ -30,9 +31,6 @@ namespace Patcher
             InitializeComponent();
         }
 
-        static Microsoft.Win32.RegistryKey InstallLocation = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64).OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App 49520"); //get BL2 install dir from registry
-
-
         public static void CopyFilesRecursively(DirectoryInfo source, DirectoryInfo target) //This function is taken straight from stackoverflow thanks to Konrad Rudolph. Rewrite
         {
             foreach (DirectoryInfo dir in source.GetDirectories())
@@ -46,14 +44,28 @@ namespace Patcher
 
         private void button_Click(object sender, RoutedEventArgs e) // patch borderlands2
         {
-            DirectoryInfo inputDir = new DirectoryInfo(InstallLocation.GetValue("InstallLocation") as string); //convert to directory
-            DirectoryInfo outputDir = new DirectoryInfo(inputDir + "/server"); //convert to directory
-            DirectoryInfo iBL2 = new DirectoryInfo(inputDir + "/Binaries/Win32/Borderlands2.exe"); //bl2 = path to Borderlands2.exe
-            DirectoryInfo oBL2 = new DirectoryInfo(outputDir + "/Binaries/Win32/Borderlands2.exe"); //bl2 = path to Borderlands2.exe
-            DirectoryInfo iUPK = new DirectoryInfo(inputDir + "/WillowGame/CookedPCConsole/Engine.upk"); // engine = path to Engine.upk
-            DirectoryInfo oUPK = new DirectoryInfo(outputDir + "/WillowGame/CookedPCConsole/Engine.upk"); // engine = path to Engine.upk
-
-        Popup.Show(inputDir.FullName);
+            var fileDialog = new System.Windows.Forms.OpenFileDialog();
+            fileDialog.Filter = "Borderlands|*.exe";
+            fileDialog.Title = "Open Borderlands2.exe";
+            fileDialog.InitialDirectory = "C:\\Program Files (x86)\\Steam\\SteamApps\\common\\Borderlands 2\\Binaries\\Win32"; //I guess this isnt working
+            fileDialog.RestoreDirectory = true; //this either
+            var result = fileDialog.ShowDialog();
+            string path = "C:\\";
+            switch (result)
+            {
+                case System.Windows.Forms.DialogResult.OK:
+                    path = fileDialog.FileName;
+                    break;
+                case System.Windows.Forms.DialogResult.Cancel:
+                default:
+                    break;
+            }
+            DirectoryInfo iBL2 = new DirectoryInfo(path); //bl2 = path to Borderlands2.exe
+            DirectoryInfo inputDir = new DirectoryInfo(iBL2 + "..\\..\\"); //convert to directory
+            DirectoryInfo outputDir = new DirectoryInfo(inputDir + "\\server"); //convert to directory
+            DirectoryInfo oBL2 = new DirectoryInfo(outputDir + "\\Binaries\\Win32\\Borderlands2.exe"); 
+            DirectoryInfo iUPK = new DirectoryInfo(inputDir + "\\WillowGame\\CookedPCConsole\\Engine.upk"); // engine = path to Engine.upk
+            DirectoryInfo oUPK = new DirectoryInfo(outputDir + "\\WillowGame\\CookedPCConsole\\Engine.upk"); // engine = path to Engine.upk
 
             String decompress = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "decompress.exe");
 
@@ -107,47 +119,46 @@ namespace Patcher
                 streamBL2.WriteByte(0x78); //willowgame.upk > xillowgame.upk
                 streamBL2.Close();
 
+                // -- CREATE SHORTCUT --
+                WshShell shell = new WshShell();
+                IWshRuntimeLibrary.IWshShortcut shortcut = shell.CreateShortcut(
+    Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + "\\Borderlands 2 COOP.lnk") as IWshRuntimeLibrary.IWshShortcut;
+                shortcut.Arguments = "-log -codermode -debug -nosplash";
+                shortcut.TargetPath = oBL2.FullName;
+                shortcut.WindowStyle = 1;
+                shortcut.Description = "Robeth's Borderlands 2 COOP patch";
+                shortcut.WorkingDirectory = (oBL2.FullName + "..\\");
+                shortcut.IconLocation = (oBL2 + ",1");
+                shortcut.Save();
+
+                // -- ENABLE CONSOLE -- RIPPED STRAIGHT FROM BUGWORM's BORDERLANDS2PATCHER!!!!!
+                try
+                {
+                    string tmppath = "\\my games\\borderlands 2\\willowgame\\Config\\WillowInput.ini";
+                    string iniPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + tmppath;
+                    string[] temp = System.IO.File.ReadAllLines(path);
+                    int i;
+                    for (i = 1; i <= temp.Length; i++)
+                    {
+                        if (temp[i].StartsWith("ConsoleKey="))
+                            break;
+                    }
+                    temp[i] = "ConsoleKey=~";
+                    System.IO.File.WriteAllLines(path, temp);
+                }
+                catch
+                {
+                    //log
+                }
+                //END OF BUGWORM'S CODE
+
                 // -- DONE --
-                Popup.Show("Done!");
+                Popup.Show("Done! Press '~' in game to open up console.");
             }
             else
             {
                 Popup.Show("Borderlands2.exe not found.");
             }
-        }
-
-        private void desktopShortcut() //copy shortcut to desktop
-        {
-            // -- COPY SHORTCUT TO DESKTOP --
-
-        }
- 
-        private void enableConsole() //add console hotkey to config files
-        {
-            // -- BACKUP CONFIG --
-
-            // -- EDIT CONFIG --
-
-        }
-
-        private void patchHexEdit() //patch Borderlands2.exe and UPKs
-        {
-
-        }
-
-        private void checkBox_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void checkBox1_Checked(object sender, RoutedEventArgs e)
-        {
-
-        }
-
-        private void checkBox2_Checked(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }
