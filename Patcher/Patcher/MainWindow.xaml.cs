@@ -90,7 +90,6 @@ namespace Patcher
                     // Download the Web resource and save it into the current filesystem folder.
                     myWebClient.DownloadFile(patchFile, outputDir.FullName + "\\Binaries\\cooppatch.txt");
                 }
-                System.IO.File.Copy("..\\CoopPatch\\cooppatch.txt", outputDir + "\\Binaries", false);
 
                 // -- RENAME UPK AND DECOMPRESSEDSIZE --
                 try //incase it's already moved
