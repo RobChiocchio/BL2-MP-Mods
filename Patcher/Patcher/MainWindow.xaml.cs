@@ -147,7 +147,7 @@ namespace Patcher
                         if (temp[i].StartsWith("ConsoleKey="))
                             break;
                     }
-                    temp[i] = "ConsoleKey=~";
+                    temp[i] = "ConsoleKey=Tilde";
                     System.IO.File.WriteAllLines(path, temp);
                 }
                 catch
