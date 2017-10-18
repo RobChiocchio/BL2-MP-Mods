@@ -83,21 +83,21 @@ namespace Patcher
 
                 // -- HEX EDIT UPK --
                 var streamUPK = new FileStream(oUPK.FullName, FileMode.Open, FileAccess.ReadWrite);
-                streamUPK.Position = 4164347; //set position
+                streamUPK.Position = 0x003F8AFD; //set position
                 streamUPK.WriteByte(0x04);
-                streamUPK.Position = 4164348;
-                streamUPK.WriteByte(0x3a);
-                streamUPK.Position = 4164349;
+                streamUPK.Position = 0x003F8AFE;
+                streamUPK.WriteByte(0x3A);
+                streamUPK.Position = 0x003F8AFF;
                 streamUPK.WriteByte(0x53);
-                streamUPK.Position = 4164350;
+                streamUPK.Position = 0x003F8B00;
                 streamUPK.WriteByte(0x38);
-                streamUPK.Position = 4164351;
+                streamUPK.Position = 0x003F8B01;
                 streamUPK.WriteByte(0x00);
-                streamUPK.Position = 4164352;
+                streamUPK.Position = 0x003F8B02;
                 streamUPK.WriteByte(0x00);
-                streamUPK.Position = 4164353;
+                streamUPK.Position = 0x003F8B03;
                 streamUPK.WriteByte(0x04);
-                streamUPK.Position = 4164354;
+                streamUPK.Position = 0x003F8B04;
                 streamUPK.WriteByte(0x47);
                 //streamUPK.Write(new byte[] {0x04, 0x3A, 0x53, 0x38, 0x00, 0x00, 0x04, 0x47}, 4164349, 8); //12 before for some reason  old: 4164347 
                 streamUPK.Close();
@@ -111,8 +111,8 @@ namespace Patcher
                     streamBL2.Position = i;
                     streamBL2.WriteByte(0x00);
                 }
-                streamBL2.Position = 0x01EF16FD; //find upk
-                streamBL2.WriteByte(0x78); //willowgame.upk > xillowgame.upk
+                //streamBL2.Position = 0x01EF16FD; //find upk
+                //streamBL2.WriteByte(0x78); //willowgame.upk > xillowgame.upk
                 streamBL2.Close();
 
                 // -- CREATE SHORTCUT --
