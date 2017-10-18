@@ -42,8 +42,8 @@ namespace Patcher
             DirectoryInfo inputDir = new DirectoryInfo(iBL2 + @"..\\..\\..\\..\\"); //convert to directory - IDK why I need more ..\\s then I actually should but it works so who cares
             DirectoryInfo outputDir = new DirectoryInfo(inputDir + @"\\server"); //convert to directory
             DirectoryInfo oBL2 = new DirectoryInfo(outputDir + @"\\Binaries\\Win32\\Borderlands2.exe");
-            DirectoryInfo iUPK = new DirectoryInfo(inputDir + @"\\WillowGame\\CookedPCConsole\\Engine.upk"); // engine = path to Engine.upk
-            DirectoryInfo oUPK = new DirectoryInfo(outputDir + @"\\WillowGame\\CookedPCConsole\\Engine.upk"); // engine = path to Engine.upk
+            DirectoryInfo iUPK = new DirectoryInfo(inputDir + @"\\WillowGame\\CookedPCConsole\\WillowGame.upk"); // engine = path to WillowGame.upk
+            DirectoryInfo oUPK = new DirectoryInfo(outputDir + @"\\WillowGame\\CookedPCConsole\\WillowGame.upk"); // engine = path to WillowGame.upk
 
             String decompress = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "decompress.exe");
 
@@ -86,11 +86,12 @@ namespace Patcher
                 }
 
                 // -- DECOMPRESS UPK --
-                var decompressing = System.Diagnostics.Process.Start(decompress, "-game=border -out=" + outputDir + @"\\WillowGame\\CookedPCConsole\\ " + iUPK.FullName); //decompress Engine.UPK
+                var decompressing = System.Diagnostics.Process.Start(decompress, "-game=border -out=" + outputDir + @"\\WillowGame\\CookedPCConsole\\ " + iUPK.FullName); //decompress WillowGame.UPK
                 decompressing.WaitForExit(); //wait for decompress.exe to finish
 
                 // -- HEX EDIT UPK --
                 var streamUPK = new FileStream(oUPK.FullName, FileMode.Open, FileAccess.ReadWrite);
+                /*
                 streamUPK.Position = 0x003F8AFD; //set position
                 streamUPK.WriteByte(0x04);
                 streamUPK.Position = 0x003F8AFE;
@@ -107,6 +108,28 @@ namespace Patcher
                 streamUPK.WriteByte(0x04);
                 streamUPK.Position = 0x003F8B04;
                 streamUPK.WriteByte(0x47);
+                */
+                streamUPK.Position = 0x006925C7;
+                streamUPK.WriteByte(0x27);
+
+                streamUPK.Position = 0x007F9152;
+                streamUPK.WriteByte(0x00);
+                streamUPK.Position = 0x007F9153;
+                streamUPK.WriteByte(0xC6);
+                streamUPK.Position = 0x007F9154;
+                streamUPK.WriteByte(0xB8);
+                streamUPK.Position = 0x007F9155;
+                streamUPK.WriteByte(0x00);
+                streamUPK.Position = 0x007F9157;
+                streamUPK.WriteByte(0x06);
+                streamUPK.Position = 0x007F9158;
+                streamUPK.WriteByte(0x44);
+                streamUPK.Position = 0x007F9159;
+                streamUPK.WriteByte(0x00);
+                streamUPK.Position = 0x007F915A;
+                streamUPK.WriteByte(0x04);
+                streamUPK.Position = 0x007F915B;
+                streamUPK.WriteByte(0x24);
                 //streamUPK.Write(new byte[] {0x04, 0x3A, 0x53, 0x38, 0x00, 0x00, 0x04, 0x47}, 4164349, 8); //12 before for some reason  old: 4164347 
                 streamUPK.Close();
 
@@ -119,7 +142,7 @@ namespace Patcher
                     streamBL2.Position = i;
                     streamBL2.WriteByte(0x00);
                 }
-                streamBL2.Position = 0x01EF16FD; //find upk
+                streamBL2.Position = 0x01EF17F9; //find upk
                 streamBL2.WriteByte(0x78); //willowgame.upk > xillowgame.upk
                 streamBL2.Close();
 
