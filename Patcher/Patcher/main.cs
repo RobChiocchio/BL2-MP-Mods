@@ -119,11 +119,11 @@ namespace Patcher
                 WshShell shell = new WshShell();
                 IWshRuntimeLibrary.IWshShortcut shortcut = shell.CreateShortcut(
     Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\\Borderlands 2 COOP.lnk") as IWshRuntimeLibrary.IWshShortcut;
-                shortcut.Arguments = "-log -codermode -debug -nosplash";
+                shortcut.Arguments = "-log -debug -codermode -nosplash";
                 shortcut.TargetPath = oBL2.FullName;
                 shortcut.WindowStyle = 1;
                 shortcut.Description = "Robeth's Borderlands 2 COOP patch";
-                shortcut.WorkingDirectory = (oBL2.FullName + "..\\");
+                shortcut.WorkingDirectory = (Directory.GetParent(oBL2.FullName)).FullName;
                 shortcut.IconLocation = (oBL2 + ",1");
                 shortcut.Save();
 
