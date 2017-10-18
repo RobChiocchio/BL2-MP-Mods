@@ -61,11 +61,19 @@ namespace Patcher
                 }
 
                 // -- COPY PATCHES TO BINARIES -- 
+                
                 using (WebClient myWebClient = new WebClient()) //download file
                 {
-                    myWebClient.DownloadFile("https://raw.githubusercontent.com/RobethX/BL2-MP-Mods/master/CoopPatch/cooppatch.txt", outputDir.FullName + @"\Binaries\cooppatch.txt");
+                    try
+                    {
+                        myWebClient.DownloadFile("https://raw.githubusercontent.com/RobethX/BL2-MP-Mods/master/CoopPatch/cooppatch.txt", outputDir.FullName + @"\Binaries\cooppatch.txt");
+                    }
+                    catch (IOException)
+                    {
+                        //log
+                    }
                 }
-
+             
                 // -- RENAME UPK AND DECOMPRESSEDSIZE --
                 try //incase it's already moved
                 {
@@ -105,14 +113,14 @@ namespace Patcher
                 // -- HEX EDIT BORDERLANDS2.EXE --
                 var streamBL2 = new FileStream(oBL2.FullName, FileMode.Open, FileAccess.ReadWrite);
                 streamBL2.Position = 0x004F2590;
-                streamBL2.WriteByte(0xff);
+                streamBL2.WriteByte(0xFF);
                 for (long i = 0x01B94B0C; i <= 0x01B94B10; i++)
                 {
                     streamBL2.Position = i;
                     streamBL2.WriteByte(0x00);
                 }
-                //streamBL2.Position = 0x01EF16FD; //find upk
-                //streamBL2.WriteByte(0x78); //willowgame.upk > xillowgame.upk
+                streamBL2.Position = 0x01EF16FD; //find upk
+                streamBL2.WriteByte(0x78); //willowgame.upk > xillowgame.upk
                 streamBL2.Close();
 
                 // -- CREATE SHORTCUT --
