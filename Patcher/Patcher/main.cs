@@ -86,8 +86,12 @@ namespace Patcher
                 }
 
                 // -- DECOMPRESS UPK --
-                var decompressing = System.Diagnostics.Process.Start(decompress, "-game=border -out=" + outputDir + @"\\WillowGame\\CookedPCConsole\\ " + iUPK.FullName); //decompress WillowGame.UPK
+                //var decompressing = System.Diagnostics.Process.Start(decompress, "-game=border -out=" + outputDir + @"\\WillowGame\\CookedPCConsole\\ " + iUPK.FullName); //decompress WillowGame.UPK
+                var decompressing = System.Diagnostics.Process.Start(decompress, "-game=border " + iUPK.FullName); //decompress WillowGame.UPK
                 decompressing.WaitForExit(); //wait for decompress.exe to finish
+                FileInfo decompressedUPK = new FileInfo(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "unpacked", iUPK.Name));
+                decompressedUPK.CopyTo(oUPK.FullName, true); //move upk to cookedpcconsole
+
 
                 // -- HEX EDIT UPK --
                 var streamUPK = new FileStream(oUPK.FullName, FileMode.Open, FileAccess.ReadWrite);
@@ -109,16 +113,20 @@ namespace Patcher
                 streamUPK.Position = 0x003F8B04;
                 streamUPK.WriteByte(0x47);
                 */
-                streamUPK.Position = 0x006925C7;
+                streamUPK.Position = 0x006924C7;
                 streamUPK.WriteByte(0x27);
 
+                streamUPK.Position = 0x007F9151;
+                streamUPK.WriteByte(0x04);
                 streamUPK.Position = 0x007F9152;
                 streamUPK.WriteByte(0x00);
                 streamUPK.Position = 0x007F9153;
                 streamUPK.WriteByte(0xC6);
                 streamUPK.Position = 0x007F9154;
-                streamUPK.WriteByte(0xB8);
+                streamUPK.WriteByte(0x8B);
                 streamUPK.Position = 0x007F9155;
+                streamUPK.WriteByte(0x00);
+                streamUPK.Position = 0x007F9156;
                 streamUPK.WriteByte(0x00);
                 streamUPK.Position = 0x007F9157;
                 streamUPK.WriteByte(0x06);
@@ -130,7 +138,8 @@ namespace Patcher
                 streamUPK.WriteByte(0x04);
                 streamUPK.Position = 0x007F915B;
                 streamUPK.WriteByte(0x24);
-                //streamUPK.Write(new byte[] {0x04, 0x3A, 0x53, 0x38, 0x00, 0x00, 0x04, 0x47}, 4164349, 8); //12 before for some reason  old: 4164347 
+                streamUPK.Position = 0x007F915C;
+                streamUPK.WriteByte(0x00);
                 streamUPK.Close();
 
                 // -- HEX EDIT BORDERLANDS2.EXE --
