@@ -3,6 +3,8 @@ using System.Windows;
 using IWshRuntimeLibrary;
 using System.Net;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using Popup = System.Windows.MessageBox;
 
 namespace Patcher
@@ -20,7 +22,7 @@ namespace Patcher
                 file.CopyTo(System.IO.Path.Combine(target.FullName, file.Name));
         }
 
-        public static void patch() //the main function
+        public static async Task<string> patch() //the main function
         {
             var fileDialog = new System.Windows.Forms.OpenFileDialog();
             fileDialog.Filter = "Borderlands|*.exe";
@@ -195,6 +197,8 @@ namespace Patcher
             {
                 Popup.Show("Borderlands2.exe not found.");
             }
+            await Task.Delay(1); //debug
+            return "Finished"; //debug
         }
     }
 }

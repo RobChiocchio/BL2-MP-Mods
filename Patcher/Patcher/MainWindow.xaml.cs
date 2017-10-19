@@ -17,10 +17,10 @@ namespace Patcher
             InitializeComponent();
         }
 
-        private void button_Click(object sender, RoutedEventArgs e) // patch borderlands2
+        private async void button_Click(object sender, RoutedEventArgs e) // patch borderlands2
         {
             buttonPatch.IsEnabled = false; //disable button
-            main.patch(); //run the patch function
+            string patchResult = await main.patch(); //run the patch function
             buttonPatch.IsEnabled = true; //enable button when done
         }
     }
