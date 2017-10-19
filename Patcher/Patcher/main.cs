@@ -22,7 +22,7 @@ namespace Patcher
                 file.CopyTo(System.IO.Path.Combine(target.FullName, file.Name));
         }
 
-        public static async Task<string> patch() //the main function
+        public static void patch() //the main function
         {
             var fileDialog = new System.Windows.Forms.OpenFileDialog();
             fileDialog.Filter = "Borderlands|*.exe";
@@ -92,29 +92,18 @@ namespace Patcher
                 var decompressing = System.Diagnostics.Process.Start(decompress, "-game=border " + iUPK.FullName); //decompress WillowGame.UPK
                 decompressing.WaitForExit(); //wait for decompress.exe to finish
                 FileInfo decompressedUPK = new FileInfo(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "unpacked", iUPK.Name));
-                decompressedUPK.CopyTo(oUPK.FullName, true); //move upk to cookedpcconsole
-
+                try
+                {
+                    decompressedUPK.CopyTo(oUPK.FullName, true); //move upk to cookedpcconsole
+                }
+                catch (IOException)
+                {
+                    Popup.Show("ERROR: Could not find decompressed UPK"); //for debugging
+                }
 
                 // -- HEX EDIT UPK --
                 var streamUPK = new FileStream(oUPK.FullName, FileMode.Open, FileAccess.ReadWrite);
-                /*
-                streamUPK.Position = 0x003F8AFD; //set position
-                streamUPK.WriteByte(0x04);
-                streamUPK.Position = 0x003F8AFE;
-                streamUPK.WriteByte(0x3A);
-                streamUPK.Position = 0x003F8AFF;
-                streamUPK.WriteByte(0x53);
-                streamUPK.Position = 0x003F8B00;
-                streamUPK.WriteByte(0x38);
-                streamUPK.Position = 0x003F8B01;
-                streamUPK.WriteByte(0x00);
-                streamUPK.Position = 0x003F8B02;
-                streamUPK.WriteByte(0x00);
-                streamUPK.Position = 0x003F8B03;
-                streamUPK.WriteByte(0x04);
-                streamUPK.Position = 0x003F8B04;
-                streamUPK.WriteByte(0x47);
-                */
+
                 streamUPK.Position = 0x006924C7;
                 streamUPK.WriteByte(0x27);
 
@@ -197,8 +186,6 @@ namespace Patcher
             {
                 Popup.Show("Borderlands2.exe not found.");
             }
-            await Task.Delay(1); //debug
-            return "Finished"; //debug
         }
     }
 }

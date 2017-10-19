@@ -3,6 +3,8 @@ using System.Windows;
 using IWshRuntimeLibrary;
 using System.Net;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 using Popup = System.Windows.MessageBox;
 
 namespace Patcher
@@ -15,12 +17,19 @@ namespace Patcher
         public MainWindow()
         {
             InitializeComponent();
+
+            //Thread tGUI = Thread.CurrentThread;
+            //tGUI.Name = "GUIThread";
         }
 
-        private async void button_Click(object sender, RoutedEventArgs e) // patch borderlands2
+        private void button_Click(object sender, RoutedEventArgs e) // patch borderlands2
         {
             buttonPatch.IsEnabled = false; //disable button
-            string patchResult = await main.patch(); //run the patch function
+            //main.patch(); //run the patch function
+            ThreadStart patcher = new ThreadStart(main.patch);
+            Thread patcherThread = new Thread(patcher);
+            patcherThread.SetApartmentState(ApartmentState.STA);
+            patcherThread.Start(); //run the patch function
             buttonPatch.IsEnabled = true; //enable button when done
         }
     }
