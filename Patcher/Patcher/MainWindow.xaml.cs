@@ -22,7 +22,7 @@ namespace Patcher
             //tGUI.Name = "GUIThread";
         }
 
-        private void button_Click(object sender, RoutedEventArgs e) // patch borderlands2
+        public void button_Click(object sender, RoutedEventArgs e) // patch borderlands2
         {
             buttonPatch.IsEnabled = false; //disable button
             //main.patch(); //run the patch function
@@ -30,7 +30,7 @@ namespace Patcher
             Thread patcherThread = new Thread(patcher);
             patcherThread.SetApartmentState(ApartmentState.STA);
             patcherThread.Start(); //run the patch function
-            buttonPatch.IsEnabled = true; //enable button when done
+            //buttonPatch.IsEnabled = true; //enable button when done
         }
     }
 }

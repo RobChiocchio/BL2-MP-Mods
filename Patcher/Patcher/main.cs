@@ -6,6 +6,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Popup = System.Windows.MessageBox;
+using System.Windows.Forms;
 
 namespace Patcher
 {
@@ -89,9 +90,9 @@ namespace Patcher
 
                 // -- DECOMPRESS UPK --
                 //var decompressing = System.Diagnostics.Process.Start(decompress, "-game=border -out=" + outputDir + @"\\WillowGame\\CookedPCConsole\\ " + iUPK.FullName); //decompress WillowGame.UPK
-                var decompressing = System.Diagnostics.Process.Start(decompress, "-game=border " + iUPK.FullName); //decompress WillowGame.UPK
+                var decompressing = System.Diagnostics.Process.Start(decompress, "-game=border -log=decompress.log " + '"' + iUPK.FullName + '"'); //decompress WillowGame.UPK
                 decompressing.WaitForExit(); //wait for decompress.exe to finish
-                FileInfo decompressedUPK = new FileInfo(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "unpacked", iUPK.Name));
+                FileInfo decompressedUPK = new FileInfo(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), @"unpacked\\", iUPK.Name));
                 try
                 {
                     decompressedUPK.CopyTo(oUPK.FullName, true); //move upk to cookedpcconsole
@@ -149,7 +150,7 @@ namespace Patcher
                 // -- CREATE SHORTCUT --
                 WshShell shell = new WshShell();
                 IWshRuntimeLibrary.IWshShortcut shortcut = shell.CreateShortcut(
-    Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\\Borderlands 2 COOP.lnk") as IWshRuntimeLibrary.IWshShortcut;
+    Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\\Borderlands 2 COOP.lnk") as IWshShortcut;
                 shortcut.Arguments = "-log -debug -codermode -nosplash";
                 shortcut.TargetPath = oBL2.FullName;
                 shortcut.WindowStyle = 1;
