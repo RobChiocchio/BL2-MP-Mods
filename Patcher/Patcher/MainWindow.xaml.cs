@@ -25,9 +25,8 @@ namespace Patcher
         public void button_Click(object sender, RoutedEventArgs e) // patch borderlands2
         {
             buttonPatch.IsEnabled = false; //disable button
-            //main.patch(); //run the patch function
-            ThreadStart patcher = new ThreadStart(main.patch);
-            Thread patcherThread = new Thread(patcher);
+            //ThreadStart patcher = new ParameterizedThreadStart(() => main.patch(2));
+            Thread patcherThread = new Thread(() => main.patch(2));
             patcherThread.SetApartmentState(ApartmentState.STA);
             patcherThread.Start(); //run the patch function
             //buttonPatch.IsEnabled = true; //enable button when done

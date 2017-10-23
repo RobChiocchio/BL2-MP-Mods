@@ -23,12 +23,25 @@ namespace Patcher
                 file.CopyTo(System.IO.Path.Combine(target.FullName, file.Name));
         }
 
-        public static void patch() //the main function
+        public static void patch(int game_) //the main function
         {
+            string gameExec = ""; //init vars
+            string gameDir = ""; //init vars
+
+            switch(game_)
+            {
+                case 3:
+                    break;
+                default: //2 or incase some how there isnt a variable
+                    gameExec = "Borderlands2.exe";
+                    gameDir = "Borderlands 2";
+                    break;
+            }
+
             var fileDialog = new System.Windows.Forms.OpenFileDialog();
             fileDialog.Filter = "Borderlands|*.exe";
-            fileDialog.Title = "Open Borderlands2.exe";
-            fileDialog.InitialDirectory = @"C:\\Program Files (x86)\\Steam\\SteamApps\\common\\Borderlands 2\\Binaries\\Win32"; //I guess this isnt working
+            fileDialog.Title = "Open " + gameExec;
+            fileDialog.InitialDirectory = @"C:\\Program Files (x86)\\Steam\\SteamApps\\common\\" + gameDir + "\\Binaries\\Win32"; //I guess this isnt working
             fileDialog.RestoreDirectory = true; //this either
             var result = fileDialog.ShowDialog();
             string path = @"C:\\";
@@ -41,16 +54,16 @@ namespace Patcher
                 default:
                     break;
             }
-            DirectoryInfo iBL2 = new DirectoryInfo(path); //bl2 = path to Borderlands2.exe
-            DirectoryInfo inputDir = new DirectoryInfo(iBL2 + @"..\\..\\..\\..\\"); //convert to directory - IDK why I need more ..\\s then I actually should but it works so who cares
+            DirectoryInfo iBL = new DirectoryInfo(path); //bl = path to Borderlands exe
+            DirectoryInfo inputDir = new DirectoryInfo(iBL + @"..\\..\\..\\..\\"); //convert to directory - IDK why I need more ..\\s then I actually should but it works so who cares
             DirectoryInfo outputDir = new DirectoryInfo(inputDir + @"\\server"); //convert to directory
-            DirectoryInfo oBL2 = new DirectoryInfo(outputDir + @"\\Binaries\\Win32\\Borderlands2.exe");
+            DirectoryInfo oBL = new DirectoryInfo(outputDir + @"\\Binaries\\Win32\\" + gameExec);
             DirectoryInfo iUPK = new DirectoryInfo(inputDir + @"\\WillowGame\\CookedPCConsole\\WillowGame.upk"); // engine = path to WillowGame.upk
             DirectoryInfo oUPK = new DirectoryInfo(outputDir + @"\\WillowGame\\CookedPCConsole\\WillowGame.upk"); // engine = path to WillowGame.upk
 
             String decompress = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "decompress.exe");
 
-            if (System.IO.File.Exists(iBL2.FullName)) //if borderlands2.exe exists
+            if (System.IO.File.Exists(iBL.FullName)) //if borderlands exec exists
             {
                 // -- COPY INPUT TO OUTPUT --
                 try
@@ -135,7 +148,7 @@ namespace Patcher
                 streamUPK.Close();
 
                 // -- HEX EDIT BORDERLANDS2.EXE --
-                var streamBL2 = new FileStream(oBL2.FullName, FileMode.Open, FileAccess.ReadWrite);
+                var streamBL2 = new FileStream(oBL.FullName, FileMode.Open, FileAccess.ReadWrite);
                 streamBL2.Position = 0x004F2590;
                 streamBL2.WriteByte(0xFF);
                 for (long i = 0x01B94B0C; i <= 0x01B94B10; i++)
@@ -150,13 +163,13 @@ namespace Patcher
                 // -- CREATE SHORTCUT --
                 WshShell shell = new WshShell();
                 IWshRuntimeLibrary.IWshShortcut shortcut = shell.CreateShortcut(
-    Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\\Borderlands 2 COOP.lnk") as IWshShortcut;
+    Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\\" + gameDir + " COOP.lnk") as IWshShortcut;
                 shortcut.Arguments = "-log -debug -codermode -nosplash";
-                shortcut.TargetPath = oBL2.FullName;
+                shortcut.TargetPath = oBL.FullName;
                 shortcut.WindowStyle = 1;
-                shortcut.Description = "Robeth's Borderlands 2 COOP patch";
-                shortcut.WorkingDirectory = (Directory.GetParent(oBL2.FullName)).FullName;
-                shortcut.IconLocation = (oBL2 + ",1");
+                shortcut.Description = "Robeth's Borderlands COOP patch";
+                shortcut.WorkingDirectory = (Directory.GetParent(oBL.FullName)).FullName;
+                shortcut.IconLocation = (oBL + ",1");
                 shortcut.Save();
 
                 // -- ENABLE CONSOLE -- RIPPED STRAIGHT FROM BUGWORM's BORDERLANDS2PATCHER!!!!!
@@ -185,7 +198,7 @@ namespace Patcher
             }
             else
             {
-                Popup.Show("Borderlands2.exe not found.");
+                Popup.Show("ERROR: " + gameExec + " not found.");
             }
         }
     }
