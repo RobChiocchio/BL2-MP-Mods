@@ -1,16 +1,5 @@
 set WillowOnlineGameSettings NumPublicConnections 64
-
 set GameInfo MaxPlayers 64
 set GameInfo MaxPlayersAllowed 64
 set GameInfo MaxSpectators 64
 set GameInfo MaxSpectatorsAllowed 64
-
-#set WillowCoopGameInfo NumPlayers 3
-
-set UIGameInfoSummary bIsTeamGame true
-
-set IPDrv.TCPNetDriver NetServerMaxTickrate 30
-
-#set WillowCoopGameInfo TotalNetBandwidth=64000
-
-#set GD_Globals.General.Globals RespawnDelayInSeconds 0.000000 #no respawn delay on enemies
