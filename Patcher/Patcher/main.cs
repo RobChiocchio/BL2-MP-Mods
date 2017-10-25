@@ -20,7 +20,14 @@ namespace Patcher
                     CopyFilesRecursively(dir, target.CreateSubdirectory(dir.Name));
                 }
             foreach (FileInfo file in source.GetFiles())
-                file.CopyTo(System.IO.Path.Combine(target.FullName, file.Name));
+                try
+                {
+                    file.CopyTo(System.IO.Path.Combine(target.FullName, file.Name));
+                }
+                catch (IOException)
+                {
+                    //log
+                }
         }
 
         public static void patch(int game_) //the main function
@@ -116,61 +123,82 @@ namespace Patcher
                 }
 
                 // -- HEX EDIT UPK --
-                var streamUPK = new FileStream(oUPK.FullName, FileMode.Open, FileAccess.ReadWrite);
+                try
+                {
+                    var streamUPK = new FileStream(oUPK.FullName, FileMode.Open, FileAccess.ReadWrite);
 
-                streamUPK.Position = 0x006924C7;
-                streamUPK.WriteByte(0x27);
+                    streamUPK.Position = 0x006924C7;
+                    streamUPK.WriteByte(0x27);
 
-                streamUPK.Position = 0x007F9151;
-                streamUPK.WriteByte(0x04);
-                streamUPK.Position = 0x007F9152;
-                streamUPK.WriteByte(0x00);
-                streamUPK.Position = 0x007F9153;
-                streamUPK.WriteByte(0xC6);
-                streamUPK.Position = 0x007F9154;
-                streamUPK.WriteByte(0x8B);
-                streamUPK.Position = 0x007F9155;
-                streamUPK.WriteByte(0x00);
-                streamUPK.Position = 0x007F9156;
-                streamUPK.WriteByte(0x00);
-                streamUPK.Position = 0x007F9157;
-                streamUPK.WriteByte(0x06);
-                streamUPK.Position = 0x007F9158;
-                streamUPK.WriteByte(0x44);
-                streamUPK.Position = 0x007F9159;
-                streamUPK.WriteByte(0x00);
-                streamUPK.Position = 0x007F915A;
-                streamUPK.WriteByte(0x04);
-                streamUPK.Position = 0x007F915B;
-                streamUPK.WriteByte(0x24);
-                streamUPK.Position = 0x007F915C;
-                streamUPK.WriteByte(0x00);
-                streamUPK.Close();
+                    streamUPK.Position = 0x007F9151;
+                    streamUPK.WriteByte(0x04);
+                    streamUPK.Position = 0x007F9152;
+                    streamUPK.WriteByte(0x00);
+                    streamUPK.Position = 0x007F9153;
+                    streamUPK.WriteByte(0xC6);
+                    streamUPK.Position = 0x007F9154;
+                    streamUPK.WriteByte(0x8B);
+                    streamUPK.Position = 0x007F9155;
+                    streamUPK.WriteByte(0x00);
+                    streamUPK.Position = 0x007F9156;
+                    streamUPK.WriteByte(0x00);
+                    streamUPK.Position = 0x007F9157;
+                    streamUPK.WriteByte(0x06);
+                    streamUPK.Position = 0x007F9158;
+                    streamUPK.WriteByte(0x44);
+                    streamUPK.Position = 0x007F9159;
+                    streamUPK.WriteByte(0x00);
+                    streamUPK.Position = 0x007F915A;
+                    streamUPK.WriteByte(0x04);
+                    streamUPK.Position = 0x007F915B;
+                    streamUPK.WriteByte(0x24);
+                    streamUPK.Position = 0x007F915C;
+                    streamUPK.WriteByte(0x00);
+                    streamUPK.Close();
+                }
+                catch(IOException)
+                {
+                    Popup.Show("ERROR: Could not modify upk files");
+                }
 
                 // -- HEX EDIT BORDERLANDS2.EXE --
-                var streamBL2 = new FileStream(oBL.FullName, FileMode.Open, FileAccess.ReadWrite);
-                streamBL2.Position = 0x004F2590;
-                streamBL2.WriteByte(0xFF);
-                for (long i = 0x01B94B0C; i <= 0x01B94B10; i++)
+                try
                 {
-                    streamBL2.Position = i;
-                    streamBL2.WriteByte(0x00);
+                    var streamBL2 = new FileStream(oBL.FullName, FileMode.Open, FileAccess.ReadWrite);
+                    streamBL2.Position = 0x004F2590;
+                    streamBL2.WriteByte(0xFF);
+                    for (long i = 0x01B94B0C; i <= 0x01B94B10; i++)
+                    {
+                        streamBL2.Position = i;
+                        streamBL2.WriteByte(0x00);
+                    }
+                    streamBL2.Position = 0x01EF17F9; //find upk
+                    streamBL2.WriteByte(0x78); //willowgame.upk > xillowgame.upk
+                    streamBL2.Close();
                 }
-                streamBL2.Position = 0x01EF17F9; //find upk
-                streamBL2.WriteByte(0x78); //willowgame.upk > xillowgame.upk
-                streamBL2.Close();
+                catch(IOException)
+                {
+                    Popup.Show("ERROR: Could not modify executable");
+                }
 
                 // -- CREATE SHORTCUT --
-                WshShell shell = new WshShell();
-                IWshRuntimeLibrary.IWshShortcut shortcut = shell.CreateShortcut(
-    Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\\" + gameDir + " COOP.lnk") as IWshShortcut;
-                shortcut.Arguments = "-log -debug -codermode -nosplash";
-                shortcut.TargetPath = oBL.FullName;
-                shortcut.WindowStyle = 1;
-                shortcut.Description = "Robeth's Borderlands COOP patch";
-                shortcut.WorkingDirectory = (Directory.GetParent(oBL.FullName)).FullName;
-                shortcut.IconLocation = (oBL + ",1");
-                shortcut.Save();
+                try
+                {
+                    WshShell shell = new WshShell();
+                    IWshRuntimeLibrary.IWshShortcut shortcut = shell.CreateShortcut(
+                    Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\\" + gameDir + " COOP.lnk") as IWshShortcut;
+                    shortcut.Arguments = "-log -debug -codermode -nosplash";
+                    shortcut.TargetPath = oBL.FullName;
+                    shortcut.WindowStyle = 1;
+                    shortcut.Description = "Robeth's Borderlands COOP patch";
+                    shortcut.WorkingDirectory = (Directory.GetParent(oBL.FullName)).FullName;
+                    shortcut.IconLocation = (oBL + ",1");
+                    shortcut.Save();
+                }
+                catch (IOException)
+                {
+                    Popup.Show("ERROR: Failed to create shortcut");
+                }
 
                 // -- ENABLE CONSOLE -- RIPPED STRAIGHT FROM BUGWORM's BORDERLANDS2PATCHER!!!!!
                 try
@@ -187,9 +215,9 @@ namespace Patcher
                     temp[i] = "ConsoleKey=~";
                     System.IO.File.WriteAllLines(path, temp);
                 }
-                catch
+                catch (IOException)
                 {
-                    //log
+                    Popup.Show("ERROR: Failed to enable console");
                 }
                 //END OF BUGWORM'S CODE
 
