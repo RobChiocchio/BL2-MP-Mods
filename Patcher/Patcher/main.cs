@@ -15,7 +15,7 @@ namespace Patcher
         public static void CopyFilesRecursively(DirectoryInfo source, DirectoryInfo target) //This function is taken straight from stackoverflow thanks to Konrad Rudolph. Rewrite
         {
             foreach (DirectoryInfo dir in source.GetDirectories())
-                if (!(source.FullName == dir.FullName)) //prevent infinite copy loop
+                if (!(source.FullName == dir.FullName) || !(source.Name == "dbghelp.dll")) //prevent infinite copy loop - dbhhelp was causing issued for god knows why
                 {
                     CopyFilesRecursively(dir, target.CreateSubdirectory(dir.Name));
                 }
@@ -76,7 +76,7 @@ namespace Patcher
                 try
                 {
                     CopyFilesRecursively(inputDir, outputDir);
-
+                    //copy dbghelp
                 }
                 catch (IOException)
                 {
@@ -187,7 +187,7 @@ namespace Patcher
                     WshShell shell = new WshShell();
                     IWshRuntimeLibrary.IWshShortcut shortcut = shell.CreateShortcut(
                     Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\\" + gameDir + " COOP.lnk") as IWshShortcut;
-                    shortcut.Arguments = "-log -debug -codermode -nosplash";
+                    shortcut.Arguments = "-log -debug -codermode -nosplash -exec=cooppatch.txt";
                     shortcut.TargetPath = oBL.FullName;
                     shortcut.WindowStyle = 1;
                     shortcut.Description = "Robeth's Borderlands COOP patch";
