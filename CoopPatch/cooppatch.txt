@@ -3,7 +3,7 @@ set GameInfo MaxPlayers 512
 set GameInfo MaxPlayersAllowed 512
 set GameInfo MaxSpectators 512
 set GameInfo MaxSpectatorsAllowed 512
-set Engine.GameInfo EffectiveNumPlayers 4
+#set Engine.GameInfo EffectiveNumPlayers 4
 
 set WillowCoopGameInfo TotalNetBandwidth 64000
 set IPDrv.TCPNetDriver NetServerMaxTickrate 20
