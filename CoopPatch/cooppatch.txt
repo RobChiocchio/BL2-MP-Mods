@@ -15,3 +15,4 @@ set IPDrv.TCPNetDriver bClampListenServerTickRate True
 set GlobalsDefinition TravelDelay 0
 set GearboxFramework.GearboxGlobals DefaultMaxPopulationActorCost 50
 set PlayerInteractionServer TimeoutTime 20.0
+set Engine.GameInfo EffectiveNumPlayers 4
