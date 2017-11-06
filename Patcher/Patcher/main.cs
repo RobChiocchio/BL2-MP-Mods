@@ -34,16 +34,19 @@ namespace Patcher
         {
             string gameExec = ""; //init vars
             string gameDir = ""; //init vars
+            string cooppatchFile = ""; //init vars
 
             switch(game_)
             {
                 case 3:
                     gameExec = "BorderlandsPreSequel.exe";
                     gameDir = "Borderlands The Pre-Sequel";
+                    cooppatchFile = "cooppatch_tps.txt";
                     break;
                 default: //2 or incase some how there isnt a variable
                     gameExec = "Borderlands2.exe";
                     gameDir = "Borderlands 2";
+                    cooppatchFile = "cooppatch.txt";
                     break;
             }
 
@@ -91,7 +94,7 @@ namespace Patcher
                 {
                     try
                     {
-                        myWebClient.DownloadFile("https://raw.githubusercontent.com/RobethX/BL2-MP-Mods/master/CoopPatch/cooppatch.txt", outputDir.FullName + @"\Binaries\cooppatch.txt");
+                        myWebClient.DownloadFile("https://raw.githubusercontent.com/RobethX/BL2-MP-Mods/master/CoopPatch/" + cooppatchFile, outputDir.FullName + @"\Binaries\" + cooppatchFile);
                     }
                     catch (IOException)
                     {
@@ -124,64 +127,74 @@ namespace Patcher
                     Popup.Show("ERROR: Could not find decompressed UPK"); //for debugging
                 }
 
-                // -- HEX EDIT UPK --
-                try
+                // -- HEX EDITING --
+                switch (game_)
                 {
-                    var streamUPK = new FileStream(oUPK.FullName, FileMode.Open, FileAccess.ReadWrite);
+                    case 3:
+                        Popup.Show("TPS not yet implemented");
+                        break;
+                    default: //2 or incase some how there isnt a variable
+                        // -- HEX EDIT UPK --
+                        try
+                        {
+                            var streamUPK = new FileStream(oUPK.FullName, FileMode.Open, FileAccess.ReadWrite);
 
-                    streamUPK.Position = 0x006924C7;
-                    streamUPK.WriteByte(0x27);
+                            streamUPK.Position = 0x006924C7;
+                            streamUPK.WriteByte(0x27);
 
-                    streamUPK.Position = 0x007F9151;
-                    streamUPK.WriteByte(0x04);
-                    streamUPK.Position = 0x007F9152;
-                    streamUPK.WriteByte(0x00);
-                    streamUPK.Position = 0x007F9153;
-                    streamUPK.WriteByte(0xC6);
-                    streamUPK.Position = 0x007F9154;
-                    streamUPK.WriteByte(0x8B);
-                    streamUPK.Position = 0x007F9155;
-                    streamUPK.WriteByte(0x00);
-                    streamUPK.Position = 0x007F9156;
-                    streamUPK.WriteByte(0x00);
-                    streamUPK.Position = 0x007F9157;
-                    streamUPK.WriteByte(0x06);
-                    streamUPK.Position = 0x007F9158;
-                    streamUPK.WriteByte(0x44);
-                    streamUPK.Position = 0x007F9159;
-                    streamUPK.WriteByte(0x00);
-                    streamUPK.Position = 0x007F915A;
-                    streamUPK.WriteByte(0x04);
-                    streamUPK.Position = 0x007F915B;
-                    streamUPK.WriteByte(0x24);
-                    streamUPK.Position = 0x007F915C;
-                    streamUPK.WriteByte(0x00);
-                    streamUPK.Close();
-                }
-                catch(IOException)
-                {
-                    Popup.Show("ERROR: Could not modify upk files");
+                            streamUPK.Position = 0x007F9151;
+                            streamUPK.WriteByte(0x04);
+                            streamUPK.Position = 0x007F9152;
+                            streamUPK.WriteByte(0x00);
+                            streamUPK.Position = 0x007F9153;
+                            streamUPK.WriteByte(0xC6);
+                            streamUPK.Position = 0x007F9154;
+                            streamUPK.WriteByte(0x8B);
+                            streamUPK.Position = 0x007F9155;
+                            streamUPK.WriteByte(0x00);
+                            streamUPK.Position = 0x007F9156;
+                            streamUPK.WriteByte(0x00);
+                            streamUPK.Position = 0x007F9157;
+                            streamUPK.WriteByte(0x06);
+                            streamUPK.Position = 0x007F9158;
+                            streamUPK.WriteByte(0x44);
+                            streamUPK.Position = 0x007F9159;
+                            streamUPK.WriteByte(0x00);
+                            streamUPK.Position = 0x007F915A;
+                            streamUPK.WriteByte(0x04);
+                            streamUPK.Position = 0x007F915B;
+                            streamUPK.WriteByte(0x24);
+                            streamUPK.Position = 0x007F915C;
+                            streamUPK.WriteByte(0x00);
+                            streamUPK.Close();
+                        }
+                        catch (IOException)
+                        {
+                            Popup.Show("ERROR: Could not modify upk files");
+                        }
+
+                        // -- HEX EDIT BORDERLANDS2.EXE --
+                        try
+                        {
+                            var streamBL = new FileStream(oBL.FullName, FileMode.Open, FileAccess.ReadWrite);
+                            streamBL.Position = 0x004F2590;
+                            streamBL.WriteByte(0xFF);
+                            for (long i = 0x01B94B0C; i <= 0x01B94B10; i++)
+                            {
+                                streamBL.Position = i;
+                                streamBL.WriteByte(0x00);
+                            }
+                            streamBL.Position = 0x01EF17F9; //find upk
+                            streamBL.WriteByte(0x78); //willowgame.upk > xillowgame.upk
+                            streamBL.Close();
+                        }
+                        catch (IOException)
+                        {
+                            Popup.Show("ERROR: Could not modify executable");
+                        }
+                        break;
                 }
 
-                // -- HEX EDIT BORDERLANDS2.EXE --
-                try
-                {
-                    var streamBL2 = new FileStream(oBL.FullName, FileMode.Open, FileAccess.ReadWrite);
-                    streamBL2.Position = 0x004F2590;
-                    streamBL2.WriteByte(0xFF);
-                    for (long i = 0x01B94B0C; i <= 0x01B94B10; i++)
-                    {
-                        streamBL2.Position = i;
-                        streamBL2.WriteByte(0x00);
-                    }
-                    streamBL2.Position = 0x01EF17F9; //find upk
-                    streamBL2.WriteByte(0x78); //willowgame.upk > xillowgame.upk
-                    streamBL2.Close();
-                }
-                catch(IOException)
-                {
-                    Popup.Show("ERROR: Could not modify executable");
-                }
 
                 // -- CREATE SHORTCUT --
                 try
@@ -189,7 +202,7 @@ namespace Patcher
                     WshShell shell = new WshShell();
                     IWshRuntimeLibrary.IWshShortcut shortcut = shell.CreateShortcut(
                     Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\\" + gameDir + " COOP.lnk") as IWshShortcut;
-                    shortcut.Arguments = "-log -debug -codermode -nosplash -exec=cooppatch.txt";
+                    shortcut.Arguments = "-log -debug -codermode -nosplash -exec=" + cooppatchFile;
                     shortcut.TargetPath = oBL.FullName;
                     shortcut.WindowStyle = 1;
                     shortcut.Description = "Robeth's Borderlands COOP patch";
@@ -205,7 +218,7 @@ namespace Patcher
                 // -- ENABLE CONSOLE -- RIPPED STRAIGHT FROM BUGWORM's BORDERLANDS2PATCHER!!!!!
                 try
                 {
-                    string tmppath = @"\\my games\\borderlands 2\\willowgame\\Config\\WillowInput.ini";
+                    string tmppath = @"\\my games\\" + gameDir + "\\willowgame\\Config\\WillowInput.ini";
                     string iniPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + tmppath;
                     string[] temp = System.IO.File.ReadAllLines(path);
                     int i;
