@@ -1,0 +1,18 @@
+## MORE PLAYERS ###
+
+set WillowOnlineGameSettings NumPublicConnections 64
+set GameInfo MaxPlayers 512
+set GameInfo MaxPlayersAllowed 512
+
+### NETWORK OPTIMIZATION ###
+
+set WillowCoopGameInfo TotalNetBandwidth 64000
+set IPDrv.TCPNetDriver NetServerMaxTickrate 20
+set IPDrv.TCPNetDriver bClampListenServerTickRate True
+
+### MISC TWEAKS ###
+
+set GlobalsDefinition TravelDelay 0
+set GearboxFramework.GearboxGlobals DefaultMaxPopulationActorCost 50
+set PlayerInteractionServer TimeoutTime 20.0
+set Engine.GameInfo EffectiveNumPlayers 4

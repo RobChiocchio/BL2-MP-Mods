@@ -38,6 +38,8 @@ namespace Patcher
             switch(game_)
             {
                 case 3:
+                    gameExec = "BorderlandsPreSequel.exe";
+                    gameDir = "Borderlands The Pre-Sequel";
                     break;
                 default: //2 or incase some how there isnt a variable
                     gameExec = "Borderlands2.exe";
