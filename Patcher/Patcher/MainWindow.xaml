@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Patcher"
         mc:Ignorable="d"
-        Title="Robeth's COOP Patcher" Height="105" Width="210" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center" ResizeMode="NoResize" Cursor="Arrow" Icon="Icon.ico">
+        Title="Robeth's COOP Patcher" Height="105" Width="215" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center" ResizeMode="NoResize" Cursor="Arrow" Icon="Icon.ico">
     <Window.TaskbarItemInfo>
         <TaskbarItemInfo x:Name="taskbarInfo" Overlay="Icon.ico" ProgressState="None" Description="Robeth's Borderlands COOP Patcher" ProgressValue="0"/>
     </Window.TaskbarItemInfo>
