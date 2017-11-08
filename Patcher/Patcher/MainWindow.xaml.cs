@@ -105,7 +105,7 @@ namespace Patcher
         public static void CopyFilesRecursively(DirectoryInfo source, DirectoryInfo target) //This function is taken straight from stackoverflow thanks to Konrad Rudolph. Rewrite
         {
             foreach (DirectoryInfo dir in source.GetDirectories())
-                if (!(source.FullName == dir.FullName) || !(source.Name == "dbghelp.dll")) //prevent infinite copy loop - dbhhelp was causing issued for god knows why
+                if (source.FullName != dir.FullName || source.Name != "dbghelp.dll" || source.Name != "server") //prevent infinite copy loop - dbhhelp was causing issued for god knows why
                 {
                     CopyFilesRecursively(dir, target.CreateSubdirectory(dir.Name));
                 }
@@ -283,8 +283,7 @@ namespace Patcher
                     string tmppath = @"\\my games\\" + gameDir + "\\willowgame\\Config\\WillowInput.ini";
                     string iniPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + tmppath;
                     string[] temp = System.IO.File.ReadAllLines(path);
-                    int i;
-                    for (i = 1; i <= temp.Length; i++)
+                    for (int i = 1; i <= temp.Length; i++)
                     {
                         if (temp[i].StartsWith("ConsoleKey="))
                             break;
