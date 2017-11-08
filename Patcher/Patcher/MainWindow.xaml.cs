@@ -57,8 +57,8 @@ namespace Patcher
             {
                 case 3:
                     gameExec = "BorderlandsPreSequel.exe";
-                    gameDir = "Borderlands The Pre-Sequel";
-                    cooppatchFile = "cooppatch_tps.txt";
+                    gameDir = "BorderlandsPreSequel";
+                    cooppatchFile = "cooppatch.txt";
                     break;
                 default: //2 or incase some how there isnt a variable
                     gameExec = "Borderlands2.exe";
@@ -100,23 +100,27 @@ namespace Patcher
             //progressBarStatic.IsIndeterminate = false; //disable MARQUEE style
             progressBarStatic.Visibility = Visibility.Hidden; //make the loading bar invisible
             taskbarInfoStatic.ProgressState = TaskbarItemProgressState.None; //hide the loading bar in the taskbar
+            Popup.Show("Done! A Shortcut was placed on your desktop. Press '~' in game to open up console.");
         }
 
-        public static void CopyFilesRecursively(DirectoryInfo source, DirectoryInfo target) //This function is taken straight from stackoverflow thanks to Konrad Rudolph. Rewrite
+        public void CopyFilesRecursively(DirectoryInfo source, DirectoryInfo target) //This function is taken straight from stackoverflow thanks to Konrad Rudolph. Rewrite
         {
             foreach (DirectoryInfo dir in source.GetDirectories())
-                if (source.FullName != dir.FullName || source.Name != "dbghelp.dll" || source.Name != "server") //prevent infinite copy loop - dbhhelp was causing issued for god knows why
+                if (source.FullName != dir.FullName && dir.Name != "server") //prevent infinite copy loop
                 {
                     CopyFilesRecursively(dir, target.CreateSubdirectory(dir.Name));
                 }
             foreach (FileInfo file in source.GetFiles())
-                try
+                if (file.Name != "dbghelp.dll") //dbhhelp was causing issued for god knows why
                 {
-                    file.CopyTo(System.IO.Path.Combine(target.FullName, file.Name));
-                }
-                catch (IOException)
-                {
-                    //log
+                    try
+                    {
+                        file.CopyTo(System.IO.Path.Combine(target.FullName, file.Name));
+                    }
+                    catch (IOException)
+                    {
+                        //log
+                    }
                 }
         }
 
@@ -164,8 +168,8 @@ namespace Patcher
                 // -- RENAME UPK AND DECOMPRESSEDSIZE --
                 try //incase it's already moved
                 {
-                    System.IO.File.Copy(oUPK.FullName, oUPK.FullName + ".bak"); //backup Engine.upk
                     System.IO.File.Move(oUPK.FullName + ".uncompressed_size", oUPK.FullName + ".uncompressed_size.bak"); //backup Engine.upk.uncompressed_size
+                    System.IO.File.Copy(oUPK.FullName, oUPK.FullName + ".bak"); //backup upk
                 }
                 catch (IOException)
                 {
@@ -191,43 +195,105 @@ namespace Patcher
                 // -- HEX EDITING --
                 switch (gameID)
                 {
-                    case 3:
-                        Popup.Show("TPS not yet implemented");
+                    case 3: //tps
+                        try
+                        {
+                            var streamUPKTPS = new FileStream(oUPK.FullName, FileMode.Open, FileAccess.ReadWrite);
+
+                            // -- DEVELOPER MODE --
+                            streamUPKTPS.Position = 0x0079ACE7;
+                            streamUPKTPS.WriteByte(0x27);
+
+                            // -- EVERY PLAYER GETS THEIR OWN TEAM --
+                            streamUPKTPS.Position = 0x0099D50F;
+                            streamUPKTPS.WriteByte(0x04);
+                            streamUPKTPS.Position = 0x0099D510;
+                            streamUPKTPS.WriteByte(0x00);
+                            streamUPKTPS.Position = 0x0099D511;
+                            streamUPKTPS.WriteByte(0x82);
+                            streamUPKTPS.Position = 0x0099D512;
+                            streamUPKTPS.WriteByte(0xB1);
+                            streamUPKTPS.Position = 0x0099D513;
+                            streamUPKTPS.WriteByte(0x00);
+                            streamUPKTPS.Position = 0x0099D514;
+                            streamUPKTPS.WriteByte(0x00);
+                            streamUPKTPS.Position = 0x0099D515;
+                            streamUPKTPS.WriteByte(0x06);
+                            streamUPKTPS.Position = 0x0099D516;
+                            streamUPKTPS.WriteByte(0x44);
+                            streamUPKTPS.Position = 0x0099D517;
+                            streamUPKTPS.WriteByte(0x00);
+                            streamUPKTPS.Position = 0x0099D518;
+                            streamUPKTPS.WriteByte(0x04);
+                            streamUPKTPS.Position = 0x0099D519;
+                            streamUPKTPS.WriteByte(0x24);
+                            streamUPKTPS.Position = 0x0099D51A;
+                            streamUPKTPS.WriteByte(0x00);
+
+                            streamUPKTPS.Close();
+                        }
+                        catch (IOException)
+                        {
+                            Popup.Show("ERROR: Could not modify upk files");
+                        }
+
+                        patcherWorker.ReportProgress(80); //set loadingprogress to 80%
+                        // -- HEX EDIT BORDERLANDSPRESEQUEL.EXE --
+                        try
+                        {
+                            var streamBLTPS = new FileStream(oBL.FullName, FileMode.Open, FileAccess.ReadWrite);
+                            streamBLTPS.Position = 0x00D8BD1F;
+                            streamBLTPS.WriteByte(0xFF);
+                            for (long i = 0x018E9C33; i <= 0x018E9C39; i++)
+                            {
+                                streamBLTPS.Position = i;
+                                streamBLTPS.WriteByte(0x00);
+                            }
+                            streamBLTPS.Position = 0x01D3D699; //find willowgame.upk
+                            streamBLTPS.WriteByte(0x78); //willowgame.upk > xillowgame.upk
+                            streamBLTPS.Close();
+                        }
+                        catch (IOException)
+                        {
+                            Popup.Show("ERROR: Could not modify executable");
+                        }
                         break;
-                    default: //2 or incase some how there isnt a variable
+                    case 2: //bl2
                         // -- HEX EDIT UPK --
                         try
                         {
-                            var streamUPK = new FileStream(oUPK.FullName, FileMode.Open, FileAccess.ReadWrite);
+                            var streamUPK2 = new FileStream(oUPK.FullName, FileMode.Open, FileAccess.ReadWrite);
 
-                            streamUPK.Position = 0x006924C7;
-                            streamUPK.WriteByte(0x27);
+                            // -- DEVELOPER MODE --
+                            streamUPK2.Position = 0x006924C7;
+                            streamUPK2.WriteByte(0x27);
 
-                            streamUPK.Position = 0x007F9151;
-                            streamUPK.WriteByte(0x04);
-                            streamUPK.Position = 0x007F9152;
-                            streamUPK.WriteByte(0x00);
-                            streamUPK.Position = 0x007F9153;
-                            streamUPK.WriteByte(0xC6);
-                            streamUPK.Position = 0x007F9154;
-                            streamUPK.WriteByte(0x8B);
-                            streamUPK.Position = 0x007F9155;
-                            streamUPK.WriteByte(0x00);
-                            streamUPK.Position = 0x007F9156;
-                            streamUPK.WriteByte(0x00);
-                            streamUPK.Position = 0x007F9157;
-                            streamUPK.WriteByte(0x06);
-                            streamUPK.Position = 0x007F9158;
-                            streamUPK.WriteByte(0x44);
-                            streamUPK.Position = 0x007F9159;
-                            streamUPK.WriteByte(0x00);
-                            streamUPK.Position = 0x007F915A;
-                            streamUPK.WriteByte(0x04);
-                            streamUPK.Position = 0x007F915B;
-                            streamUPK.WriteByte(0x24);
-                            streamUPK.Position = 0x007F915C;
-                            streamUPK.WriteByte(0x00);
-                            streamUPK.Close();
+                            // -- EVERY PLAYER GETS THEIR OWN TEAM --
+                            streamUPK2.Position = 0x007F9151;
+                            streamUPK2.WriteByte(0x04);
+                            streamUPK2.Position = 0x007F9152;
+                            streamUPK2.WriteByte(0x00);
+                            streamUPK2.Position = 0x007F9153;
+                            streamUPK2.WriteByte(0xC6);
+                            streamUPK2.Position = 0x007F9154;
+                            streamUPK2.WriteByte(0x8B);
+                            streamUPK2.Position = 0x007F9155;
+                            streamUPK2.WriteByte(0x00);
+                            streamUPK2.Position = 0x007F9156;
+                            streamUPK2.WriteByte(0x00);
+                            streamUPK2.Position = 0x007F9157;
+                            streamUPK2.WriteByte(0x06);
+                            streamUPK2.Position = 0x007F9158;
+                            streamUPK2.WriteByte(0x44);
+                            streamUPK2.Position = 0x007F9159;
+                            streamUPK2.WriteByte(0x00);
+                            streamUPK2.Position = 0x007F915A;
+                            streamUPK2.WriteByte(0x04);
+                            streamUPK2.Position = 0x007F915B;
+                            streamUPK2.WriteByte(0x24);
+                            streamUPK2.Position = 0x007F915C;
+                            streamUPK2.WriteByte(0x00);
+                            streamUPK2.Close();
                         }
                         catch (IOException)
                         {
@@ -238,17 +304,17 @@ namespace Patcher
                         // -- HEX EDIT BORDERLANDS2.EXE --
                         try
                         {
-                            var streamBL = new FileStream(oBL.FullName, FileMode.Open, FileAccess.ReadWrite);
-                            streamBL.Position = 0x004F2590;
-                            streamBL.WriteByte(0xFF);
+                            var streamBL2 = new FileStream(oBL.FullName, FileMode.Open, FileAccess.ReadWrite);
+                            streamBL2.Position = 0x004F2590;
+                            streamBL2.WriteByte(0xFF);
                             for (long i = 0x01B94B0C; i <= 0x01B94B10; i++)
                             {
-                                streamBL.Position = i;
-                                streamBL.WriteByte(0x00);
+                                streamBL2.Position = i;
+                                streamBL2.WriteByte(0x00);
                             }
-                            streamBL.Position = 0x01EF17F9; //find upk
-                            streamBL.WriteByte(0x78); //willowgame.upk > xillowgame.upk
-                            streamBL.Close();
+                            streamBL2.Position = 0x01EF17F9; //find upk
+                            streamBL2.WriteByte(0x78); //willowgame.upk > xillowgame.upk
+                            streamBL2.Close();
                         }
                         catch (IOException)
                         {
@@ -280,10 +346,11 @@ namespace Patcher
                 // -- ENABLE CONSOLE -- RIPPED STRAIGHT FROM BUGWORM's BORDERLANDS2PATCHER!!!!!
                 try
                 {
+                    int i; //for temp[i]
                     string tmppath = @"\\my games\\" + gameDir + "\\willowgame\\Config\\WillowInput.ini";
                     string iniPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + tmppath;
                     string[] temp = System.IO.File.ReadAllLines(path);
-                    for (int i = 1; i <= temp.Length; i++)
+                    for (i = 1; i <= temp.Length; i++)
                     {
                         if (temp[i].StartsWith("ConsoleKey="))
                             break;
@@ -299,7 +366,6 @@ namespace Patcher
 
                 // -- DONE --
                 patcherWorker.ReportProgress(100); //set loadingprogress to 100%
-                Popup.Show("Done! A Shortcut was placed on your desktop. Press '~' in game to open up console.");
             }
             else
             {
