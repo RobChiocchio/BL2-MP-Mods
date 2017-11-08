@@ -5,19 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Patcher"
         mc:Ignorable="d"
-        Title="Robeth's COOP Patcher" Height="100" Width="205" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center" ResizeMode="NoResize" Cursor="Arrow">
-    <Grid RenderTransformOrigin="0.461,0.677" HorizontalAlignment="Left" Width="199">
-        <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition Height="0*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
-        </Grid.ColumnDefinitions>
-        <Button x:Name="buttonPatch" Content="Patch Borderlands" Margin="10,40,22,0" Click="button_Click" Height="20" VerticalAlignment="Top"/>
-        <ComboBox x:Name="comboBoxGame" VerticalAlignment="Top" Margin="10,10,22,0" SelectionChanged="ComboBox_SelectionChanged">
-            <ComboBoxItem Content="Borderlands 2" IsSelected="True"/>
+        Title="Robeth's COOP Patcher" Height="105" Width="210" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center" ResizeMode="NoResize" Cursor="Arrow" Icon="Icon.ico">
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo x:Name="taskbarInfo" Overlay="Icon.ico" ProgressState="None" Description="Robeth's Borderlands COOP Patcher" ProgressValue="0"/>
+    </Window.TaskbarItemInfo>
+    <Grid>
+        <ComboBox x:Name="comboBoxGame" Margin="10,10,10,0" Height="20" VerticalAlignment="Top">
+            <ComboBoxItem Content="Borderlands 2" IsSelected="True" IsEnabled="True"/>
             <ComboBoxItem Content="Borderlands: The Pre-Sequel" IsEnabled="False"/>
         </ComboBox>
+        <ProgressBar x:Name="progressBar" Height="20" VerticalAlignment="Top" Margin="10,40,10,0" Visibility="Hidden"/>
+        <Button x:Name="buttonPatch" Content="Patch Borderlands" Margin="10,40,10,0" Click="button_Click" Height="20" VerticalAlignment="Top" Visibility="Visible"/>
     </Grid>
 </Window>
