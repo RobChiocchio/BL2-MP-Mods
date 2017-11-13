@@ -137,7 +137,6 @@ namespace Patcher
             String decompress = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "decompress.exe");
 
             patcherWorker.ReportProgress(10); //set loading to 10%
-            Popup.Show(gameID.ToString()); //DEBUG
 
             if (System.IO.File.Exists(iBL.FullName)) //if borderlands exec exists
             {
