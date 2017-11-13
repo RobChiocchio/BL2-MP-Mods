@@ -156,6 +156,7 @@ namespace Patcher
                                 }
                                 break;
                             case System.Windows.Forms.DialogResult.No:
+                                Close(); //close the window
                                 break;
                             default: //for safety, I guess
                                 break;
