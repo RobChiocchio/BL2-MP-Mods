@@ -14,7 +14,7 @@
             <ComboBoxItem Content="Borderlands 2" IsSelected="True" IsEnabled="True"/>
             <ComboBoxItem Content="Borderlands: The Pre-Sequel" IsEnabled="True"/>
         </ComboBox>
-        <ProgressBar x:Name="progressBar" Height="20" VerticalAlignment="Top" Margin="10,40,10,0" Visibility="Hidden"/>
+        <ProgressBar x:Name="progressBar" Height="20" VerticalAlignment="Top" Margin="10,40,10,0" Visibility="Hidden" ToolTip="This takes a while; please be patient!"/>
         <Button x:Name="buttonPatch" Content="Patch Borderlands" Margin="10,40,10,0" Click="button_Click" Height="20" VerticalAlignment="Top" Visibility="Visible"/>
     </Grid>
 </Window>

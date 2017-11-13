@@ -142,6 +142,22 @@ namespace Patcher
                 // -- COPY INPUT TO OUTPUT --
                 try
                 {
+                    if (outputDir.Exists) //if the server folder exists
+                    {
+                        System.Windows.Forms.DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("It looks like a patched version of Borderlands already exists, would you like to replace it?", "ERROR: Output folder already exists!", System.Windows.Forms.MessageBoxButtons.YesNo);
+
+                        switch (dialogResult)
+                        {
+                            case System.Windows.Forms.DialogResult.Yes:
+                                outputDir.Delete(true); //delete the server folder recursively
+                                break;
+                            case System.Windows.Forms.DialogResult.No:
+                                break;
+                            default: //for safety, I guess
+                                break;
+                        }
+                    }
+
                     CopyFilesRecursively(inputDir, outputDir);
                     //copy dbghelp
                 }
@@ -258,7 +274,7 @@ namespace Patcher
                             Popup.Show("ERROR: Could not modify executable");
                         }
                         break;
-                    case 2: //bl2
+                    default: //bl2
                         // -- HEX EDIT UPK --
                         try
                         {
