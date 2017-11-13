@@ -19,6 +19,7 @@ namespace Patcher
         public static volatile ProgressBar progressBarStatic;
         public static BackgroundWorker patcherWorker = new BackgroundWorker(); //replace threading
 
+        public volatile Boolean debug = false; //go through the motions without copying all of the files
         public volatile string gameExec = ""; //init gameExec
         public volatile string gameDir = ""; //init gameDir
         public volatile string cooppatchFile = ""; //init cooppatchFile
@@ -44,12 +45,12 @@ namespace Patcher
 
         public void button_Click(object sender, RoutedEventArgs e) // patch borderlands2
         {
-            int gameID = (comboBoxGame.SelectedIndex + 2); //calculate id of game from index of selected dropdown item
+            gameID = (comboBoxGame.SelectedIndex + 2); //calculate id of game from index of selected dropdown item
 
             buttonPatchStatic.IsEnabled = false; //disable patch button
             buttonPatchStatic.Visibility = Visibility.Hidden; //hide the patch button
             taskbarInfoStatic.ProgressState = TaskbarItemProgressState.Normal;
-            TaskbarItemInfo.ProgressState = System.Windows.Shell.TaskbarItemProgressState.Normal;
+            taskbarInfoStatic.ProgressValue = 0; //reset progress to 0
             progressBarStatic.Visibility = Visibility.Visible; //make visible
             //progressBarStatic.IsIndeterminate = true; //MARQUEE style
 
@@ -136,6 +137,7 @@ namespace Patcher
             String decompress = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "decompress.exe");
 
             patcherWorker.ReportProgress(10); //set loading to 10%
+            Popup.Show(gameID.ToString()); //DEBUG
 
             if (System.IO.File.Exists(iBL.FullName)) //if borderlands exec exists
             {
@@ -149,7 +151,10 @@ namespace Patcher
                         switch (dialogResult)
                         {
                             case System.Windows.Forms.DialogResult.Yes:
-                                outputDir.Delete(true); //delete the server folder recursively
+                                if (!debug) //if not in debug mode
+                                {
+                                    outputDir.Delete(true); //delete the server folder recursively
+                                }
                                 break;
                             case System.Windows.Forms.DialogResult.No:
                                 break;
@@ -158,8 +163,10 @@ namespace Patcher
                         }
                     }
 
-                    CopyFilesRecursively(inputDir, outputDir);
-                    //copy dbghelp
+                    if (!debug) //if not in debug mode
+                    {
+                        CopyFilesRecursively(inputDir, outputDir);
+                    }
                 }
                 catch (IOException)
                 {
@@ -274,7 +281,7 @@ namespace Patcher
                             Popup.Show("ERROR: Could not modify executable");
                         }
                         break;
-                    default: //bl2
+                    case 2: //bl2
                         // -- HEX EDIT UPK --
                         try
                         {
@@ -363,16 +370,16 @@ namespace Patcher
                 try
                 {
                     int i; //for temp[i]
-                    string tmppath = @"\\my games\\" + gameDir + "\\willowgame\\Config\\WillowInput.ini";
-                    string iniPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + tmppath;
-                    string[] temp = System.IO.File.ReadAllLines(path);
-                    for (i = 1; i <= temp.Length; i++)
+                    string tmpPath = @"\\my games\\" + gameDir + "\\willowgame\\Config\\WillowInput.ini";
+                    string iniPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + tmpPath;
+                    string[] iniLine = System.IO.File.ReadAllLines(iniPath);
+                    for (i = 0; i < iniLine.Length; i++)
                     {
-                        if (temp[i].StartsWith("ConsoleKey="))
+                        if (iniLine[i].StartsWith("ConsoleKey="))
                             break;
                     }
-                    temp[i] = "ConsoleKey=~";
-                    System.IO.File.WriteAllLines(path, temp);
+                    iniLine[i] = "ConsoleKey=Tilde";
+                    System.IO.File.WriteAllLines(iniPath, iniLine);
                 }
                 catch (IOException)
                 {
