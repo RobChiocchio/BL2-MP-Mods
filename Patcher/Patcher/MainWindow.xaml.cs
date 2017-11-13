@@ -41,6 +41,7 @@ namespace Patcher
             patcherWorker.RunWorkerCompleted += patcherWorker_RunWorkerCompleted;
             patcherWorker.ProgressChanged += patcherWorker_ProgressChanged;
             patcherWorker.WorkerReportsProgress = true;
+            patcherWorker.WorkerSupportsCancellation = true;
         }
 
         public void button_Click(object sender, RoutedEventArgs e) // patch borderlands2
@@ -104,6 +105,8 @@ namespace Patcher
             Popup.Show("Done! A Shortcut was placed on your desktop. Press '~' in game to open up console.");
         }
 
+        //private void pat
+
         public void CopyFilesRecursively(DirectoryInfo source, DirectoryInfo target) //This function is taken straight from stackoverflow thanks to Konrad Rudolph. Rewrite
         {
             foreach (DirectoryInfo dir in source.GetDirectories())
@@ -145,7 +148,7 @@ namespace Patcher
                 {
                     if (outputDir.Exists) //if the server folder exists
                     {
-                        System.Windows.Forms.DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("It looks like a patched version of Borderlands already exists, would you like to replace it?", "ERROR: Output folder already exists!", System.Windows.Forms.MessageBoxButtons.YesNo);
+                        System.Windows.Forms.DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("It looks like a patched version of Borderlands already exists, would you like to replace it? Clicking 'No' will skip the copy and attempt to patch the existing files, and 'Cancel' will stop the patcher altogether.", "ERROR: Output folder already exists!", System.Windows.Forms.MessageBoxButtons.YesNoCancel);
 
                         switch (dialogResult)
                         {
@@ -153,19 +156,18 @@ namespace Patcher
                                 if (!debug) //if not in debug mode
                                 {
                                     outputDir.Delete(true); //delete the server folder recursively
+                                    CopyFilesRecursively(inputDir, outputDir); //backup borderlands to server subdir
                                 }
                                 break;
                             case System.Windows.Forms.DialogResult.No:
-                                Close(); //close the window
+                                //skip the copy
                                 break;
-                            default: //for safety, I guess
+                            case System.Windows.Forms.DialogResult.Cancel:
+                                patcherWorker.CancelAsync(); //cancel
+                                patcherWorker.Dispose(); 
+                                Close(); //terminate thread
                                 break;
                         }
-                    }
-
-                    if (!debug) //if not in debug mode
-                    {
-                        CopyFilesRecursively(inputDir, outputDir);
                     }
                 }
                 catch (IOException)
