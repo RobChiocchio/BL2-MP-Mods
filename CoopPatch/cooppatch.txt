@@ -1,7 +1,7 @@
 ## MORE PLAYERS ###
 
 set WillowOnlineGameSettings NumPublicConnections 64
-set GameInfo MaxPlayers 512
+set GameInfo MaxPlayers 0
 set GameInfo MaxPlayersAllowed 512
 
 ### NETWORK OPTIMIZATION ###
