@@ -366,8 +366,8 @@ namespace Patcher
                             var streamEngine2 = new FileStream(oBL.FullName, FileMode.Open, FileAccess.ReadWrite);
                             // -- DON'T UPDATE PLAYERCOUNT --
 
-                            streamEngine2.Position = 0x003F69A4;
-                            streamEngine2.WriteByte(0x1E);
+                            //streamEngine2.Position = 0x003F69A4;
+                            //streamEngine2.WriteByte(0x1E);
                             streamEngine2.Close();
                         }
                         catch (IOException)
