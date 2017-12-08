@@ -110,7 +110,7 @@ namespace Patcher
         public void CopyFilesRecursively(DirectoryInfo source, DirectoryInfo target) //This function is taken straight from stackoverflow thanks to Konrad Rudolph. Rewrite
         {
             foreach (DirectoryInfo dir in source.GetDirectories())
-                if (source.FullName != dir.FullName && dir.Name != "server") //prevent infinite copy loop
+                if (source.FullName != dir.FullName && source.Name != "server") //prevent infinite copy loop
                 {
                     CopyFilesRecursively(dir, target.CreateSubdirectory(dir.Name));
                 }
@@ -123,7 +123,7 @@ namespace Patcher
                     }
                     catch (IOException)
                     {
-                        //log
+                        Console.WriteLine("ERROR: Could not copy file " + file.Name);
                     }
                 }
         }
@@ -140,6 +140,7 @@ namespace Patcher
             DirectoryInfo oEngineUPK = new DirectoryInfo(outputDir + @"\\WillowGame\\CookedPCConsole\\Engine.upk"); // path to Engine.upk
 
             String decompress = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "decompress.exe");
+            Boolean skipCopy = false;
 
             patcherWorker.ReportProgress(10); //set loading to 10%
 
@@ -155,14 +156,14 @@ namespace Patcher
                         switch (dialogResult)
                         {
                             case System.Windows.Forms.DialogResult.Yes:
-                                if (!debug) //if not in debug mode
+                                if (!debug && !skipCopy) //if not in debug mode
                                 {
                                     outputDir.Delete(true); //delete the server folder recursively
-                                    CopyFilesRecursively(inputDir, outputDir); //backup borderlands to server subdir
                                 }
+                                skipCopy = false ;//continue
                                 break;
                             case System.Windows.Forms.DialogResult.No:
-                                //skip the copy
+                                skipCopy = true;//skip the copy
                                 break;
                             case System.Windows.Forms.DialogResult.Cancel:
                                 patcherWorker.CancelAsync(); //cancel
@@ -170,6 +171,11 @@ namespace Patcher
                                 Close(); //terminate thread
                                 break;
                         }
+                    }
+
+                    if (!debug && !skipCopy) //if not in debug mode
+                    {
+                        CopyFilesRecursively(inputDir, outputDir); //backup borderlands to server subdir
                     }
                 }
                 catch (IOException)
@@ -185,7 +191,7 @@ namespace Patcher
                     {
                         myWebClient.DownloadFile("https://raw.githubusercontent.com/RobethX/BL2-MP-Mods/master/CoopPatch/" + cooppatchFile, outputDir.FullName + @"\Binaries\" + cooppatchFile);
                     }
-                    catch (IOException)
+                    catch (WebException)
                     {
                         //log
                     }
