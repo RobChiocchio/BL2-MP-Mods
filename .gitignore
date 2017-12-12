@@ -23,6 +23,7 @@ Patcher/Icon.ico
 bld/
 [Bb]in/
 [Oo]bj/
+[pP]ublish/
 
 # Visual Studio 2015 cache/options directory
 .vs/
