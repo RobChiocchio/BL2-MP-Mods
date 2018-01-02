@@ -63,7 +63,7 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -142,7 +142,10 @@
     <None Include="app.manifest">
       <SubType>Designer</SubType>
     </None>
+<<<<<<< HEAD
     <None Include="Patcher.snk" />
+=======
+>>>>>>> a9689bd603c7416b279eaa407c679620f9746626
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

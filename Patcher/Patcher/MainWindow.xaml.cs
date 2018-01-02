@@ -8,6 +8,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.ComponentModel;
+<<<<<<< HEAD
 using System.Diagnostics;
 using System.Reflection;
 using System.Security.Principal;
@@ -28,6 +29,7 @@ namespace Patcher
         public volatile string cooppatchFile = ""; //init cooppatchFile
         public volatile string path = @"C:\\"; //init default path
         public volatile int gameID; //init game id
+
 
         public MainWindow()
         {

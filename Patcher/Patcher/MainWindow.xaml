@@ -1,11 +1,11 @@
-﻿<Window x:Class="Patcher.MainWindow"
+﻿<Window x:Name="window" x:Class="Patcher.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Patcher"
         mc:Ignorable="d"
-        Title="Robeth's COOP Patcher" Height="105" Width="215" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center" ResizeMode="NoResize" Cursor="Arrow" Icon="Icon.ico">
+        Title="Robeth's COOP Patcher" Height="165" Width="215" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center" ResizeMode="NoResize" Cursor="Arrow" Icon="Icon.ico">
     <Window.TaskbarItemInfo>
         <TaskbarItemInfo x:Name="taskbarInfo" Overlay="Icon.ico" ProgressState="None" Description="Robeth's Borderlands COOP Patcher" ProgressValue="0"/>
     </Window.TaskbarItemInfo>
@@ -14,7 +14,25 @@
             <ComboBoxItem Content="Borderlands 2" IsSelected="True" IsEnabled="True"/>
             <ComboBoxItem Content="Borderlands: The Pre-Sequel" IsEnabled="True"/>
         </ComboBox>
-        <ProgressBar x:Name="progressBar" Height="20" VerticalAlignment="Top" Margin="10,40,10,0" Visibility="Hidden" ToolTip="This takes a while; please be patient!"/>
-        <Button x:Name="buttonPatch" Content="Patch Borderlands" Margin="10,40,10,0" Click="button_Click" Height="20" VerticalAlignment="Top" Visibility="Visible"/>
+        <ProgressBar x:Name="progressBar" Height="20" VerticalAlignment="Top" Margin="10,10,10,0" Visibility="Hidden" ToolTip="This takes a while; please be patient!"/>
+        <Button x:Name="buttonPatch" Content="Patch Borderlands" Margin="10,95,10,0" Click="button_Click" Height="20" VerticalAlignment="Top" Visibility="Visible" RenderTransformOrigin="0.502,0"/>
+        <ComboBox x:Name="comboBoxConsoleKey" Margin="10,40,88,0" VerticalAlignment="Top">
+            <ComboBoxItem Content="Tilde" IsSelected="True" IsEnabled="True"/>
+            <ComboBoxItem Content="F1" IsEnabled="True"/>
+            <ComboBoxItem Content="F2" IsEnabled="True"/>
+            <ComboBoxItem Content="F3" IsEnabled="True"/>
+            <ComboBoxItem Content="F4" IsEnabled="True"/>
+            <ComboBoxItem Content="F5" IsEnabled="True"/>
+            <ComboBoxItem Content="F6" IsEnabled="True"/>
+            <ComboBoxItem Content="F7" IsEnabled="True"/>
+            <ComboBoxItem Content="F8" IsEnabled="True"/>
+            <ComboBoxItem Content="F9" IsEnabled="True"/>
+            <ComboBoxItem Content="F10" IsEnabled="True"/>
+            <ComboBoxItem Content="F11" IsEnabled="True"/>
+            <ComboBoxItem Content="F12" IsEnabled="True"/>
+        </ComboBox>
+        <CheckBox x:Name="checkBoxCommunityPatch" Content="Enable Community Patch" Margin="10,70,10,0" VerticalAlignment="Top" Height="15"/>
+        <Label x:Name="labelConsoleKey" Content="Console Key" Margin="0,37,10,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Right" Width="78" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+        <Label x:Name="labelProgressText" Visibility="Hidden" Content="Looking for Borderlands" Margin="10,35,10,0" Height="30" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
     </Grid>
 </Window>
