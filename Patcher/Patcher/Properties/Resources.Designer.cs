@@ -59,5 +59,15 @@ namespace Patcher.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] decompress {
+            get {
+                object obj = ResourceManager.GetObject("decompress", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
     }
 }
