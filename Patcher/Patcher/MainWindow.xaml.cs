@@ -8,19 +8,16 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.ComponentModel;
-<<<<<<< HEAD
 using System.Diagnostics;
 using System.Reflection;
 using System.Security.Principal;
+using System.Collections;
 using Popup = System.Windows.MessageBox;
 
 namespace Patcher
 {
     public partial class MainWindow : Window
     {
-        public static volatile Button buttonPatchStatic;
-        public static volatile TaskbarItemInfo taskbarInfoStatic;
-        public static volatile ProgressBar progressBarStatic;
         public static BackgroundWorker patcherWorker = new BackgroundWorker(); //replace threading
 
         public volatile Boolean debug = false; //go through the motions without copying all of the files
@@ -28,7 +25,9 @@ namespace Patcher
         public volatile string gameDir = ""; //init gameDir
         public volatile string cooppatchFile = ""; //init cooppatchFile
         public volatile string path = @"C:\\"; //init default path
+        public volatile string consoleKey; //init -- set in button_CLick
         public volatile int gameID; //init game id
+        public volatile ArrayList mods = new ArrayList();
 
 
         public MainWindow()
@@ -38,10 +37,6 @@ namespace Patcher
 
             progressBar.Maximum = 100;
             progressBar.Value = 0;
-
-            buttonPatchStatic = buttonPatch;
-            taskbarInfoStatic = taskbarInfo;
-            progressBarStatic = progressBar;
 
             patcherWorker.DoWork += new DoWorkEventHandler(patcherWorker_DoWork);
             patcherWorker.RunWorkerCompleted += patcherWorker_RunWorkerCompleted;
@@ -85,12 +80,25 @@ namespace Patcher
         {
             gameID = (comboBoxGame.SelectedIndex + 2); //calculate id of game from index of selected dropdown item
 
-            buttonPatchStatic.IsEnabled = false; //disable patch button
-            buttonPatchStatic.Visibility = Visibility.Hidden; //hide the patch button
-            taskbarInfoStatic.ProgressState = TaskbarItemProgressState.Normal;
-            taskbarInfoStatic.ProgressValue = 0; //reset progress to 0
-            progressBarStatic.Visibility = Visibility.Visible; //make visible
-            //progressBarStatic.IsIndeterminate = true; //MARQUEE style
+            buttonPatch.IsEnabled = false; //disable patch button
+            buttonPatch.Visibility = Visibility.Hidden; //hide the patch button
+            comboBoxGame.Visibility = Visibility.Hidden;
+            comboBoxConsoleKey.Visibility = Visibility.Hidden;
+            labelConsoleKey.Visibility = Visibility.Hidden;
+            checkBoxCommunityPatch.Visibility = Visibility.Hidden;
+            Height = 115; //shorten window
+            taskbarInfo.ProgressState = TaskbarItemProgressState.Normal;
+            taskbarInfo.ProgressValue = 0; //reset progress to 0
+            progressBar.Visibility = Visibility.Visible; //make visible
+            labelProgressText.Visibility = Visibility.Visible; //make visible
+
+            consoleKey = comboBoxConsoleKey.Text; //console key
+            mods.Add(cooppatchFile);
+            if (checkBoxCommunityPatch.IsChecked == true && gameID == 2) //Community patch - only with Borderlands 2
+            {
+                mods.Add("Patch.txt");
+            }
+
 
             switch (gameID) //depending on game, set variables accordingly
             {
@@ -128,17 +136,56 @@ namespace Patcher
 
         private void patcherWorker_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
-            progressBarStatic.Value = e.ProgressPercentage; //loading bar
-            taskbarInfoStatic.ProgressValue = e.ProgressPercentage; //taskbar
+            progressBar.Value = e.ProgressPercentage; //loading bar
+            taskbarInfo.ProgressValue = e.ProgressPercentage; //taskbar
+
+            switch(e.ProgressPercentage)
+            {
+                case 10:
+                    labelProgressText.Content = "Copying game files";
+                    break;
+                case 40:
+                    labelProgressText.Content = "Downloading patches";
+                    break;
+                case 50:
+                    labelProgressText.Content = "Hacking your Minecraft account";
+                    break;
+                case 60:
+                    labelProgressText.Content = "Decompressing some stuff";
+                    break;
+                case 70:
+                    labelProgressText.Content = "Making a sandwich";
+                    break;
+                case 75:
+                    labelProgressText.Content = "Installing viruses";
+                    break;
+                case 80:
+                    labelProgressText.Content = "Recombobulation the flux capacitor";
+                    break;
+                case 90:
+                    labelProgressText.Content = "Climaxing";
+                    break;
+                case 100:
+                    labelProgressText.Content = "All done";
+                    break;
+                default:
+                    break;
+            }
         }
 
         private void patcherWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
-            buttonPatchStatic.IsEnabled = true; //disable patch button
-            buttonPatchStatic.Visibility = Visibility.Visible; //hide the patch button
+            Height = 165; //resize back to original size
+            buttonPatch.IsEnabled = true; //disable patch button
+            buttonPatch.Visibility = Visibility.Visible; //hide the patch button
+            comboBoxGame.Visibility = Visibility.Visible;
+            comboBoxConsoleKey.Visibility = Visibility.Visible;
+            labelConsoleKey.Visibility = Visibility.Visible;
+            checkBoxCommunityPatch.Visibility = Visibility.Visible;
             //progressBarStatic.IsIndeterminate = false; //disable MARQUEE style
-            progressBarStatic.Visibility = Visibility.Hidden; //make the loading bar invisible
-            taskbarInfoStatic.ProgressState = TaskbarItemProgressState.None; //hide the loading bar in the taskbar
+            progressBar.Visibility = Visibility.Hidden; //make the loading bar invisible
+            labelProgressText.Visibility = Visibility.Hidden; //make invisible
+            taskbarInfo.ProgressState = TaskbarItemProgressState.None; //hide the loading bar in the taskbar
             Popup.Show("Done! A Shortcut was placed on your desktop. Press '~' in game to open up console.");
         }
 
@@ -231,6 +278,19 @@ namespace Patcher
                     catch (WebException)
                     {
                         //log
+                    }
+
+                    //Community patch
+                    if (mods.Contains("Patch.txt"))
+                    {
+                        try
+                        {
+                            myWebClient.DownloadFile("https://www.dropbox.com/s/kxvf8w3ul4zuh93/Patch.txt", outputDir.FullName + @"\Binaries\Patch.txt");
+                        }
+                        catch (WebException)
+                        {
+                            //log
+                        }
                     }
                 }
 
@@ -440,10 +500,16 @@ namespace Patcher
                 // -- CREATE SHORTCUT --
                 try
                 {
+                    String execMods = "";
+                    foreach(String mod in mods)
+                    {
+                        execMods = execMods + " -exec=" + mod;
+                    }
+
                     WshShell shell = new WshShell();
                     IWshRuntimeLibrary.IWshShortcut shortcut = shell.CreateShortcut(
                     Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\\" + gameDir + " COOP.lnk") as IWshShortcut;
-                    shortcut.Arguments = "-log -debug -codermode -nosplash -exec=" + cooppatchFile;
+                    shortcut.Arguments = "-log -debug -codermode -nosplash" + execMods;
                     shortcut.TargetPath = oBL.FullName;
                     shortcut.WindowStyle = 1;
                     shortcut.Description = "Robeth's Borderlands COOP patch";
@@ -468,7 +534,7 @@ namespace Patcher
                         if (iniLine[i].StartsWith("ConsoleKey="))
                             break;
                     }
-                    iniLine[i] = "ConsoleKey=Tilde";
+                    iniLine[i] = "ConsoleKey=" + consoleKey;
                     System.IO.File.WriteAllLines(iniPath, iniLine);
                 }
                 catch (IOException)
