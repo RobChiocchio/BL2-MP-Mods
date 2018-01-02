@@ -28,7 +28,8 @@ namespace Patcher
         public volatile string consoleKey; //init -- set in button_CLick
         public volatile int gameID; //init game id
         public volatile ArrayList mods = new ArrayList();
-
+        double heightDefault = 200;
+        double heightLoading = 115;
 
         public MainWindow()
         {
@@ -37,6 +38,8 @@ namespace Patcher
 
             progressBar.Maximum = 100;
             progressBar.Value = 0;
+
+            Height = heightDefault; //override just in case
 
             patcherWorker.DoWork += new DoWorkEventHandler(patcherWorker_DoWork);
             patcherWorker.RunWorkerCompleted += patcherWorker_RunWorkerCompleted;
@@ -76,21 +79,47 @@ namespace Patcher
             return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
 
-        public void button_Click(object sender, RoutedEventArgs e) // patch borderlands2
+        public void sceneMenu() //show all main menu elements
         {
-            gameID = (comboBoxGame.SelectedIndex + 2); //calculate id of game from index of selected dropdown item
+            buttonPatch.IsEnabled = true; //disable patch button
+            menuClose.IsEnabled = true;
 
+            buttonPatch.Visibility = Visibility.Visible; //hide the patch button
+            comboBoxGame.Visibility = Visibility.Visible;
+            comboBoxConsoleKey.Visibility = Visibility.Visible;
+            labelConsoleKey.Visibility = Visibility.Visible;
+            checkBoxCommunityPatch.Visibility = Visibility.Visible;
+            //progressBarStatic.IsIndeterminate = false; //disable MARQUEE style
+            progressBar.Visibility = Visibility.Hidden; //make the loading bar invisible
+            labelProgressText.Visibility = Visibility.Hidden; //make invisible
+            taskbarInfo.ProgressState = TaskbarItemProgressState.None; //hide the loading bar in the taskbar
+            Height = heightDefault; //resize back to original size
+        }
+
+        public void sceneLoading() //show loading screen elements
+        {
             buttonPatch.IsEnabled = false; //disable patch button
+            menuClose.IsEnabled = false; //prevent patcher from being closed
+            menuDebug.IsEnabled = false; //prevent toggling debug mode after starting patching
+
             buttonPatch.Visibility = Visibility.Hidden; //hide the patch button
             comboBoxGame.Visibility = Visibility.Hidden;
             comboBoxConsoleKey.Visibility = Visibility.Hidden;
             labelConsoleKey.Visibility = Visibility.Hidden;
             checkBoxCommunityPatch.Visibility = Visibility.Hidden;
-            Height = 115; //shorten window
             taskbarInfo.ProgressState = TaskbarItemProgressState.Normal;
             taskbarInfo.ProgressValue = 0; //reset progress to 0
             progressBar.Visibility = Visibility.Visible; //make visible
             labelProgressText.Visibility = Visibility.Visible; //make visible
+            Height = heightLoading; //shorten window
+        }
+
+        public void button_Click(object sender, RoutedEventArgs e) // patch borderlands2
+        {
+            gameID = (comboBoxGame.SelectedIndex + 2); //calculate id of game from index of selected dropdown item
+            debug = menuDebug.IsChecked; //enable debug mode if the menu option is checked
+
+            sceneLoading(); //change window to loading scene
 
             consoleKey = comboBoxConsoleKey.Text; //console key
             mods.Add(cooppatchFile);
@@ -134,6 +163,38 @@ namespace Patcher
             patcherWorker.RunWorkerAsync(); //run the patch function
         }
 
+        private void menuClose_Click(object sender, RoutedEventArgs e)
+        {
+            patcherWorker.CancelAsync(); //stop patching process
+            try
+            {
+                Close(); //close program
+            } catch (Exception)
+            {
+                //log
+            }
+        }
+
+        private void menuAbout_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void menuReportBug_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void menuHelp_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void menuLFG_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         private void patcherWorker_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
             progressBar.Value = e.ProgressPercentage; //loading bar
@@ -175,17 +236,7 @@ namespace Patcher
 
         private void patcherWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
-            Height = 165; //resize back to original size
-            buttonPatch.IsEnabled = true; //disable patch button
-            buttonPatch.Visibility = Visibility.Visible; //hide the patch button
-            comboBoxGame.Visibility = Visibility.Visible;
-            comboBoxConsoleKey.Visibility = Visibility.Visible;
-            labelConsoleKey.Visibility = Visibility.Visible;
-            checkBoxCommunityPatch.Visibility = Visibility.Visible;
-            //progressBarStatic.IsIndeterminate = false; //disable MARQUEE style
-            progressBar.Visibility = Visibility.Hidden; //make the loading bar invisible
-            labelProgressText.Visibility = Visibility.Hidden; //make invisible
-            taskbarInfo.ProgressState = TaskbarItemProgressState.None; //hide the loading bar in the taskbar
+            sceneMenu(); //restore menu window
             Popup.Show("Done! A Shortcut was placed on your desktop. Press '~' in game to open up console.");
         }
 

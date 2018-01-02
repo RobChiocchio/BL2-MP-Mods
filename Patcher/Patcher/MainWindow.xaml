@@ -5,18 +5,36 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Patcher"
         mc:Ignorable="d"
-        Title="Robeth's COOP Patcher" Height="165" Width="215" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center" ResizeMode="NoResize" Cursor="Arrow" Icon="Icon.ico">
+        Title="Robeth's COOP Patcher" Height="200" Width="215" HorizontalContentAlignment="Center" HorizontalAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center" ResizeMode="NoResize" Cursor="Arrow" Icon="Icon.ico" Visibility="Visible" Foreground="Black" Background="White">
+    <Window.Resources>
+        <Style TargetType="{x:Type Rectangle}" />
+    </Window.Resources>
     <Window.TaskbarItemInfo>
         <TaskbarItemInfo x:Name="taskbarInfo" Overlay="Icon.ico" ProgressState="None" Description="Robeth's Borderlands COOP Patcher" ProgressValue="0"/>
     </Window.TaskbarItemInfo>
     <Grid>
-        <ComboBox x:Name="comboBoxGame" Margin="10,10,10,0" Height="20" VerticalAlignment="Top">
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="_Patcher">
+                    <MenuItem x:Name="menuClose" Header="_Close" Click="menuClose_Click"/>
+                </MenuItem>
+                <MenuItem Header="_Help">
+                    <MenuItem x:Name="menuAbout" Header="_About" Click="menuAbout_Click"/>
+                    <MenuItem x:Name="menuReportBug" Header="_Report a bug" Click="menuReportBug_Click" />
+                    <MenuItem x:Name="menuHelp" Header="_Need more help?" Click="menuHelp_Click"/>
+                    <MenuItem x:Name="menuLFG" Header="_Find players" Click="menuLFG_Click"/>
+                    <Separator/>
+                    <MenuItem x:Name="menuDebug" Header="_Debug Mode" IsCheckable="True"/>
+                </MenuItem>
+            </Menu>
+        </DockPanel>
+        <ComboBox x:Name="comboBoxGame" Margin="10,25,10,0" Height="20" VerticalAlignment="Top">
             <ComboBoxItem Content="Borderlands 2" IsSelected="True" IsEnabled="True"/>
             <ComboBoxItem Content="Borderlands: The Pre-Sequel" IsEnabled="True"/>
         </ComboBox>
-        <ProgressBar x:Name="progressBar" Height="20" VerticalAlignment="Top" Margin="10,10,10,0" Visibility="Hidden" ToolTip="This takes a while; please be patient!"/>
-        <Button x:Name="buttonPatch" Content="Patch Borderlands" Margin="10,95,10,0" Click="button_Click" Height="20" VerticalAlignment="Top" Visibility="Visible" RenderTransformOrigin="0.502,0"/>
-        <ComboBox x:Name="comboBoxConsoleKey" Margin="10,40,88,0" VerticalAlignment="Top">
+        <ProgressBar x:Name="progressBar" Height="20" VerticalAlignment="Top" Margin="10,25,10,0" Visibility="Hidden" ToolTip="This takes a while; please be patient!"/>
+        <Button x:Name="buttonPatch" Content="Patch Borderlands" Margin="10,110,10,0" Click="button_Click" Height="20" VerticalAlignment="Top" Visibility="Visible" RenderTransformOrigin="0.502,0"/>
+        <ComboBox x:Name="comboBoxConsoleKey" Margin="10,55,88,0" VerticalAlignment="Top">
             <ComboBoxItem Content="Tilde" IsSelected="True" IsEnabled="True"/>
             <ComboBoxItem Content="F1" IsEnabled="True"/>
             <ComboBoxItem Content="F2" IsEnabled="True"/>
@@ -31,8 +49,9 @@
             <ComboBoxItem Content="F11" IsEnabled="True"/>
             <ComboBoxItem Content="F12" IsEnabled="True"/>
         </ComboBox>
-        <CheckBox x:Name="checkBoxCommunityPatch" Content="Enable Community Patch" Margin="10,70,10,0" VerticalAlignment="Top" Height="15"/>
-        <Label x:Name="labelConsoleKey" Content="Console Key" Margin="0,37,10,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Right" Width="78" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
-        <Label x:Name="labelProgressText" Visibility="Hidden" Content="Looking for Borderlands" Margin="10,35,10,0" Height="30" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <CheckBox x:Name="checkBoxCommunityPatch" Content="Enable Community Patch" Margin="10,85,10,0" VerticalAlignment="Top" Height="15"/>
+        <Label x:Name="labelConsoleKey" Content="Console Key" Margin="0,52,10,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Right" Width="78" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+        <Label x:Name="labelSupportLink" Content="Need help?" Margin="0,135,10,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Right" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+        <Label x:Name="labelProgressText" Visibility="Hidden" Content="Looking for Borderlands" Margin="10,50,10,0" Height="30" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
     </Grid>
 </Window>
