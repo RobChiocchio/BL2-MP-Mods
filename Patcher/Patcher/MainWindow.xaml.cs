@@ -8,6 +8,9 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Reflection;
+using System.Security.Principal;
 using Popup = System.Windows.MessageBox;
 
 namespace Patcher
@@ -29,6 +32,7 @@ namespace Patcher
         public MainWindow()
         {
             InitializeComponent();
+            AdminRelauncher(); //if not in admin mode, relaunch
 
             progressBar.Maximum = 100;
             progressBar.Value = 0;
@@ -42,6 +46,37 @@ namespace Patcher
             patcherWorker.ProgressChanged += patcherWorker_ProgressChanged;
             patcherWorker.WorkerReportsProgress = true;
             patcherWorker.WorkerSupportsCancellation = true;
+        }
+
+        private void AdminRelauncher()
+        {
+            if (!IsRunAsAdmin())
+            {
+                ProcessStartInfo proc = new ProcessStartInfo();
+                proc.UseShellExecute = true;
+                proc.WorkingDirectory = Environment.CurrentDirectory;
+                proc.FileName = Assembly.GetEntryAssembly().CodeBase;
+
+                proc.Verb = "runas";
+
+                try
+                {
+                    Process.Start(proc);
+                    Application.Current.Shutdown();
+                }
+                catch (Exception ex)
+                {
+                    Popup.Show("This program must be run as an administrator! \n\n" + ex.ToString());
+                }
+            }
+        }
+
+        private bool IsRunAsAdmin()
+        {
+            WindowsIdentity id = WindowsIdentity.GetCurrent();
+            WindowsPrincipal principal = new WindowsPrincipal(id);
+
+            return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
 
         public void button_Click(object sender, RoutedEventArgs e) // patch borderlands2
