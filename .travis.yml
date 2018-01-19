@@ -1,3 +1,5 @@
+dist: trusty
+os: linux
 language: csharp
 solution: Patcher/Patcher.sln
 script:
