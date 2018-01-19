@@ -1,6 +1,7 @@
 dist: trusty
 os: linux
 language: csharp
-solution: Patcher/Patcher.sln
+script: cd Patcher
+solution: Patcher.sln
 script:
-  - xbuild /p:Configuration=Release Patcher/Patcher.sln
+  - xbuild /p:Configuration=Release Patcher.sln
