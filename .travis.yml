@@ -1,0 +1,4 @@
+language: csharp
+solution: Patcher/Patcher.sln
+script:
+  - xbuild /p:Configuration=Release Patcher/Patcher.sln
