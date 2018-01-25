@@ -20,15 +20,15 @@ namespace Patcher
     {
         public static BackgroundWorker patcherWorker = new BackgroundWorker(); //replace threading
 
-        public volatile Boolean debug = false; //go through the motions without copying all of the files
-        public volatile string gameExec = ""; //init gameExec
-        public volatile string gameDir = ""; //init gameDir
-        public volatile string cooppatchFile = ""; //init cooppatchFile
+        private volatile Boolean debug = false; //go through the motions without copying all of the files
+        private volatile string gameExec = ""; //init gameExec
+        private volatile string gameDir = ""; //init gameDir
+        private volatile string cooppatchFile = ""; //init cooppatchFile
         public volatile string path = @"C:\\"; //init default path
-        public volatile string consoleKey; //init -- set in button_Click
-        public volatile string fileCopying = "files..."; //current file copying
+        private volatile string consoleKey; //init -- set in button_Click
+        private volatile string fileCopying = "files..."; //current file copying
         public volatile int gameID; //init game id
-        public volatile ArrayList mods = new ArrayList();
+        private volatile ArrayList mods = new ArrayList();
         double heightDefault = 180;
         double heightLoading = 115;
 
@@ -231,8 +231,8 @@ namespace Patcher
                     labelProgressText.Content = "All done";
                     Popup.Show("Done! A Shortcut was placed on your desktop. Press '~' in game to open up console.");
                     break;
-                default:
-                    break;
+                //default:
+                    //break;
             }
         }
 
@@ -246,11 +246,14 @@ namespace Patcher
         public void CopyFilesRecursively(DirectoryInfo source, DirectoryInfo target) //This function is taken straight from stackoverflow thanks to Konrad Rudolph. Rewrite
         {
             foreach (DirectoryInfo dir in source.GetDirectories())
+            {
                 if (source.FullName != dir.FullName && source.Name != "server") //prevent infinite copy loop
                 {
                     CopyFilesRecursively(dir, target.CreateSubdirectory(dir.Name));
                 }
+            }
             foreach (FileInfo file in source.GetFiles())
+            {
                 if (file.Name != "dbghelp.dll") //dbhhelp was causing issued for god knows why
                 {
                     try
@@ -264,6 +267,7 @@ namespace Patcher
                         Console.WriteLine("ERROR: Could not copy file " + file.Name);
                     }
                 }
+            }
         }
 
         private void patcherWorker_DoWork(object sender, DoWorkEventArgs e) //the main function
