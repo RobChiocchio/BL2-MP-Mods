@@ -20,17 +20,17 @@ namespace Patcher
     {
         public static BackgroundWorker patcherWorker = new BackgroundWorker(); //replace threading
 
-        private volatile Boolean debug = false; //go through the motions without copying all of the files
+        private volatile Boolean debug; //go through the motions without copying all of the files
         private volatile string gameExec = ""; //init gameExec
         private volatile string gameDir = ""; //init gameDir
         private volatile string cooppatchFile = ""; //init cooppatchFile
-        public volatile string path = @"C:\\"; //init default path
+        private volatile string path = @"C:\\"; //init default path
         private volatile string consoleKey; //init -- set in button_Click
         private volatile string fileCopying = "files..."; //current file copying
-        public volatile int gameID; //init game id
+        private volatile int gameID; //init game id
         private volatile ArrayList mods = new ArrayList();
-        double heightDefault = 180;
-        double heightLoading = 115;
+        readonly double heightDefault = 180;
+        readonly double heightLoading = 115;
 
         public MainWindow()
         {
@@ -231,8 +231,9 @@ namespace Patcher
                     labelProgressText.Content = "All done";
                     Popup.Show("Done! A Shortcut was placed on your desktop. Press '~' in game to open up console.");
                     break;
-                //default:
-                    //break;
+                default:
+                    //default
+                    break;
             }
         }
 
@@ -307,7 +308,8 @@ namespace Patcher
                             case System.Windows.Forms.DialogResult.No:
                                 skipCopy = true;//skip the copy
                                 break;
-                            case System.Windows.Forms.DialogResult.Cancel:
+                            //case System.Windows.Forms.DialogResult.Cancel:
+                            default:
                                 patcherWorker.CancelAsync(); //cancel
                                 patcherWorker.Dispose(); 
                                 //Close(); //terminate thread
@@ -607,7 +609,9 @@ namespace Patcher
                     for (i = 0; i < iniLine.Length; i++)
                     {
                         if (iniLine[i].StartsWith("ConsoleKey="))
+                        {
                             break;
+                        }
                     }
                     iniLine[i] = "ConsoleKey=" + consoleKey;
                     System.IO.File.WriteAllLines(iniPath, iniLine);
