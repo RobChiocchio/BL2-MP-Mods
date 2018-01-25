@@ -19,5 +19,5 @@ set Engine.GameInfo EffectiveNumPlayers 4
 
 ### INFO MESSAGE ###
 
-say Running Robeth's Coop Patch
+say Running Robeth's Unlimited COOP Patch
 say Please re-run this script if you have any issues
