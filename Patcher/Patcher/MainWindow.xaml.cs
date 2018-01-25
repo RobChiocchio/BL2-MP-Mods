@@ -8,6 +8,9 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Reflection;
+using System.Security.Principal;
 using System.Collections;
 using Popup = System.Windows.MessageBox;
 
@@ -26,14 +29,18 @@ namespace Patcher
         public volatile string fileCopying = "files..."; //current file copying
         public volatile int gameID; //init game id
         public volatile ArrayList mods = new ArrayList();
-
+        double heightDefault = 180;
+        double heightLoading = 115;
 
         public MainWindow()
         {
             InitializeComponent();
+            AdminRelauncher(); //if not in admin mode, relaunch
 
             progressBar.Maximum = 100;
             progressBar.Value = 0;
+
+            Height = heightDefault; //override just in case
 
             patcherWorker.DoWork += new DoWorkEventHandler(patcherWorker_DoWork);
             patcherWorker.RunWorkerCompleted += patcherWorker_RunWorkerCompleted;
@@ -42,21 +49,78 @@ namespace Patcher
             patcherWorker.WorkerSupportsCancellation = true;
         }
 
-        public void button_Click(object sender, RoutedEventArgs e) // patch borderlands2
+        private void AdminRelauncher()
         {
-            gameID = (comboBoxGame.SelectedIndex + 2); //calculate id of game from index of selected dropdown item
+            if (!IsRunAsAdmin())
+            {
+                ProcessStartInfo proc = new ProcessStartInfo();
+                proc.UseShellExecute = true;
+                proc.WorkingDirectory = Environment.CurrentDirectory;
+                proc.FileName = Assembly.GetEntryAssembly().CodeBase;
 
+                proc.Verb = "runas";
+
+                try
+                {
+                    Process.Start(proc);
+                    Application.Current.Shutdown();
+                }
+                catch (Exception ex)
+                {
+                    Popup.Show("This program must be run as an administrator! \n\n" + ex.ToString());
+                }
+            }
+        }
+
+        private bool IsRunAsAdmin()
+        {
+            WindowsIdentity id = WindowsIdentity.GetCurrent();
+            WindowsPrincipal principal = new WindowsPrincipal(id);
+
+            return principal.IsInRole(WindowsBuiltInRole.Administrator);
+        }
+
+        public void sceneMenu() //show all main menu elements
+        {
+            buttonPatch.IsEnabled = true; //disable patch button
+            menuClose.IsEnabled = true;
+
+            buttonPatch.Visibility = Visibility.Visible; //hide the patch button
+            comboBoxGame.Visibility = Visibility.Visible;
+            comboBoxConsoleKey.Visibility = Visibility.Visible;
+            labelConsoleKey.Visibility = Visibility.Visible;
+            checkBoxCommunityPatch.Visibility = Visibility.Visible;
+            //progressBarStatic.IsIndeterminate = false; //disable MARQUEE style
+            progressBar.Visibility = Visibility.Hidden; //make the loading bar invisible
+            labelProgressText.Visibility = Visibility.Hidden; //make invisible
+            taskbarInfo.ProgressState = TaskbarItemProgressState.None; //hide the loading bar in the taskbar
+            Height = heightDefault; //resize back to original size
+        }
+
+        public void sceneLoading() //show loading screen elements
+        {
             buttonPatch.IsEnabled = false; //disable patch button
+            menuClose.IsEnabled = false; //prevent patcher from being closed
+            menuDebug.IsEnabled = false; //prevent toggling debug mode after starting patching
+
             buttonPatch.Visibility = Visibility.Hidden; //hide the patch button
             comboBoxGame.Visibility = Visibility.Hidden;
             comboBoxConsoleKey.Visibility = Visibility.Hidden;
             labelConsoleKey.Visibility = Visibility.Hidden;
             checkBoxCommunityPatch.Visibility = Visibility.Hidden;
-            Height = 115; //shorten window
             taskbarInfo.ProgressState = TaskbarItemProgressState.Normal;
             taskbarInfo.ProgressValue = 0; //reset progress to 0
             progressBar.Visibility = Visibility.Visible; //make visible
             labelProgressText.Visibility = Visibility.Visible; //make visible
+            Height = heightLoading; //shorten window
+        }
+
+        public void button_Click(object sender, RoutedEventArgs e) // patch borderlands2
+        {
+            gameID = (comboBoxGame.SelectedIndex + 2); //calculate id of game from index of selected dropdown item
+            debug = menuDebug.IsChecked; //enable debug mode if the menu option is checked
+
+            sceneLoading(); //change window to loading scene
 
             consoleKey = comboBoxConsoleKey.Text; //console key
             mods.Add(cooppatchFile);
@@ -98,6 +162,38 @@ namespace Patcher
             }
 
             patcherWorker.RunWorkerAsync(); //run the patch function
+        }
+
+        private void menuClose_Click(object sender, RoutedEventArgs e)
+        {
+            patcherWorker.CancelAsync(); //stop patching process
+            try
+            {
+                Close(); //close program
+            } catch (Exception)
+            {
+                //log
+            }
+        }
+
+        private void menuAbout_Click(object sender, RoutedEventArgs e)
+        {
+            Popup.Show("Made by Robeth");
+        }
+
+        private void menuReportBug_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("http://steamcommunity.com/groups/bl2unlimitedcoop/discussions/0/1479856439030633321/"); //issues post in Steam group
+        }
+
+        private void menuHelp_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("http://steamcommunity.com/sharedfiles/filedetails/?id=1151711689"); //Steam Guide
+        }
+
+        private void menuLFG_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("http://steamcommunity.com/groups/bl2unlimitedcoop/discussions/0/1488866180610449590/"); //LFG post in Steam group
         }
 
         private void patcherWorker_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
@@ -142,17 +238,7 @@ namespace Patcher
 
         private void patcherWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
-            Height = 165; //resize back to original size
-            buttonPatch.IsEnabled = true; //disable patch button
-            buttonPatch.Visibility = Visibility.Visible; //hide the patch button
-            comboBoxGame.Visibility = Visibility.Visible;
-            comboBoxConsoleKey.Visibility = Visibility.Visible;
-            labelConsoleKey.Visibility = Visibility.Visible;
-            checkBoxCommunityPatch.Visibility = Visibility.Visible;
-            //progressBarStatic.IsIndeterminate = false; //disable MARQUEE style
-            progressBar.Visibility = Visibility.Hidden; //make the loading bar invisible
-            labelProgressText.Visibility = Visibility.Hidden; //make invisible
-            taskbarInfo.ProgressState = TaskbarItemProgressState.None; //hide the loading bar in the taskbar
+            sceneMenu(); //restore menu window
         }
 
         //private void pat
