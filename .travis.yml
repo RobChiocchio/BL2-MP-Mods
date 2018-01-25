@@ -4,6 +4,10 @@ language: csharp
 solution: Patcher.sln
 before_install:
   - cd Patcher
+  - pip install --user cpp-coveralls
 install:
 script:
   - xbuild /p:Configuration=Release Patcher.sln
+after_success:
+  - coveralls --exclude lib --exclude tests --gcov-options '\-lp'
+
