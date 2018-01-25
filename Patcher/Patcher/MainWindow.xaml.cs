@@ -18,7 +18,7 @@ namespace Patcher
 {
     public partial class MainWindow : Window
     {
-        public static BackgroundWorker patcherWorker = new BackgroundWorker(); //replace threading
+        private static BackgroundWorker patcherWorker = new BackgroundWorker(); //replace threading
 
         private volatile Boolean debug; //go through the motions without copying all of the files
         private volatile string gameExec = ""; //init gameExec
@@ -570,6 +570,9 @@ namespace Patcher
                         {
                             Popup.Show("ERROR: Could not modify executable");
                         }
+                        break;
+                    default: //if not bl2 or tps
+                        //log
                         break;
                 }
 
