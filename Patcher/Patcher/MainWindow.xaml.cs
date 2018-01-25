@@ -84,6 +84,7 @@ namespace Patcher
         {
             buttonPatch.IsEnabled = true; //disable patch button
             menuClose.IsEnabled = true;
+            menuDebug.IsEnabled = true;
 
             buttonPatch.Visibility = Visibility.Visible; //hide the patch button
             comboBoxGame.Visibility = Visibility.Visible;
@@ -128,7 +129,6 @@ namespace Patcher
             {
                 mods.Add("Patch.txt");
             }
-
 
             switch (gameID) //depending on game, set variables accordingly
             {
@@ -199,7 +199,7 @@ namespace Patcher
         private void patcherWorker_ProgressChanged(object sender, System.ComponentModel.ProgressChangedEventArgs e)
         {
             progressBar.Value = e.ProgressPercentage; //loading bar
-            taskbarInfo.ProgressValue = e.ProgressPercentage; //taskbar
+            taskbarInfo.ProgressValue = (double)e.ProgressPercentage / 100; //taskbar
 
             switch(e.ProgressPercentage)
             {
