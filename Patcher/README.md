@@ -1,1 +1,3 @@
+[![Build Status](https://travis-ci.org/RobethX/BL2-MP-Mods.svg?branch=master)](https://travis-ci.org/RobethX/BL2-MP-Mods)
+
 The patcher might act like it's frozen after you press the patch button, but it's just making a copy of your entire Borderlands 2 folder for safety. The tool will place a patched verion of Borderlands 2 on your desktop that you need to run to use my COOP mod. To execute the COOP patch in game, press '~' and type exec cooppatch.txt.

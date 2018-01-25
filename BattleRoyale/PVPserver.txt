@@ -2,6 +2,8 @@ exec NoSpawnLimit.txt
 exec PVPclient.txt
 exec COOPpatch.txt
 
+set Engine.OnlineGameSettings OwningPlayerName Robeth's Battle Royale
+
 set WillowGame.WillowGameInfo bIgnoreFriendlyFire false
 
 set WillowGame.WillowAIPawn SightRadius 1000

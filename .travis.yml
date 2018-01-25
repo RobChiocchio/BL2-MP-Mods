@@ -1,0 +1,9 @@
+dist: trusty
+os: linux
+language: csharp
+solution: Patcher.sln
+before_install:
+  - cd Patcher
+install:
+script:
+  - xbuild /p:Configuration=Release Patcher.sln

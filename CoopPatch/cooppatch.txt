@@ -16,3 +16,8 @@ set GlobalsDefinition TravelDelay 0
 set GearboxFramework.GearboxGlobals DefaultMaxPopulationActorCost 50
 set PlayerInteractionServer TimeoutTime 20.0
 set Engine.GameInfo EffectiveNumPlayers 4
+
+### INFO MESSAGE ###
+
+say Running Robeth's Unlimited COOP Patch
+say Please re-run this script if you have any issues
