@@ -22,7 +22,8 @@ namespace Patcher
         public volatile string gameDir = ""; //init gameDir
         public volatile string cooppatchFile = ""; //init cooppatchFile
         public volatile string path = @"C:\\"; //init default path
-        public volatile string consoleKey; //init -- set in button_CLick
+        public volatile string consoleKey; //init -- set in button_Click
+        public volatile string fileCopying = "files..."; //current file copying
         public volatile int gameID; //init game id
         public volatile ArrayList mods = new ArrayList();
 
@@ -107,7 +108,7 @@ namespace Patcher
             switch(e.ProgressPercentage)
             {
                 case 10:
-                    labelProgressText.Content = "Copying game files";
+                    labelProgressText.Content = "Copying " + fileCopying; //current file copying
                     break;
                 case 40:
                     labelProgressText.Content = "Downloading patches";
@@ -132,6 +133,7 @@ namespace Patcher
                     break;
                 case 100:
                     labelProgressText.Content = "All done";
+                    Popup.Show("Done! A Shortcut was placed on your desktop. Press '~' in game to open up console.");
                     break;
                 default:
                     break;
@@ -151,7 +153,6 @@ namespace Patcher
             progressBar.Visibility = Visibility.Hidden; //make the loading bar invisible
             labelProgressText.Visibility = Visibility.Hidden; //make invisible
             taskbarInfo.ProgressState = TaskbarItemProgressState.None; //hide the loading bar in the taskbar
-            Popup.Show("Done! A Shortcut was placed on your desktop. Press '~' in game to open up console.");
         }
 
         //private void pat
@@ -169,6 +170,8 @@ namespace Patcher
                     try
                     {
                         file.CopyTo(System.IO.Path.Combine(target.FullName, file.Name));
+                        fileCopying = file.Name; //update the current copying file with the name of the file being copied
+                        patcherWorker.ReportProgress(10);
                     }
                     catch (IOException)
                     {
@@ -217,7 +220,7 @@ namespace Patcher
                             case System.Windows.Forms.DialogResult.Cancel:
                                 patcherWorker.CancelAsync(); //cancel
                                 patcherWorker.Dispose(); 
-                                Close(); //terminate thread
+                                //Close(); //terminate thread
                                 break;
                         }
                     }
@@ -426,10 +429,27 @@ namespace Patcher
                         try
                         {
                             var streamEngine2 = new FileStream(oBL.FullName, FileMode.Open, FileAccess.ReadWrite);
-                            // -- DON'T UPDATE PLAYERCOUNT --
 
-                            //streamEngine2.Position = 0x003F69A4;
-                            //streamEngine2.WriteByte(0x1E);
+                            // -- EffectiveNumPlayers --> NumSpectators --
+                            /*
+                            streamEngine2.Position = 0x003F699F;
+                            streamEngine2.WriteByte(0x22);
+                            streamEngine2.Position = 0x003F7085;
+                            streamEngine2.WriteByte(0x22);
+                            */
+                            streamEngine2.Position = 0x003FC015;
+                            streamEngine2.WriteByte(0x22);
+
+                            // -- NumPlayers --> EffectiveNumPlayers --
+                            /*
+                            streamEngine2.Position = 0x003F69A4;
+                            streamEngine2.WriteByte(0x1E);
+                            streamEngine2.Position = 0x003F708A;
+                            streamEngine2.WriteByte(0x1E);
+                            */
+                            streamEngine2.Position = 0x003FC01A;
+                            streamEngine2.WriteByte(0x1E);
+                           
                             streamEngine2.Close();
                         }
                         catch (IOException)
@@ -473,7 +493,7 @@ namespace Patcher
 
                     WshShell shell = new WshShell();
                     IWshRuntimeLibrary.IWshShortcut shortcut = shell.CreateShortcut(
-                    Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\\" + gameDir + " COOP.lnk") as IWshShortcut;
+                    Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\\" + gameDir + " - Robeth's Unlimited COOP Mod.lnk") as IWshShortcut;
                     shortcut.Arguments = "-log -debug -codermode -nosplash" + execMods;
                     shortcut.TargetPath = oBL.FullName;
                     shortcut.WindowStyle = 1;
