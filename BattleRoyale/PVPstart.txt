@@ -9,7 +9,7 @@ set GD_AI_Allegiance.Allegiance_Player_NoLevel bForceAllOtherOpinions True
 
 ## Teleport Players ##
 
-set WillowPlayerSpawn location (x=30000, y=-35000, z=30000) ## teleport to the top of the map
+set WillowPlayerPawn location (x=30000, y=-35000, z=30000) ## teleport to the top of the map
 set Loader.TheWorld:PersistentLevel.WillowPlayerPawn_0 location (x=22352.009766, y=-28377.501953, z=3339.926758)
 set Loader.TheWorld:PersistentLevel.WillowPlayerPawn_1 location (x=-13831.071289, y=5626.872559, z=-7470.404297)
 set Loader.TheWorld:PersistentLevel.WillowPlayerPawn_2 location (x=-34675.027344, y=-21311.375000, z=-1308.469727)
