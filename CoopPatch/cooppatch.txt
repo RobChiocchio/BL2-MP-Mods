@@ -20,6 +20,8 @@
 
 		set IPDrv.TCPNetDriver bClampListenServerTickRate True
 		
+		set IPDrv.TCPNetDriver KeepAliveTime 0.500000
+		
 		set PlayerInteractionServer TimeoutTime 20.0
 
 	#</NETWORK OPTIMIZATION>
