@@ -22,7 +22,11 @@
 		
 		set IPDrv.TCPNetDriver KeepAliveTime 0.500000
 		
-		set IPDrv.TCPNetDriver MaxInternetClientRate 20000
+		set IPDrv.TCPNetDriver MaxInternetClientRate 5000
+		
+		set IPDrv.TCPNetDriver MaxClientRate 10000
+		
+		set GameInfo AdjustedNetSpeed 5000
 		
 		set PlayerInteractionServer TimeoutTime 20.0
 
