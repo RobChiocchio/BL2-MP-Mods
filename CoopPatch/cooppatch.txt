@@ -16,6 +16,7 @@ set GlobalsDefinition TravelDelay 0
 set GearboxFramework.GearboxGlobals DefaultMaxPopulationActorCost 50
 set PlayerInteractionServer TimeoutTime 20.0
 set Engine.GameInfo EffectiveNumPlayers 4
+set GD_Challenges.BadassSkill.BadassSkill SkillEffectDefinitions () # Disable BAR
 
 ### ENEMY DAMAGE FIX ###
 
