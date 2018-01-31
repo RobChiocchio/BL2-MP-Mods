@@ -132,9 +132,14 @@ namespace Patcher
 
             switch (gameID) //depending on game, set variables accordingly
             {
-                case 3:
+                case 3: //tps
                     gameExec = "BorderlandsPreSequel.exe";
                     gameDir = "BorderlandsPreSequel";
+                    cooppatchFile = "cooppatch.txt";
+                    break;
+                case 1: ///Borderlands 1
+                    gameExec = "Borderlands.exe";
+                    gameDir = "Borderlands";
                     cooppatchFile = "cooppatch.txt";
                     break;
                 default: //2 or incase some how there isnt a variable
