@@ -1,6 +1,7 @@
 theme: jekyll-theme-modernist
 title: "COOP Patcher"
 description: "Robeth's Unlimited COOP Patch for Borderlands"
+github_username: RobethX
 show_downloads: true
 github:
   dist: https://github.com/RobethX/BL2-MP-Mods/releases
