@@ -550,7 +550,7 @@ namespace Patcher
                             streamWillowGame2.WriteByte(0x00);
 
                             // -- PREVENT MENU FROM CANCELLING FAST TRAVEL --
-                            streamWillowGame2.Position = 0x006BE9BD;
+                            streamWillowGame2.Position = 0x006BEAF6;
                             streamWillowGame2.WriteByte(0x27);
                             streamWillowGame2.Close();
                         }
