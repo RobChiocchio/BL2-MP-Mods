@@ -1,3 +1,8 @@
+---
+layout: default
+permalink: none
+---
+
 ## Test
 
 Test
