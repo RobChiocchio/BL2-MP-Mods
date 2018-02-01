@@ -116,9 +116,26 @@ namespace Patcher
             Height = heightLoading; //shorten window
         }
 
+        private void comboBoxGame_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (comboBoxGame != null && checkBoxCommunityPatch != null)
+            {
+                switch (comboBoxGame.SelectedIndex + 1)
+                {
+                    case 2: //borderlands 2
+                        checkBoxCommunityPatch.IsEnabled = true; //enable option for community patch
+                        break;
+                    default: //other game
+                        checkBoxCommunityPatch.IsEnabled = false; //disable community patch option
+                        checkBoxCommunityPatch.IsChecked = false; //uncheck
+                        break;
+                }
+            }
+        }
+
         public void button_Click(object sender, RoutedEventArgs e) // patch borderlands2
         {
-            gameID = (comboBoxGame.SelectedIndex + 2); //calculate id of game from index of selected dropdown item
+            gameID = (comboBoxGame.SelectedIndex + 1); //calculate id of game from index of selected dropdown item
             debug = menuDebug.IsChecked; //enable debug mode if the menu option is checked
 
             sceneLoading(); //change window to loading scene
@@ -281,11 +298,29 @@ namespace Patcher
             DirectoryInfo iBL = new DirectoryInfo(path); //bl = path to Borderlands exe
             DirectoryInfo inputDir = new DirectoryInfo(iBL + @"..\\..\\..\\..\\"); //convert to directory - IDK why I need more ..\\s then I actually should but it works so who cares
             DirectoryInfo outputDir = new DirectoryInfo(inputDir + @"\\server"); //convert to directory
-            DirectoryInfo oBL = new DirectoryInfo(outputDir + @"\\Binaries\\Win32\\" + gameExec);
-            DirectoryInfo iWillowGameUPK = new DirectoryInfo(inputDir + @"\\WillowGame\\CookedPCConsole\\WillowGame.upk"); // path to WillowGame.upk
-            DirectoryInfo oWillowGameUPK = new DirectoryInfo(outputDir + @"\\WillowGame\\CookedPCConsole\\WillowGame.upk"); // path to WillowGame.upk
-            DirectoryInfo iEngineUPK = new DirectoryInfo(inputDir + @"\\WillowGame\\CookedPCConsole\\Engine.upk"); // path to Engine.upk
-            DirectoryInfo oEngineUPK = new DirectoryInfo(outputDir + @"\\WillowGame\\CookedPCConsole\\Engine.upk"); // path to Engine.upk
+
+            DirectoryInfo oBL;
+            DirectoryInfo iWillowGame;
+            DirectoryInfo oWillowGame;
+            DirectoryInfo iEngine;
+            DirectoryInfo oEngine;
+
+            if (gameID == 1) //if Borderlands 1
+            {
+                oBL = new DirectoryInfo(outputDir + @"\\Binaries\\" + gameExec);
+                iWillowGame = new DirectoryInfo(inputDir + @"\\WillowGame\\CookedPC\\WillowGame.u"); // path to WillowGame.upk
+                oWillowGame = new DirectoryInfo(outputDir + @"\\WillowGame\\CookedPC\\WillowGame.u"); // path to WillowGame.upk
+                iEngine = new DirectoryInfo(inputDir + @"\\WillowGame\\CookedPC\\Engine.u"); // path to Engine.upk
+                oEngine = new DirectoryInfo(outputDir + @"\\WillowGame\\CookedPC\\Engine.u"); // path to Engine.upk
+            }
+            else
+            {
+                oBL = new DirectoryInfo(outputDir + @"\\Binaries\\Win32\\" + gameExec);
+                iWillowGame = new DirectoryInfo(inputDir + @"\\WillowGame\\CookedPCConsole\\WillowGame.upk"); // path to WillowGame.upk
+                oWillowGame = new DirectoryInfo(outputDir + @"\\WillowGame\\CookedPCConsole\\WillowGame.upk"); // path to WillowGame.upk
+                iEngine = new DirectoryInfo(inputDir + @"\\WillowGame\\CookedPCConsole\\Engine.upk"); // path to Engine.upk
+                oEngine = new DirectoryInfo(outputDir + @"\\WillowGame\\CookedPCConsole\\Engine.upk"); // path to Engine.upk
+            }
 
             String decompress = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "decompress.exe");
             Boolean skipCopy = false;
@@ -363,10 +398,10 @@ namespace Patcher
                 // -- RENAME UPK AND DECOMPRESSEDSIZE --
                 try //incase it's already moved
                 {
-                    System.IO.File.Move(oWillowGameUPK.FullName + ".uncompressed_size", oWillowGameUPK.FullName + ".uncompressed_size.bak"); //backup WillowGame.upk.uncompressed_size
-                    System.IO.File.Copy(oWillowGameUPK.FullName, oWillowGameUPK.FullName + ".bak"); //backup upk
-                    System.IO.File.Move(oEngineUPK.FullName + ".uncompressed_size", oEngineUPK.FullName + ".uncompressed_size.bak"); //backup Engine.upk.uncompressed_size
-                    System.IO.File.Copy(oEngineUPK.FullName, oEngineUPK.FullName + ".bak"); //backup upk
+                    System.IO.File.Move(oWillowGame.FullName + ".uncompressed_size", oWillowGame.FullName + ".uncompressed_size.bak"); //backup WillowGame.upk.uncompressed_size
+                    System.IO.File.Copy(oWillowGame.FullName, oWillowGame.FullName + ".bak"); //backup upk
+                    System.IO.File.Move(oEngine.FullName + ".uncompressed_size", oEngine.FullName + ".uncompressed_size.bak"); //backup Engine.upk.uncompressed_size
+                    System.IO.File.Copy(oEngine.FullName, oEngine.FullName + ".bak"); //backup upk
                 }
                 catch (IOException)
                 {
@@ -376,17 +411,17 @@ namespace Patcher
                 patcherWorker.ReportProgress(60); //set loadingprogress to 60%
                 // -- DECOMPRESS UPK --
                 //var decompressing = System.Diagnostics.Process.Start(decompress, "-game=border -out=" + outputDir + @"\\WillowGame\\CookedPCConsole\\ " + iUPK.FullName); //decompress WillowGame.UPK
-                var decompressingWillowGame = System.Diagnostics.Process.Start(decompress, "-game=border -log=decompress.log " + '"' + iWillowGameUPK.FullName + '"'); //decompress WillowGame.UPK
+                var decompressingWillowGame = System.Diagnostics.Process.Start(decompress, "-game=border -log=decompress.log " + '"' + iWillowGame.FullName + '"'); //decompress WillowGame.UPK
                 decompressingWillowGame.WaitForExit(); //wait for decompress.exe to finish
-                var decompressingEngine = System.Diagnostics.Process.Start(decompress, "-game=border -log=decompress.log " + '"' + iEngineUPK.FullName + '"'); //decompress Engine.UPK
+                var decompressingEngine = System.Diagnostics.Process.Start(decompress, "-game=border -log=decompress.log " + '"' + iEngine.FullName + '"'); //decompress Engine.UPK
                 decompressingEngine.WaitForExit(); //wait for decompress.exe to finish
-                FileInfo decompressedWillowGameUPK = new FileInfo(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), @"unpacked\\", iWillowGameUPK.Name));
-                FileInfo decompressedEngineUPK = new FileInfo(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), @"unpacked\\", iEngineUPK.Name));
+                FileInfo decompressedWillowGame = new FileInfo(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), @"unpacked\\", iWillowGame.Name));
+                FileInfo decompressedEngine = new FileInfo(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), @"unpacked\\", iEngine.Name));
 
                 try
                 {
-                    decompressedWillowGameUPK.CopyTo(oWillowGameUPK.FullName, true); //move upk to cookedpcconsole
-                    decompressedEngineUPK.CopyTo(oEngineUPK.FullName, true); //move upk to cookedpcconsole
+                    decompressedWillowGame.CopyTo(oWillowGame.FullName, true); //move upk to cookedpcconsole
+                    decompressedEngine.CopyTo(oEngine.FullName, true); //move upk to cookedpcconsole
 
                 }
                 catch (IOException)
@@ -401,7 +436,7 @@ namespace Patcher
                     case 3: //tps
                         try
                         {
-                            var streamWillowGameUPKTPS = new FileStream(oWillowGameUPK.FullName, FileMode.Open, FileAccess.ReadWrite);
+                            var streamWillowGameUPKTPS = new FileStream(oWillowGame.FullName, FileMode.Open, FileAccess.ReadWrite);
 
                             // -- DEVELOPER MODE --
                             streamWillowGameUPKTPS.Position = 0x0079ACE7;
@@ -482,7 +517,7 @@ namespace Patcher
                         // -- HEX EDIT WILLOWGAME --
                         try
                         {
-                            var streamWillowGame2 = new FileStream(oWillowGameUPK.FullName, FileMode.Open, FileAccess.ReadWrite);
+                            var streamWillowGame2 = new FileStream(oWillowGame.FullName, FileMode.Open, FileAccess.ReadWrite);
 
                             // -- DEVELOPER MODE --
                             streamWillowGame2.Position = 0x006924C7;
@@ -513,6 +548,10 @@ namespace Patcher
                             streamWillowGame2.WriteByte(0x24);
                             streamWillowGame2.Position = 0x007F915C;
                             streamWillowGame2.WriteByte(0x00);
+
+                            // -- PREVENT MENU FROM CANCELLING FAST TRAVEL --
+                            streamWillowGame2.Position = 0x006BE9BD;
+                            streamWillowGame2.WriteByte(0x27);
                             streamWillowGame2.Close();
                         }
                         catch (IOException)
@@ -575,6 +614,64 @@ namespace Patcher
                         {
                             Popup.Show("ERROR: Could not modify executable");
                         }
+                        break;
+                    case 1: //bl2
+                        // -- HEX EDIT WILLOWGAME.U --
+                        /*
+                        try
+                        {
+                            var streamWillowGame1 = new FileStream(oWillowGame.FullName, FileMode.Open, FileAccess.ReadWrite);
+
+                            streamWillowGame1.Close();
+                        }
+                        catch (IOException)
+                        {
+                            Popup.Show("ERROR: Could not modify upk files");
+                        }
+                        */
+
+                        patcherWorker.ReportProgress(75); //set loadingprogress to 75%
+
+                        // -- HEX EDIT ENGINE.U --
+                        try
+                        {
+                            var streamEngine1 = new FileStream(oBL.FullName, FileMode.Open, FileAccess.ReadWrite);
+
+                            // -- Enable Console --
+                            streamEngine1.Position = 0x00396938;
+                            streamEngine1.WriteByte(0x06);
+                            streamEngine1.Position = 0x00396939;
+                            streamEngine1.WriteByte(0x52);
+                            streamEngine1.Close();
+                        }
+                        catch (IOException)
+                        {
+                            Popup.Show("ERROR: Could not modify upk files");
+                        }
+
+                        patcherWorker.ReportProgress(80); //set loadingprogress to 80%
+
+                        // -- HEX EDIT BORDERLANDS.EXE --
+                        /*
+                        try
+                        {
+                            var streamBL2 = new FileStream(oBL.FullName, FileMode.Open, FileAccess.ReadWrite);
+                            streamBL2.Position = 0x004F2590;
+                            streamBL2.WriteByte(0xFF);
+                            for (long i = 0x01B94B0C; i <= 0x01B94B10; i++)
+                            {
+                                streamBL2.Position = i;
+                                streamBL2.WriteByte(0x00);
+                            }
+                            streamBL2.Position = 0x01EF17F9; //find upk
+                            streamBL2.WriteByte(0x78); //willowgame.upk > xillowgame.upk
+                            streamBL2.Close();
+                        }
+                        catch (IOException)
+                        {
+                            Popup.Show("ERROR: Could not modify executable");
+                        }
+                        */
                         break;
                     default: //if not bl2 or tps
                         //log
