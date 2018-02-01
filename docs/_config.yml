@@ -4,3 +4,8 @@ description: "Robeth's Unlimited COOP Patch for Borderlands"
 show_downloads: "true"
 github:
   dist: https://github.com/RobethX/BL2-MP-Mods/releases
+gems:
+  - jekyll-readme-index
+readme_index:
+  enabled:          true
+  remove_originals: false
