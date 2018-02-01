@@ -1,5 +1,5 @@
 ---
-title: Robeth's Unlimited COOP Patch for Borderlands
+layout: default
 permalink: none
 ---
 
