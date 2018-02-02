@@ -225,6 +225,9 @@ namespace Patcher
 
             switch(e.ProgressPercentage)
             {
+                case 5:
+                    labelProgressText.Content = "Removing old files";
+                    break;
                 case 10:
                     labelProgressText.Content = "Copying " + fileCopying; //current file copying
                     break;
@@ -232,7 +235,7 @@ namespace Patcher
                     labelProgressText.Content = "Downloading patches";
                     break;
                 case 50:
-                    labelProgressText.Content = "Hacking your Minecraft account";
+                    labelProgressText.Content = "EXPLOSIONS?!?!?!?!";//"Hacking your Minecraft account";
                     break;
                 case 60:
                     labelProgressText.Content = "Decompressing some stuff";
@@ -241,7 +244,7 @@ namespace Patcher
                     labelProgressText.Content = "Making a sandwich";
                     break;
                 case 75:
-                    labelProgressText.Content = "Installing viruses";
+                    labelProgressText.Content = "Norton sucks";//"Installing viruses";
                     break;
                 case 80:
                     labelProgressText.Content = "Recombobulation the flux capacitor";
@@ -341,7 +344,9 @@ namespace Patcher
                             case System.Windows.Forms.DialogResult.Yes:
                                 if (!debug && !skipCopy) //if not in debug mode
                                 {
+                                    patcherWorker.ReportProgress(5); //set loadingprogress to 5%
                                     outputDir.Delete(true); //delete the server folder recursively
+                                    patcherWorker.ReportProgress(10); //set loadingprogress to 10%
                                 }
                                 skipCopy = false ;//continue
                                 break;
@@ -691,7 +696,7 @@ namespace Patcher
                     WshShell shell = new WshShell();
                     IWshRuntimeLibrary.IWshShortcut shortcut = shell.CreateShortcut(
                     Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\\" + gameDir + " - Robeth's Unlimited COOP Mod.lnk") as IWshShortcut;
-                    shortcut.Arguments = "-log -debug -codermode -nosplash" + execMods;
+                    shortcut.Arguments = "-log" + " -exec=cooppatch.txt";//execMods;
                     shortcut.TargetPath = oBL.FullName;
                     shortcut.WindowStyle = 1;
                     shortcut.Description = "Robeth's Borderlands COOP patch";
