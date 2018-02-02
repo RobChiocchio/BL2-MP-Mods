@@ -2,9 +2,9 @@
 
     #<CORE - MORE PLAYERS>
 
-		say Running Robeth's Unlimited COOP Patch
+        say Running Robeth's Unlimited COOP Patch
 		
-		say Please re-run this script if you have any issues
+        say Please re-run this script if you have any issues
 	
         set WillowOnlineGameSettings NumPublicConnections 64
 
