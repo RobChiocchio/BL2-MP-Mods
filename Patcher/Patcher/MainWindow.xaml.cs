@@ -1,17 +1,15 @@
-﻿using System;
+﻿using IWshRuntimeLibrary;
+using System;
+using System.Collections;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
+using System.Net;
+using System.Reflection;
+using System.Security.Principal;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Shell;
-using IWshRuntimeLibrary;
-using System.Net;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Reflection;
-using System.Security.Principal;
-using System.Collections;
 using Popup = System.Windows.MessageBox;
 
 namespace Patcher
@@ -29,8 +27,8 @@ namespace Patcher
         private volatile string fileCopying = "files..."; //current file copying
         private volatile int gameID; //init game id
         private volatile ArrayList mods = new ArrayList();
-        readonly double heightDefault = 180;
-        readonly double heightLoading = 115;
+        private readonly double heightDefault = 180;
+        private readonly double heightLoading = 115;
 
         public MainWindow()
         {
@@ -125,6 +123,7 @@ namespace Patcher
                     case 2: //borderlands 2
                         checkBoxCommunityPatch.IsEnabled = true; //enable option for community patch
                         break;
+
                     default: //other game
                         checkBoxCommunityPatch.IsEnabled = false; //disable community patch option
                         checkBoxCommunityPatch.IsChecked = false; //uncheck
@@ -154,11 +153,13 @@ namespace Patcher
                     gameDir = "BorderlandsPreSequel";
                     cooppatchFile = "cooppatch.txt";
                     break;
+
                 case 1: ///Borderlands 1
                     gameExec = "Borderlands.exe";
                     gameDir = "Borderlands";
                     cooppatchFile = "cooppatch.txt";
                     break;
+
                 default: //2 or incase some how there isnt a variable
                     gameExec = "Borderlands2.exe";
                     gameDir = "Borderlands 2";
@@ -178,6 +179,7 @@ namespace Patcher
                 case System.Windows.Forms.DialogResult.OK:
                     path = fileDialog.FileName;
                     break;
+
                 case System.Windows.Forms.DialogResult.Cancel:
                 default:
                     break;
@@ -192,7 +194,8 @@ namespace Patcher
             try
             {
                 Close(); //close program
-            } catch (Exception)
+            }
+            catch (Exception)
             {
                 //log
             }
@@ -200,7 +203,7 @@ namespace Patcher
 
         private void menuAbout_Click(object sender, RoutedEventArgs e)
         {
-            Popup.Show("Made by Robeth");
+            Popup.Show("Robeth's Unlimited COOP Mod & Robeth's Unlimited COOP Patch made by Rob 'Robeth' Chiocchio.", "About");
         }
 
         private void menuReportBug_Click(object sender, RoutedEventArgs e)
@@ -223,39 +226,49 @@ namespace Patcher
             progressBar.Value = e.ProgressPercentage; //loading bar
             taskbarInfo.ProgressValue = (double)e.ProgressPercentage / 100; //taskbar
 
-            switch(e.ProgressPercentage)
+            switch (e.ProgressPercentage)
             {
                 case 5:
                     labelProgressText.Content = "Removing old files";
                     break;
+
                 case 10:
                     labelProgressText.Content = "Copying " + fileCopying; //current file copying
                     break;
+
                 case 40:
                     labelProgressText.Content = "Downloading patches";
                     break;
+
                 case 50:
                     labelProgressText.Content = "EXPLOSIONS?!?!?!?!";//"Hacking your Minecraft account";
                     break;
+
                 case 60:
                     labelProgressText.Content = "Decompressing some stuff";
                     break;
+
                 case 70:
                     labelProgressText.Content = "Making a sandwich";
                     break;
+
                 case 75:
                     labelProgressText.Content = "Norton sucks";//"Installing viruses";
                     break;
+
                 case 80:
                     labelProgressText.Content = "Recombobulation the flux capacitor";
                     break;
+
                 case 90:
                     labelProgressText.Content = "Climaxing";
                     break;
+
                 case 100:
                     labelProgressText.Content = "All done";
-                    Popup.Show("Done! A Shortcut was placed on your desktop. Press '~' in game to open up console.");
+                    Popup.Show("Done! A Shortcut was placed on your desktop. Press '~' in game to open up console.", "Info");
                     break;
+
                 default:
                     //default
                     break;
@@ -348,15 +361,16 @@ namespace Patcher
                                     outputDir.Delete(true); //delete the server folder recursively
                                     patcherWorker.ReportProgress(10); //set loadingprogress to 10%
                                 }
-                                skipCopy = false ;//continue
+                                skipCopy = false;//continue
                                 break;
+
                             case System.Windows.Forms.DialogResult.No:
                                 skipCopy = true;//skip the copy
                                 break;
                             //case System.Windows.Forms.DialogResult.Cancel:
                             default:
                                 patcherWorker.CancelAsync(); //cancel
-                                patcherWorker.Dispose(); 
+                                patcherWorker.Dispose();
                                 //Close(); //terminate thread
                                 break;
                         }
@@ -373,7 +387,7 @@ namespace Patcher
                 }
 
                 patcherWorker.ReportProgress(40); //set loadingprogress to 40%
-                // -- COPY PATCHES TO BINARIES -- 
+                // -- COPY PATCHES TO BINARIES --
                 using (WebClient myWebClient = new WebClient()) //download file
                 {
                     try
@@ -427,7 +441,6 @@ namespace Patcher
                 {
                     decompressedWillowGame.CopyTo(oWillowGame.FullName, true); //move upk to cookedpcconsole
                     decompressedEngine.CopyTo(oEngine.FullName, true); //move upk to cookedpcconsole
-
                 }
                 catch (IOException)
                 {
@@ -518,6 +531,7 @@ namespace Patcher
                             Popup.Show("ERROR: Could not modify executable");
                         }
                         break;
+
                     case 2: //bl2
                         // -- HEX EDIT WILLOWGAME --
                         try
@@ -590,7 +604,7 @@ namespace Patcher
                             */
                             streamEngine2.Position = 0x003FC01A;
                             streamEngine2.WriteByte(0x1E);
-                           
+
                             streamEngine2.Close();
                         }
                         catch (IOException)
@@ -620,6 +634,7 @@ namespace Patcher
                             Popup.Show("ERROR: Could not modify executable");
                         }
                         break;
+
                     case 1: //bl2
                         // -- HEX EDIT WILLOWGAME.U --
                         /*
@@ -678,6 +693,7 @@ namespace Patcher
                         }
                         */
                         break;
+
                     default: //if not bl2 or tps
                         //log
                         break;
@@ -688,7 +704,7 @@ namespace Patcher
                 try
                 {
                     String execMods = "";
-                    foreach(String mod in mods)
+                    foreach (String mod in mods)
                     {
                         execMods = execMods + " -exec=" + mod;
                     }
