@@ -33,7 +33,7 @@
             </Menu>
         </DockPanel>
         <ComboBox x:Name="comboBoxGame" Margin="10,25,10,0" Height="20" VerticalAlignment="Top" SelectionChanged="comboBoxGame_SelectionChanged">
-            <ComboBoxItem Content="Borderlands 1" IsEnabled="True" />
+            <ComboBoxItem Content="Borderlands 1" IsEnabled="False" />
             <ComboBoxItem Content="Borderlands 2" IsSelected="True" IsEnabled="True" />
             <ComboBoxItem Content="Borderlands: The Pre-Sequel" IsEnabled="True" />
         </ComboBox>
