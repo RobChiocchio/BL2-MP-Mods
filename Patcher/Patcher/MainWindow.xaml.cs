@@ -453,6 +453,16 @@ namespace Patcher
                     Popup.Show("ERROR: Could not find decompressed UPK"); //for debugging
                 }
 
+                // -- DELETE UNPACKED FOLDER --
+                try
+                {
+                    Directory.Delete(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), @"unpacked\\"), true); //delete Unpacked folder recursively
+                }
+                catch (IOException)
+                {
+                    //log
+                }
+
                 patcherWorker.ReportProgress(70); //set loadingprogress to 70%
                 // -- HEX EDITING --
                 switch (gameID)
