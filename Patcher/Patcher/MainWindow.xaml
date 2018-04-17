@@ -21,11 +21,11 @@
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_Patcher">
                     <MenuItem x:Name="menuOptions" Header="_Options" Click="menuOptions_Click" IsEnabled="False">
-                        <MenuItem x:Name="menuOptionInstantFastTravel" Header="_Instant fast travel" IsCheckable="True" IsChecked="True"/>
-                        <MenuItem x:Name="menuOptionDisableBAR" Header="_Disable BAR" HorizontalAlignment="Left" VerticalAlignment="Top" IsCheckable="True"/>
-                        <MenuItem x:Name="menuOptionInvincibleVehicles" Header="_Invincible vehicles" IsCheckable="True"/>
-                        <MenuItem x:Name="menuOptionAllVehiclesTechnicals" Header="_All vehicles are Bandit Technicals" IsCheckable="True"/>
-                        <MenuItem x:Name="menuOptionNoEnemyRespawnDelay" Header="_No enemy respawn delay" IsCheckable="True"/>
+                        <MenuItem x:Name="menuOptionInstantFastTravel" Header="_Instant fast travel" IsCheckable="True" IsChecked="True" />
+                        <MenuItem x:Name="menuOptionDisableBAR" Header="_Disable BAR" HorizontalAlignment="Left" VerticalAlignment="Top" IsCheckable="True" />
+                        <MenuItem x:Name="menuOptionInvincibleVehicles" Header="_Invincible vehicles" IsCheckable="True" />
+                        <MenuItem x:Name="menuOptionAllVehiclesTechnicals" Header="_All vehicles are Bandit Technicals" IsCheckable="True" />
+                        <MenuItem x:Name="menuOptionNoEnemyRespawnDelay" Header="_No enemy respawn delay" IsCheckable="True" />
                     </MenuItem>
                     <Separator />
                     <MenuItem x:Name="menuClose" Header="_Close" Click="menuClose_Click" />

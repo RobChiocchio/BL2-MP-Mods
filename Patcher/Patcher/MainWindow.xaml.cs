@@ -10,7 +10,6 @@ using System.Security.Principal;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Shell;
-using Patcher;
 using Popup = System.Windows.MessageBox;
 
 namespace Patcher
@@ -188,10 +187,8 @@ namespace Patcher
             patcherWorker.RunWorkerAsync(); //run the patch function
         }
 
-
         private void menuOptions_Click(object sender, RoutedEventArgs e)
         {
-
         }
 
         private void menuClose_Click(object sender, RoutedEventArgs e)
