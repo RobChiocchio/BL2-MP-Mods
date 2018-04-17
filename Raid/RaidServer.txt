@@ -1,1 +1,4 @@
+exec COOPpatch.txt
+exec zhdigiss.txt # Zer0 Hour SuperSwap (digi peak)
 
+set Engine.OnlineGameSettings OwningPlayerName Zer0 Hour's SuperSwap (5+)

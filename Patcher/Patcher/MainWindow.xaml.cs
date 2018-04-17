@@ -722,9 +722,10 @@ namespace Patcher
                         execMods = execMods + " -exec=" + mod;
                     }
 
+                    string shortcutName = @"\\" + gameDir + " - Robeth's Unlimited COOP Mod.lnk";
                     WshShell shell = new WshShell();
-                    IWshRuntimeLibrary.IWshShortcut shortcut = shell.CreateShortcut(
-                    Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + @"\\" + gameDir + " - Robeth's Unlimited COOP Mod.lnk") as IWshShortcut;
+                    IWshRuntimeLibrary.IWshShortcut shortcut = shell.CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + shortcutName) as IWshShortcut;
+
                     shortcut.Arguments = "-log" + " -exec=cooppatch.txt";//execMods;
                     shortcut.TargetPath = oBL.FullName;
                     shortcut.WindowStyle = 1;
@@ -732,6 +733,13 @@ namespace Patcher
                     shortcut.WorkingDirectory = (Directory.GetParent(oBL.FullName)).FullName;
                     shortcut.IconLocation = (oBL + ",1");
                     shortcut.Save();
+
+                    string appStartMenuPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu), "Programs", "Robeth's Borderlands COOP Mod");
+                    if (!Directory.Exists(appStartMenuPath))
+                    {
+                        Directory.CreateDirectory(appStartMenuPath);
+                    }
+                    System.IO.File.Copy((Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + shortcutName), (appStartMenuPath + shortcutName), true); //copy shortcut from desktop to shell : programs and overwrite old version
                 }
                 catch (IOException)
                 {
