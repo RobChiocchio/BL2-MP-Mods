@@ -20,13 +20,15 @@
         <DockPanel>
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_Patcher">
-                    <MenuItem x:Name="menuOptions" Header="_Options" Click="menuOptions_Click" IsEnabled="False">
+                    <!--<MenuItem x:Name="menuOptions" Header="_Options" Click="menuOptions_Click" IsEnabled="False">
                         <MenuItem x:Name="menuOptionInstantFastTravel" Header="_Instant fast travel" IsCheckable="True" IsChecked="True" />
                         <MenuItem x:Name="menuOptionDisableBAR" Header="_Disable BAR" HorizontalAlignment="Left" VerticalAlignment="Top" IsCheckable="True" />
                         <MenuItem x:Name="menuOptionInvincibleVehicles" Header="_Invincible vehicles" IsCheckable="True" />
                         <MenuItem x:Name="menuOptionAllVehiclesTechnicals" Header="_All vehicles are Bandit Technicals" IsCheckable="True" />
                         <MenuItem x:Name="menuOptionNoEnemyRespawnDelay" Header="_No enemy respawn delay" IsCheckable="True" />
-                    </MenuItem>
+                    </MenuItem>-->
+                    <MenuItem x:Name="menuExperimental" Header="_Experimental mode" IsCheckable="True" ToolTip="Enables Borderlands 1 and The Pre-Sequel" Click="menuExperimental_Click" />
+                    <MenuItem x:Name="menuDebug" Header="_Debug Mode" IsCheckable="True" ToolTip="Does not actually run through all of the steps (Do not use unless you know what you're doing!)" />
                     <Separator />
                     <MenuItem x:Name="menuClose" Header="_Close" Click="menuClose_Click" />
                 </MenuItem>
@@ -35,18 +37,17 @@
                     <MenuItem x:Name="menuReportBug" Header="_Report a bug" Click="menuReportBug_Click" />
                     <MenuItem x:Name="menuHelp" Header="_Need more help?" Click="menuHelp_Click" />
                     <MenuItem x:Name="menuLFG" Header="_Find players" Click="menuLFG_Click" />
-                    <Separator />
-                    <MenuItem x:Name="menuDebug" Header="_Debug Mode" IsCheckable="True" />
                 </MenuItem>
             </Menu>
         </DockPanel>
+
         <ComboBox x:Name="comboBoxGame" Margin="10,25,10,0" Height="20" VerticalAlignment="Top" SelectionChanged="comboBoxGame_SelectionChanged">
-            <ComboBoxItem Content="Borderlands 1" IsEnabled="False" />
-            <ComboBoxItem Content="Borderlands 2" IsSelected="True" IsEnabled="True" />
-            <ComboBoxItem Content="Borderlands: The Pre-Sequel" IsEnabled="True" />
+            <ComboBoxItem x:Name="comboItemBL1" Content="Borderlands 1" IsEnabled="False" ToolTip="Not fully implimented yet. Caveat emptor." />
+            <ComboBoxItem x:Name="comboItemBL2" Content="Borderlands 2" IsSelected="True" IsEnabled="True" />
+            <ComboBoxItem x:Name="comboItemBLTPS" Content="Borderlands: The Pre-Sequel" IsEnabled="False" ToolTip="Not fully implimented yet. Caveat emptor." />
         </ComboBox>
         <ProgressBar x:Name="progressBar" Height="20" VerticalAlignment="Top" Margin="10,25,10,0" Visibility="Hidden" ToolTip="This takes a while; please be patient!" />
-        <Button x:Name="buttonPatch" Content="Patch Borderlands" Margin="10,110,10,0" Click="button_Click" Height="20" VerticalAlignment="Top" Visibility="Visible" RenderTransformOrigin="0.502,0" />
+        <Button x:Name="buttonPatch" Content="Patch Borderlands" Margin="10,110,10,0" Click="buttonPatch_Click" Height="20" VerticalAlignment="Top" Visibility="Visible" RenderTransformOrigin="0.502,0" />
         <ComboBox x:Name="comboBoxConsoleKey" Margin="10,55,88,0" VerticalAlignment="Top">
             <ComboBoxItem Content="Tilde" IsSelected="True" IsEnabled="True" />
             <ComboBoxItem Content="F1" IsEnabled="True" />
