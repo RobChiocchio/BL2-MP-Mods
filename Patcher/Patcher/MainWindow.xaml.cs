@@ -106,10 +106,10 @@ namespace Patcher
             comboBoxConsoleKey.Visibility = Visibility.Hidden;
             labelConsoleKey.Visibility = Visibility.Hidden;
             checkBoxCommunityPatch.Visibility = Visibility.Hidden;
-            taskbarInfo.ProgressState = TaskbarItemProgressState.Normal;
-            taskbarInfo.ProgressValue = 0; //reset progress to 0
             progressBar.Visibility = Visibility.Visible; //make visible
             labelProgressText.Visibility = Visibility.Visible; //make visible
+            taskbarInfo.ProgressState = TaskbarItemProgressState.Normal;
+            taskbarInfo.ProgressValue = 0; //reset progress to 0
             Height = heightLoading; //shorten window
         }
 
