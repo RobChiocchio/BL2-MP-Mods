@@ -83,7 +83,7 @@ namespace Patcher
             menuClose.IsEnabled = true;
             menuDebug.IsEnabled = true;
 
-            buttonPatch.Visibility = Visibility.Visible; //hide the patch button
+            buttonPatch.Visibility = Visibility.Visible; //show the patch button
             comboBoxGame.Visibility = Visibility.Visible;
             comboBoxConsoleKey.Visibility = Visibility.Visible;
             labelConsoleKey.Visibility = Visibility.Visible;
@@ -106,10 +106,10 @@ namespace Patcher
             comboBoxConsoleKey.Visibility = Visibility.Hidden;
             labelConsoleKey.Visibility = Visibility.Hidden;
             checkBoxCommunityPatch.Visibility = Visibility.Hidden;
-            taskbarInfo.ProgressState = TaskbarItemProgressState.Normal;
-            taskbarInfo.ProgressValue = 0; //reset progress to 0
             progressBar.Visibility = Visibility.Visible; //make visible
             labelProgressText.Visibility = Visibility.Visible; //make visible
+            taskbarInfo.ProgressState = TaskbarItemProgressState.Normal;
+            taskbarInfo.ProgressValue = 0; //reset progress to 0
             Height = heightLoading; //shorten window
         }
 
@@ -131,7 +131,7 @@ namespace Patcher
             }
         }
 
-        public void button_Click(object sender, RoutedEventArgs e) // patch borderlands2
+        public void buttonPatch_Click(object sender, RoutedEventArgs e) // patch borderlands2
         {
             gameID = (comboBoxGame.SelectedIndex + 1); //calculate id of game from index of selected dropdown item
             debug = menuDebug.IsChecked; //enable debug mode if the menu option is checked
@@ -189,6 +189,12 @@ namespace Patcher
 
         private void menuOptions_Click(object sender, RoutedEventArgs e)
         {
+        }
+
+        private void menuExperimental_Click(object sender, RoutedEventArgs e)
+        {
+            comboItemBL1.IsEnabled = menuExperimental.IsEnabled; //only enable bl1 when experimental mode is on
+            comboItemBLTPS.IsEnabled = menuExperimental.IsEnabled; //only enable bl1 when experimental mode is on
         }
 
         private void menuClose_Click(object sender, RoutedEventArgs e)
@@ -353,11 +359,15 @@ namespace Patcher
                 {
                     if (outputDir.Exists) //if the server folder exists
                     {
-                        System.Windows.Forms.DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("It looks like a patched version of Borderlands already exists, would you like to replace it? Clicking 'No' will skip the copy and attempt to patch the existing files, and 'Cancel' will stop the patcher altogether.", "ERROR: Output folder already exists!", System.Windows.Forms.MessageBoxButtons.YesNoCancel);
+                        System.Windows.Forms.DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("It looks like a patched version of Borderlands already exists, would you like to update it? Clicking 'Yes' will attempt to update the existing files, clicking 'No' will overwrite the old patch data, and 'Cancel' will stop the patcher altogether.", "ERROR: Output folder already exists!", System.Windows.Forms.MessageBoxButtons.YesNoCancel);
 
                         switch (dialogResult)
                         {
                             case System.Windows.Forms.DialogResult.Yes:
+                                skipCopy = true;//skip the copy
+                                break;
+
+                            case System.Windows.Forms.DialogResult.No:
                                 if (!debug && !skipCopy) //if not in debug mode
                                 {
                                     patcherWorker.ReportProgress(5); //set loadingprogress to 5%
@@ -367,11 +377,7 @@ namespace Patcher
                                 skipCopy = false;//continue
                                 break;
 
-                            case System.Windows.Forms.DialogResult.No:
-                                skipCopy = true;//skip the copy
-                                break;
-                            //case System.Windows.Forms.DialogResult.Cancel:
-                            default:
+                            default: //case System.Windows.Forms.DialogResult.Cancel:
                                 patcherWorker.CancelAsync(); //cancel
                                 patcherWorker.Dispose();
                                 //Close(); //terminate thread
