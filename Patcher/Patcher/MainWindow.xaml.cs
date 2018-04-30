@@ -590,6 +590,11 @@ namespace Patcher
                             // -- PREVENT MENU FROM CANCELLING FAST TRAVEL --
                             streamWillowGame2.Position = 0x006BEAF6;
                             streamWillowGame2.WriteByte(0x27);
+
+                            // -- MORE CACHED PLAYERS --
+                            streamWillowGame2.Position = 0x00832B20;
+                            streamWillowGame2.WriteByte(0x39);
+
                             streamWillowGame2.Close();
                         }
                         catch (IOException)
