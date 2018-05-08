@@ -84,6 +84,12 @@
 
     #<OPTIONS>
 
+        #<PRESS 'HOME' TO REFRESH PATCH>
+
+            set PlayerInput Bindings ((Name=Home,Command="exec cooppatch.txt",Control=false,Shift=false,Alt=false,LeftTrigger=false,RightTrigger=false,bIgnoreCtrl=true,bIgnoreShift=true,bIgnoreAlt=true))
+
+        #</PRESS 'HOME' TO REFRESH PATCH>
+
         #<INSTANT FAST TRAVEL>
 
             set GlobalsDefinition TravelDelay 0
