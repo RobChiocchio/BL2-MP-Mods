@@ -34,7 +34,7 @@
 
         set GameInfo AdjustedNetSpeed 5000
 
-        set PlayerInteractionServer TimeoutTime 20.0
+        set PlayerInteractionServer TimeoutTime 60.0
 
     #</NETWORK OPTIMIZATION>
 
