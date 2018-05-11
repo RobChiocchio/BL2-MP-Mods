@@ -249,6 +249,10 @@ namespace Patcher
                     labelProgressText.Content = "Downloading patches";
                     break;
 
+                case 45:
+                    labelProgressText.Content = "Installing DLL loader";
+                    break;
+
                 case 50:
                     labelProgressText.Content = "EXPLOSIONS?!?!?!?!";//"Hacking your Minecraft account";
                     break;
@@ -414,6 +418,26 @@ namespace Patcher
                         try
                         {
                             myWebClient.DownloadFile("https://www.dropbox.com/s/kxvf8w3ul4zuh93/Patch.txt", outputDir.FullName + @"\Binaries\Patch.txt");
+                        }
+                        catch (WebException)
+                        {
+                            //log
+                        }
+                    }
+                }
+
+                // -- INSTALL DLL LOADER --
+                if (!(System.IO.File.Exists(outputDir.FullName + @"\Binaries\Win32\binkw23.dll"))) //if the patch is not already installed
+                {
+                    patcherWorker.ReportProgress(45); //set loadingprogress to 45%
+
+                    System.IO.File.Move(outputDir.FullName + @"\Binaries\Win32\binkw32.dll", outputDir.FullName + @"\Binaries\Win32\binkw23.dll"); //rename binkw32 to binkw23
+
+                    using (WebClient myWebClient = new WebClient()) //download file
+                    {
+                        try
+                        {
+                            myWebClient.DownloadFile("https://github.com/RobethX/BL2-DLL-Loader/releases/download/v0.2/binkw32.dll", outputDir.FullName + @"\Binaries\Win32\binkw32.dll"); //debug/temporary - need permalink to latest release
                         }
                         catch (WebException)
                         {
