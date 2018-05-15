@@ -20,7 +20,7 @@
 
     #<NETWORK OPTIMIZATION>
 
-        set WillowCoopGameInfo TotalNetBandwidth 64000
+        set WillowCoopGameInfo TotalNetBandwidth 640000
 
 	set WillowCoopGameInfo MinDynamicBandwidth 2000
 
