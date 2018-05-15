@@ -21,7 +21,7 @@ Patcher/Icon.ico
 [Xx]86/
 [Bb]uild/
 bld/
-[Bb]in/
+#[Bb]in/
 [Oo]bj/
 [pP]ublish/
 

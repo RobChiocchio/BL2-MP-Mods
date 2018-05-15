@@ -22,7 +22,7 @@ namespace Patcher
         private volatile string gameExec = ""; //init gameExec
         private volatile string gameDir = ""; //init gameDir
         private volatile string cooppatchFile = ""; //init cooppatchFile
-        private volatile string path = @"C:\\"; //init default path
+        private volatile string path = @"C:\"; //init default path
         private volatile string consoleKey; //init -- set in button_Click
         private volatile string fileCopying = "files..."; //current file copying
         private volatile int gameID; //init game id
@@ -169,7 +169,7 @@ namespace Patcher
             var fileDialog = new System.Windows.Forms.OpenFileDialog();
             fileDialog.Filter = "Borderlands|*.exe";
             fileDialog.Title = "Open " + gameExec;
-            fileDialog.InitialDirectory = @"C:\\Program Files (x86)\\Steam\\SteamApps\\common\\" + gameDir + "\\Binaries\\Win32"; //I guess this isnt working
+            fileDialog.InitialDirectory = @"C:\Program Files (x86)\Steam\SteamApps\common\" + gameDir + @"\Binaries\Win32"; //I guess this isnt working
             fileDialog.RestoreDirectory = true; //this either
             var result = fileDialog.ShowDialog(); //open file picker dialog
 
@@ -325,8 +325,8 @@ namespace Patcher
         private void patcherWorker_DoWork(object sender, DoWorkEventArgs e) //the main function
         {
             DirectoryInfo iBL = new DirectoryInfo(path); //bl = path to Borderlands exe
-            DirectoryInfo inputDir = new DirectoryInfo(iBL + @"..\\..\\..\\..\\"); //convert to directory - IDK why I need more ..\\s then I actually should but it works so who cares
-            DirectoryInfo outputDir = new DirectoryInfo(inputDir + @"\\server"); //convert to directory
+            DirectoryInfo inputDir = new DirectoryInfo(iBL + @"..\..\..\..\"); //convert to directory
+            DirectoryInfo outputDir = new DirectoryInfo(inputDir + @"\server"); //convert to directory
 
             DirectoryInfo oBL;
             DirectoryInfo iWillowGame;
@@ -336,22 +336,22 @@ namespace Patcher
 
             if (gameID == 1) //if Borderlands 1
             {
-                oBL = new DirectoryInfo(outputDir + @"\\Binaries\\" + gameExec);
-                iWillowGame = new DirectoryInfo(inputDir + @"\\WillowGame\\CookedPC\\WillowGame.u"); // path to WillowGame.upk
-                oWillowGame = new DirectoryInfo(outputDir + @"\\WillowGame\\CookedPC\\WillowGame.u"); // path to WillowGame.upk
-                iEngine = new DirectoryInfo(inputDir + @"\\WillowGame\\CookedPC\\Engine.u"); // path to Engine.upk
-                oEngine = new DirectoryInfo(outputDir + @"\\WillowGame\\CookedPC\\Engine.u"); // path to Engine.upk
+                oBL = new DirectoryInfo(outputDir + @"\Binaries\" + gameExec);
+                iWillowGame = new DirectoryInfo(inputDir + @"\WillowGame\CookedPC\WillowGame.u"); // path to WillowGame.upk
+                oWillowGame = new DirectoryInfo(outputDir + @"\WillowGame\CookedPC\WillowGame.u"); // path to WillowGame.upk
+                iEngine = new DirectoryInfo(inputDir + @"\WillowGame\CookedPC\Engine.u"); // path to Engine.upk
+                oEngine = new DirectoryInfo(outputDir + @"\WillowGame\CookedPC\Engine.u"); // path to Engine.upk
             }
             else
             {
-                oBL = new DirectoryInfo(outputDir + @"\\Binaries\\Win32\\" + gameExec);
-                iWillowGame = new DirectoryInfo(inputDir + @"\\WillowGame\\CookedPCConsole\\WillowGame.upk"); // path to WillowGame.upk
-                oWillowGame = new DirectoryInfo(outputDir + @"\\WillowGame\\CookedPCConsole\\WillowGame.upk"); // path to WillowGame.upk
-                iEngine = new DirectoryInfo(inputDir + @"\\WillowGame\\CookedPCConsole\\Engine.upk"); // path to Engine.upk
-                oEngine = new DirectoryInfo(outputDir + @"\\WillowGame\\CookedPCConsole\\Engine.upk"); // path to Engine.upk
+                oBL = new DirectoryInfo(outputDir + @"\Binaries\Win32\" + gameExec);
+                iWillowGame = new DirectoryInfo(inputDir + @"\WillowGame\CookedPCConsole\WillowGame.upk"); // path to WillowGame.upk
+                oWillowGame = new DirectoryInfo(outputDir + @"\WillowGame\CookedPCConsole\WillowGame.upk"); // path to WillowGame.upk
+                iEngine = new DirectoryInfo(inputDir + @"\WillowGame\CookedPCConsole\Engine.upk"); // path to Engine.upk
+                oEngine = new DirectoryInfo(outputDir + @"\WillowGame\CookedPCConsole\Engine.upk"); // path to Engine.upk
             }
 
-            String decompress = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), "decompress.exe");
+            String decompress = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), @"bin\decompress.exe");
             Boolean skipCopy = false;
 
             patcherWorker.ReportProgress(10); //set loading to 10%
@@ -382,9 +382,10 @@ namespace Patcher
                                 break;
 
                             default: //case System.Windows.Forms.DialogResult.Cancel:
+                                skipCopy = true;
                                 patcherWorker.CancelAsync(); //cancel
                                 patcherWorker.Dispose();
-                                //Close(); //terminate thread
+                                Close(); //terminate thread
                                 break;
                         }
                     }
@@ -426,30 +427,20 @@ namespace Patcher
                     }
                 }
 
-                // -- INSTALL DLL LOADER --
-                /*
                 if (!(System.IO.File.Exists(outputDir.FullName + @"\Binaries\Win32\binkw23.dll"))) //if the patch is not already installed
                 {
                     patcherWorker.ReportProgress(45); //set loadingprogress to 45%
 
-                    System.IO.File.Move(outputDir.FullName + @"\Binaries\Win32\binkw32.dll", outputDir.FullName + @"\Binaries\Win32\binkw23.dll"); //rename binkw32 to binkw23
+                    DirectoryInfo iPlugins = new DirectoryInfo(@"bin\Plugins");
+                    DirectoryInfo oPlugins = new DirectoryInfo(outputDir + @"\Binaries\Plugins");
 
-                    using (WebClient myWebClient = new WebClient()) //download file
-                    {
-                        try
-                        {
-                            myWebClient.DownloadFile("https://github.com/RobethX/BL2-DLL-Loader/releases/download/v0.2/binkw32.dll", outputDir.FullName + @"\Binaries\Win32\binkw32.dll"); //debug/temporary - need permalink to latest release
-                        }
-                        catch (WebException)
-                        {
-                            //log
-                        }
-                    }
+                    System.IO.File.Move(outputDir.FullName + @"\Binaries\Win32\binkw32.dll", outputDir.FullName + @"\Binaries\Win32\binkw23.dll"); //rename binkw32 to binkw23
+                    System.IO.File.Copy(@"bin\bink32.dll", outputDir.FullName + @"\Binaries\Win32\binkw32.dll"); //copy patched dll to win32
+                    CopyFilesRecursively(iPlugins, oPlugins); //copy plugins to borderlands
                 }
-                */
 
                 patcherWorker.ReportProgress(50); //set loadingprogress to 50%
-                // -- RENAME UPK AND DECOMPRESSEDSIZE --
+                                                  // -- RENAME UPK AND DECOMPRESSEDSIZE --
                 try //incase it's already moved
                 {
                     System.IO.File.Move(oWillowGame.FullName + ".uncompressed_size", oWillowGame.FullName + ".uncompressed_size.bak"); //backup WillowGame.upk.uncompressed_size
@@ -463,14 +454,16 @@ namespace Patcher
                 }
 
                 patcherWorker.ReportProgress(60); //set loadingprogress to 60%
+
                 // -- DECOMPRESS UPK --
-                //var decompressing = System.Diagnostics.Process.Start(decompress, "-game=border -out=" + outputDir + @"\\WillowGame\\CookedPCConsole\\ " + iUPK.FullName); //decompress WillowGame.UPK
+
+                //var decompressing = System.Diagnostics.Process.Start(decompress, "-game=border -out=" + outputDir + @"\WillowGame\CookedPCConsole\ " + iUPK.FullName); //decompress WillowGame.UPK
                 var decompressingWillowGame = System.Diagnostics.Process.Start(decompress, "-game=border -log=decompress.log " + '"' + iWillowGame.FullName + '"'); //decompress WillowGame.UPK
                 decompressingWillowGame.WaitForExit(); //wait for decompress.exe to finish
                 var decompressingEngine = System.Diagnostics.Process.Start(decompress, "-game=border -log=decompress.log " + '"' + iEngine.FullName + '"'); //decompress Engine.UPK
                 decompressingEngine.WaitForExit(); //wait for decompress.exe to finish
-                FileInfo decompressedWillowGame = new FileInfo(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), @"unpacked\\", iWillowGame.Name));
-                FileInfo decompressedEngine = new FileInfo(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), @"unpacked\\", iEngine.Name));
+                FileInfo decompressedWillowGame = new FileInfo(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), @"bin\unpacked\", iWillowGame.Name));
+                FileInfo decompressedEngine = new FileInfo(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), @"bin\unpacked\", iEngine.Name));
 
                 try
                 {
@@ -483,9 +476,10 @@ namespace Patcher
                 }
 
                 // -- DELETE UNPACKED FOLDER --
+
                 try
                 {
-                    Directory.Delete(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), @"unpacked\\"), true); //delete Unpacked folder recursively
+                    Directory.Delete(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), @"bin\unpacked\"), true); //delete Unpacked folder recursively
                 }
                 catch (IOException)
                 {
@@ -493,7 +487,9 @@ namespace Patcher
                 }
 
                 patcherWorker.ReportProgress(70); //set loadingprogress to 70%
+
                 // -- HEX EDITING --
+
                 switch (gameID)
                 {
                     case 3: //tps
@@ -541,6 +537,7 @@ namespace Patcher
                         patcherWorker.ReportProgress(75); //set loadingprogress to 75%
 
                         // -- HEX EDIT ENGINE.UPK --
+
                         try
                         {
                             var streamEngineTPS = new FileStream(oBL.FullName, FileMode.Open, FileAccess.ReadWrite);
@@ -556,7 +553,9 @@ namespace Patcher
                         }
 
                         patcherWorker.ReportProgress(80); //set loadingprogress to 80%
+
                         // -- HEX EDIT BORDERLANDSPRESEQUEL.EXE --
+
                         try
                         {
                             var streamBLTPS = new FileStream(oBL.FullName, FileMode.Open, FileAccess.ReadWrite);
@@ -578,7 +577,9 @@ namespace Patcher
                         break;
 
                     case 2: //bl2
+
                         // -- HEX EDIT WILLOWGAME --
+
                         try
                         {
                             var streamWillowGame2 = new FileStream(oWillowGame.FullName, FileMode.Open, FileAccess.ReadWrite);
@@ -631,6 +632,7 @@ namespace Patcher
                         patcherWorker.ReportProgress(75); //set loadingprogress to 75%
 
                         // -- HEX EDIT ENGINE.UPK --
+
                         try
                         {
                             var streamEngine2 = new FileStream(oBL.FullName, FileMode.Open, FileAccess.ReadWrite);
@@ -685,8 +687,10 @@ namespace Patcher
                         }
                         break;
 
-                    case 1: //bl2
+                    case 1: //bl1
+
                         // -- HEX EDIT WILLOWGAME.U --
+
                         /*
                         try
                         {
@@ -703,6 +707,7 @@ namespace Patcher
                         patcherWorker.ReportProgress(75); //set loadingprogress to 75%
 
                         // -- HEX EDIT ENGINE.U --
+
                         try
                         {
                             var streamEngine1 = new FileStream(oBL.FullName, FileMode.Open, FileAccess.ReadWrite);
@@ -722,20 +727,21 @@ namespace Patcher
                         patcherWorker.ReportProgress(80); //set loadingprogress to 80%
 
                         // -- HEX EDIT BORDERLANDS.EXE --
+
                         /*
                         try
                         {
-                            var streamBL2 = new FileStream(oBL.FullName, FileMode.Open, FileAccess.ReadWrite);
-                            streamBL2.Position = 0x004F2590;
-                            streamBL2.WriteByte(0xFF);
+                            var streamBL1 = new FileStream(oBL.FullName, FileMode.Open, FileAccess.ReadWrite);
+                            streamBL1.Position = 0x004F2590;
+                            streamBL1.WriteByte(0xFF);
                             for (long i = 0x01B94B0C; i <= 0x01B94B10; i++)
                             {
-                                streamBL2.Position = i;
-                                streamBL2.WriteByte(0x00);
+                                streamBL1.Position = i;
+                                streamBL1.WriteByte(0x00);
                             }
-                            streamBL2.Position = 0x01EF17F9; //find upk
-                            streamBL2.WriteByte(0x78); //willowgame.upk > xillowgame.upk
-                            streamBL2.Close();
+                            streamBL1.Position = 0x01EF17F9; //find upk
+                            streamBL1.WriteByte(0x78); //willowgame.upk > xillowgame.upk
+                            streamBL1.Close();
                         }
                         catch (IOException)
                         {
@@ -744,13 +750,15 @@ namespace Patcher
                         */
                         break;
 
-                    default: //if not bl2 or tps
-                        //log
+                    default: //if not bl1, bl2, or tps
+                             //log
                         break;
                 }
 
                 patcherWorker.ReportProgress(90); //set loadingprogress to 90%
+
                 // -- CREATE SHORTCUT --
+
                 try
                 {
                     String execMods = "";
@@ -759,7 +767,7 @@ namespace Patcher
                         execMods = execMods + " -exec=" + mod;
                     }
 
-                    string shortcutName = @"\\" + gameDir + " - Robeth's Unlimited COOP Mod.lnk";
+                    string shortcutName = @"\" + gameDir + " - Robeth's Unlimited COOP Mod.lnk";
                     WshShell shell = new WshShell();
                     IWshRuntimeLibrary.IWshShortcut shortcut = shell.CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + shortcutName) as IWshShortcut;
 
@@ -784,10 +792,11 @@ namespace Patcher
                 }
 
                 // -- ENABLE CONSOLE -- RIPPED STRAIGHT FROM BUGWORM's BORDERLANDS2PATCHER!!!!!
+
                 try
                 {
                     int i; //for temp[i]
-                    string tmpPath = @"\\my games\\" + gameDir + "\\willowgame\\Config\\WillowInput.ini";
+                    string tmpPath = @"\my games\" + gameDir + @"\willowgame\Config\WillowInput.ini";
                     string iniPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + tmpPath;
                     string[] iniLine = System.IO.File.ReadAllLines(iniPath);
                     for (i = 0; i < iniLine.Length; i++)
