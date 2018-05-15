@@ -22,13 +22,15 @@
 
         set WillowCoopGameInfo TotalNetBandwidth 64000
 
+	set WillowCoopGameInfo MinDynamicBandwidth 2000
+
         set IPDrv.TCPNetDriver NetServerMaxTickrate 20
 
         set IPDrv.TCPNetDriver bClampListenServerTickRate True
 
         set IPDrv.TCPNetDriver KeepAliveTime 0.500000
 
-        set IPDrv.TCPNetDriver MaxInternetClientRate 5000
+        set IPDrv.TCPNetDriver MaxInternetClientRate 7000
 
         set IPDrv.TCPNetDriver MaxClientRate 10000
 
