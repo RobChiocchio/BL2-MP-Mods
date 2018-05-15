@@ -427,6 +427,7 @@ namespace Patcher
                 }
 
                 // -- INSTALL DLL LOADER --
+                /*
                 if (!(System.IO.File.Exists(outputDir.FullName + @"\Binaries\Win32\binkw23.dll"))) //if the patch is not already installed
                 {
                     patcherWorker.ReportProgress(45); //set loadingprogress to 45%
@@ -445,6 +446,7 @@ namespace Patcher
                         }
                     }
                 }
+                */
 
                 patcherWorker.ReportProgress(50); //set loadingprogress to 50%
                 // -- RENAME UPK AND DECOMPRESSEDSIZE --
