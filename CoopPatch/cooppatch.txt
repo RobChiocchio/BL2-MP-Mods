@@ -22,7 +22,7 @@
 
         set WillowCoopGameInfo TotalNetBandwidth 640000
 
-	set WillowCoopGameInfo MinDynamicBandwidth 2000
+        set WillowCoopGameInfo MinDynamicBandwidth 2000
 
         set IPDrv.TCPNetDriver NetServerMaxTickrate 20
 
@@ -131,6 +131,12 @@
             #<hotfix><key>"SparkLevelPatchEntry-VEHICLES2"</key><value>",WillowVehicle_WheeledVehicle,bIsInvulnerable,,True"</value><off>
 
         #</INVINCIBLE CARS>
+
+        #<STAND ON PAWNS>
+
+            #set Actor bCanStepUpOn true<off>
+
+        #</STAND ON PAWNS>
 
     #</OPTIONS>
 
