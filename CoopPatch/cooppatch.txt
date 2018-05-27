@@ -38,6 +38,12 @@
 
         set PlayerInteractionServer TimeoutTime 60.0
 
+        set IPDrv.TCPNetDriver SpawnPrioritySeconds 2
+
+        set IPDrv.TCPNetDriver InitialConnectTimeout 300
+
+        set IPDrv.TCPNetDriver ConnectionTimeout 120
+
     #</NETWORK OPTIMIZATION>
 
     #<FIXES>
