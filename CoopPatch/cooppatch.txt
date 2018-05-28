@@ -24,6 +24,10 @@
 
         set WillowCoopGameInfo MinDynamicBandwidth 2000
 
+        set PlayerInteractionServer TimeoutTime 60.0
+
+        set GameInfo AdjustedNetSpeed 5000
+
         set IPDrv.TCPNetDriver NetServerMaxTickrate 20
 
         set IPDrv.TCPNetDriver bClampListenServerTickRate True
@@ -34,15 +38,31 @@
 
         set IPDrv.TCPNetDriver MaxClientRate 10000
 
-        set GameInfo AdjustedNetSpeed 5000
-
-        set PlayerInteractionServer TimeoutTime 60.0
-
         set IPDrv.TCPNetDriver SpawnPrioritySeconds 2
 
         set IPDrv.TCPNetDriver InitialConnectTimeout 300
 
         set IPDrv.TCPNetDriver ConnectionTimeout 120
+
+        set WillowPlayerReplicationInfo NetUpdateFrequency 20
+
+        set Engine NetClientTicksPerSecond 60.0
+
+        set OnlineSubsystemSteamworks.IpNetDriverSteamworks NetServerMaxTickRate 20
+
+        set OnlineSubsystemSteamworks.IpNetDriverSteamworks bClampListenServerTickRate True
+
+        set OnlineSubsystemSteamworks.IpNetDriverSteamworks KeepAliveTime 0.500000
+
+        set OnlineSubsystemSteamworks.IpNetDriverSteamworks MaxInternetClientRate 7000
+
+        set OnlineSubsystemSteamworks.IpNetDriverSteamworks MaxClientRate 10000
+
+        set OnlineSubsystemSteamworks.IpNetDriverSteamworks SpawnPrioritySeconds 2
+
+        set OnlineSubsystemSteamworks.IpNetDriverSteamworks InitialConnectionTimeout 300
+
+        set OnlineSubsystemSteamworks.IpNetDriverSteamworks ConnectionTimeout 120
 
     #</NETWORK OPTIMIZATION>
 
