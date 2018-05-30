@@ -435,7 +435,7 @@ namespace Patcher
                     DirectoryInfo oPlugins = new DirectoryInfo(outputDir + @"\Binaries\Plugins");
 
                     System.IO.File.Move(outputDir.FullName + @"\Binaries\Win32\binkw32.dll", outputDir.FullName + @"\Binaries\Win32\binkw23.dll"); //rename binkw32 to binkw23
-                    System.IO.File.Copy(@"bin\bink32.dll", outputDir.FullName + @"\Binaries\Win32\binkw32.dll"); //copy patched dll to win32
+                    System.IO.File.Copy(@"bin\bink32.dll", outputDir.FullName + @"\Binaries\Win32\binkw32.dll", true); //copy patched dll to win32 - overwrite
                     CopyFilesRecursively(iPlugins, oPlugins); //copy plugins to borderlands
                 }
 
@@ -761,17 +761,11 @@ namespace Patcher
 
                 try
                 {
-                    String execMods = "";
-                    foreach (String mod in mods)
-                    {
-                        execMods = execMods + " -exec=" + mod;
-                    }
-
                     string shortcutName = @"\" + gameDir + " - Robeth's Unlimited COOP Mod.lnk";
                     WshShell shell = new WshShell();
                     IWshRuntimeLibrary.IWshShortcut shortcut = shell.CreateShortcut(Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + shortcutName) as IWshShortcut;
 
-                    shortcut.Arguments = "-log" + " -exec=cooppatch.txt";//execMods;
+                    shortcut.Arguments = "-log";
                     shortcut.TargetPath = oBL.FullName;
                     shortcut.WindowStyle = 1;
                     shortcut.Description = "Robeth's Borderlands COOP patch";
