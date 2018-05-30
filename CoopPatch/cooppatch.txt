@@ -30,7 +30,7 @@
 
         set IPDrv.TCPNetDriver NetServerMaxTickrate 20
 
-        set IPDrv.TCPNetDriver bClampListenServerTickRate True
+        set IPDrv.TCPNetDriver bClampListenServerTickRate False
 
         set IPDrv.TCPNetDriver KeepAliveTime 0.500000
 
@@ -46,11 +46,11 @@
 
         set WillowPlayerReplicationInfo NetUpdateFrequency 20
 
-        set Engine NetClientTicksPerSecond 60.0
+        set Engine NetClientTicksPerSecond 100.0
 
         set OnlineSubsystemSteamworks.IpNetDriverSteamworks NetServerMaxTickRate 20
 
-        set OnlineSubsystemSteamworks.IpNetDriverSteamworks bClampListenServerTickRate True
+        set OnlineSubsystemSteamworks.IpNetDriverSteamworks bClampListenServerTickRate False
 
         set OnlineSubsystemSteamworks.IpNetDriverSteamworks KeepAliveTime 0.500000
 
