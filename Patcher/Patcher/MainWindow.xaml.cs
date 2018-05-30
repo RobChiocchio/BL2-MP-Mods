@@ -462,8 +462,8 @@ namespace Patcher
                 decompressingWillowGame.WaitForExit(); //wait for decompress.exe to finish
                 var decompressingEngine = System.Diagnostics.Process.Start(decompress, "-game=border -log=decompress.log " + '"' + iEngine.FullName + '"'); //decompress Engine.UPK
                 decompressingEngine.WaitForExit(); //wait for decompress.exe to finish
-                FileInfo decompressedWillowGame = new FileInfo(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), @"bin\unpacked\", iWillowGame.Name));
-                FileInfo decompressedEngine = new FileInfo(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), @"bin\unpacked\", iEngine.Name));
+                FileInfo decompressedWillowGame = new FileInfo(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), @"unpacked\", iWillowGame.Name));
+                FileInfo decompressedEngine = new FileInfo(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), @"unpacked\", iEngine.Name));
 
                 try
                 {
@@ -479,7 +479,7 @@ namespace Patcher
 
                 try
                 {
-                    Directory.Delete(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), @"bin\unpacked\"), true); //delete Unpacked folder recursively
+                    Directory.Delete(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), @"unpacked\"), true); //delete Unpacked folder recursively
                 }
                 catch (IOException)
                 {
