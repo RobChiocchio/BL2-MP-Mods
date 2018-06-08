@@ -60,8 +60,6 @@
 
         set OnlineSubsystemSteamworks.IpNetDriverSteamworks SpawnPrioritySeconds 2
 
-        set OnlineSubsystemSteamworks.IpNetDriverSteamworks InitialConnectionTimeout 300
-
         set OnlineSubsystemSteamworks.IpNetDriverSteamworks ConnectionTimeout 120
 
     #</NETWORK OPTIMIZATION>
