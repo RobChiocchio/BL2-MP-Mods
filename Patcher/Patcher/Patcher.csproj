@@ -67,7 +67,7 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -186,7 +186,11 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy "$(SolutionDir)bin" "$(TargetDir)bin" /y /e /i</PostBuildEvent>
+    <PostBuildEvent>if "%25SIGNTOOL%25"=="" set SIGNTOOL="%25ProgramFiles(x86)%25\Windows Kits\8.1\bin\x86\signtool.exe"
+if not exist %25SIGNTOOL%25 goto SKIPSIGN
+    %25SIGNTOOL%25 sign /t http://timestamp.verisign.com/scripts/timestamp.dll /a "$(TargetPath)"
+:SKIPSIGN
+xcopy "$(SolutionDir)bin" "$(TargetDir)bin" /y /e /i</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
