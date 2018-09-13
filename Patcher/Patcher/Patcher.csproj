@@ -186,9 +186,11 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>if "%25SIGNTOOL%25"=="" set SIGNTOOL="%25ProgramFiles(x86)%25\Windows Kits\8.1\bin\x86\signtool.exe"
-if not exist %25SIGNTOOL%25 goto SKIPSIGN
-    %25SIGNTOOL%25 sign /t http://timestamp.verisign.com/scripts/timestamp.dll /a "$(TargetPath)"
+    <PostBuildEvent>if $(ConfigurationName) == Release (
+    if "%25SIGNTOOL%25"=="" set SIGNTOOL="%25ProgramFiles(x86)%25\Windows Kits\8.1\bin\x86\signtool.exe"
+    if not exist %25SIGNTOOL%25 goto SKIPSIGN
+        %25SIGNTOOL%25 sign /t http://timestamp.verisign.com/scripts/timestamp.dll /a "$(TargetPath)"
+)
 :SKIPSIGN
 xcopy "$(SolutionDir)bin" "$(TargetDir)bin" /y /e /i</PostBuildEvent>
   </PropertyGroup>
