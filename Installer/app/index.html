@@ -20,17 +20,17 @@
       Chromium <script>document.write(process.versions.chrome)</script>,
       and Electron <script>document.write(process.versions.electron)</script>.<br>
 
-      <select id="selectGame">
-        <option id="optionBL1" value="1">Borderlands</option>
-        <option id="optionBL2" value="2" selected>Borderlands 2</option>
-        <option id="optionBLTPS" value="3">Borderlands: The Pre-Sequel</option>
+      <select id="selectGame" class="element">
+        <option id="optionBL1" value="bl1">Borderlands</option>
+        <option id="optionBL2" value="bl2" selected>Borderlands 2</option>
+        <option id="optionBLTPS" value="bltps">Borderlands: The Pre-Sequel</option>
       </select>
 
-      <div id="loadingBar">
+      <div id="loadingBar" class="element">
           <div id="loadingBarProgress"></div>
-      </div><br>
+      </div>
 
-      <button id="buttonPatch" onclick="testLoadingBar()">Patch Borderlands</button>
+      <button id="buttonPatch" class="element" onclick="testLoadingBar()">Patch Borderlands</button>
     </div>
   </body>
   <!-- <script src="scripts/" -->
