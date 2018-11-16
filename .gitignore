@@ -246,7 +246,3 @@ ModelManifest.xml
 
 # Electron
 node_modules
-
-
-#VSCode
-.vscode
