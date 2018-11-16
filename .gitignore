@@ -243,3 +243,10 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+
+# Electron
+node_modules
+
+
+#VSCode
+.vscode

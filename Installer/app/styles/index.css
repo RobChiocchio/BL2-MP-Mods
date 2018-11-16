@@ -1,0 +1,90 @@
+/*
+Palette: 
+Light grey: #f5f6fa, #dcdde1
+Blue grey: #7f8fa6, #718093
+Dark grey: #353b48, #2f3640
+*/
+
+html, body {
+	padding: 0;
+	margin: 0;
+	font-family: -apple-system, 'Roboto', 'Helvetica Neue', Helvetica, sans-serif;
+}
+
+body {
+	background: #353b48;
+	color: #f5f6fa;
+}
+
+.container {
+	padding: 5px;
+	margin: 10px;
+}
+
+#titlebar {
+	-webkit-user-select: none;
+	-webkit-app-region: drag;
+	height: 32px;
+	padding: 0px;
+	margin: 0px;
+	background: #2f3640;
+	color: #7f8fa6;
+}
+
+#titlebar-title {
+	position: fixed;
+	top: 0px;
+	left: 12px;
+	line-height: 32px;
+	font-size: 14px;
+}
+
+#titlebar-buttons {
+	-webkit-app-region: no-drag;
+	position: fixed;
+	right: 0px;
+	margin: auto;
+}
+
+#titlebar-buttons button {
+	height: 32px;
+	width: 32px;
+	border: none;
+	outline: 0px;
+	background: transparent;
+	color: #7f8fa6;
+	text-align: center;
+	font-size: 16px;
+}
+
+#titlebar-buttons button:hover {
+	background: #353b48;
+}
+
+#loadingBar {
+	background: #718093;
+	height: 30px;
+	margin-top: 10px;
+}
+
+#loadingBarProgress {
+	width: 0%;
+	height: 100%;
+	background: #7f8fa6;
+}
+
+#buttonPatch {
+	margin-top: 10px;
+}
+
+#buttonPatch button {
+	background: #7f8fa6;
+}
+
+#buttonPatch button:hover {
+	background: #718093;
+}
+
+#selectGame {
+	margin-top: 10px;
+}

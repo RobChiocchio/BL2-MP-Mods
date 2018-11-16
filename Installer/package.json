@@ -1,0 +1,27 @@
+{
+  "name": "unlimited-coop-patcher",
+  "version": "1.0.0",
+  "description": "Robeth's Borderlands Unlimited COOP Mod",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RobethX/BL2-MP-Mods.git"
+  },
+  "keywords": [
+    "Borderlands",
+    "mod"
+  ],
+  "author": "Rob Chiocchio",
+  "license": "GPL-3.0-or-later",
+  "devDependencies": {
+    "electron": "^3.0.9"
+  },
+  "bugs": {
+    "url": "https://github.com/RobethX/BL2-MP-Mods/issues"
+  },
+  "homepage": "https://steamcommunity.com/sharedfiles/filedetails/?id=1151711689",
+  "dependencies": {}
+}
