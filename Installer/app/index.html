@@ -1,40 +1,40 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Hello World!</title>
-    <link rel="stylesheet" href="styles/index.css">
-  </head>
-  <body>
-    <div id="titlebar">
-      <div id="titlebar-title">Robeth's COOP Patcher</div>
-      <div id="titlebar-buttons">
-        <button id="buttonMinimize">🗕</button>
-        <button id="buttonMaximize">🗖</button>
-        <button id="buttonClose">🗙</button>
-        <!-- ✕×✖🞩x ... which to choose? -->
-      </div>
-    </div>
-    <div class="container">
-      We are using Node.js <script>document.write(process.versions.node)</script>,
-      Chromium <script>document.write(process.versions.chrome)</script>,
-      and Electron <script>document.write(process.versions.electron)</script>.<br>
+	<head>
+		<meta charset="UTF-8">
+		<title>Hello World!</title>
+		<link rel="stylesheet" href="styles/index.css">
+	</head>
+	<body>
+		<div id="titlebar">
+			<div id="titlebar-title">Robeth's COOP Patcher</div>
+			<div id="titlebar-buttons">
+				<button id="buttonMinimize">&#128469;</button>
+				<button id="buttonMaximize">&#128470;</button>
+				<button id="buttonClose">&#128473;</button>
+				<!-- ✕×✖🞩x ... which to choose? -->
+			</div>
+		</div>
+		<div class="container">
+			We are using Node.js <script>document.write(process.versions.node)</script>,
+			Chromium <script>document.write(process.versions.chrome)</script>,
+			and Electron <script>document.write(process.versions.electron)</script>.<br>
 
-      <select id="selectGame" class="element">
-        <option id="optionBL1" value="bl1">Borderlands</option>
-        <option id="optionBL2" value="bl2" selected>Borderlands 2</option>
-        <option id="optionBLTPS" value="bltps">Borderlands: The Pre-Sequel</option>
-      </select>
+			<select id="selectGame" class="element">
+				<option id="optionBL1" value="bl1">Borderlands</option>
+				<option id="optionBL2" value="bl2" selected>Borderlands 2</option>
+				<option id="optionBLTPS" value="bltps">Borderlands: The Pre-Sequel</option>
+			</select>
 
-      <div id="loadingBar" class="element">
-          <div id="loadingBarProgress"></div>
-      </div>
+			<div id="loadingBar" class="element">
+				<div id="loadingBarProgress"></div>
+			</div>
 
-      <button id="buttonPatch" class="element" onclick="testLoadingBar()">Patch Borderlands</button>
-    </div>
-  </body>
-  <!-- <script src="scripts/" -->
-    <script src="scripts/patch.js"></script?
-    <script src="scripts/titlebar.js"></script>
-    <script src="scripts/loadingbar.js"></script>
+			<button id="buttonPatch" class="element" onclick="testLoadingBar()">Patch Borderlands</button>
+		</div>
+	</body>
+	
+	<script src="scripts/titlebar.js"></script>
+	<script src="scripts/loadingbar.js"></script>
+	<script src="scripts/patch.js"></script?
 </html>
