@@ -21,11 +21,11 @@
             const window = remote.getCurrentWindow();
             window.close();
         });
-    };
+    }
 
     document.onreadystatechange = function () {
         if (document.readyState == "complete") {
             init();
         }
-    };
+    }
 })();
