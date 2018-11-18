@@ -19,8 +19,7 @@ body {
 }
 
 .container {
-	padding: 5px;
-	margin: 10px;
+	padding: 10px;
 }
 
 #titlebar {
@@ -77,6 +76,19 @@ body {
 
 select {
 	outline: none;
+	text-indent: 5px;
+}
+
+#selectConsoleKey {
+	width: 70%;
+	margin-left: 0px;
+}
+
+#labelConsoleKey {
+	display: inline-block;
+	width: 28%;
+	margin-right: 0px;
+	text-align: center;
 }
 
 #buttonPatch:hover {
@@ -97,6 +109,6 @@ select {
 	display: none;
 	margin-top: 15px;
 	color: #f5f6fa;
-	font-size: 24px;
+	font-size: 20px;
 	text-align: center;
 }

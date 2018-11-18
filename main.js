@@ -12,10 +12,10 @@ let mainWindow
 function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 430,
-    height: 230,
-    minWidth: 430,
-    minHeight: 160,
+    width: 360,
+    height: 200,
+    minWidth: 360,
+    minHeight: 200,
     frame: false, // remove frame from windows apps
     titleBarStyle: 'hidden', // hide mac titlebar
     transparent: true, //allow rounded corners
