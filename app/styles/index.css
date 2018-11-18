@@ -9,11 +9,13 @@ html, body {
 	padding: 0;
 	margin: 0;
 	font-family: -apple-system, 'Roboto', 'Helvetica Neue', Helvetica, sans-serif;
+	border-radius: 5px;
 }
 
 body {
 	background: #353b48;
 	color: #f5f6fa;
+	overflow: hidden;
 }
 
 .container {
@@ -77,12 +79,24 @@ select {
 	outline: none;
 }
 
+#buttonPatch:hover {
+	background: #7f8fa6;
+}
+
+#loadingBar {
+	display: none;
+}
+
 #loadingBarProgress {
 	width: 0%;
 	height: 100%;
 	background: #f5f6fa;
 }
 
-#buttonPatch:hover {
-	background: #7f8fa6;
+#statusText {
+	display: none;
+	margin-top: 15px;
+	color: #f5f6fa;
+	font-size: 24px;
+	text-align: center;
 }

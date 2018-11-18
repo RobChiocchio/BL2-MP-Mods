@@ -13,14 +13,16 @@ function createWindow () {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 430,
-    height: 360,
+    height: 230,
     minWidth: 430,
-    minHeight: 230,
+    minHeight: 160,
     frame: false, // remove frame from windows apps
-    titleBarStyle: 'hidden' // hide mac titlebar
+    titleBarStyle: 'hidden', // hide mac titlebar
+    transparent: true, //allow rounded corners
+    icon: 'app/images/icon.png',
   });
 
-  mainWindow.setIcon
+  //mainWindow.setIcon()
 
   // and load the index.html of the app.
   mainWindow.loadFile('app/index.html');

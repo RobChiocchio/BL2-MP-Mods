@@ -1,7 +1,4 @@
 (function(){
-    const electron = require('electron');
-    const remote = electron.remote;
-
     function init() {
         document.getElementById("buttonMinimize").addEventListener("click", function(e) {
             const window = remote.getCurrentWindow();
@@ -21,6 +18,12 @@
             const window = remote.getCurrentWindow();
             window.close();
         });
+
+        buttonPatch.addEventListener("click", function(e) {
+            patch();
+        });
+
+        //check if admin, if not, popup or request restart as admin?
     }
 
     document.onreadystatechange = function () {

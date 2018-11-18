@@ -12,29 +12,25 @@
 				<button id="buttonMinimize">&#128469;</button>
 				<button id="buttonMaximize">&#128470;</button>
 				<button id="buttonClose">&#128473;</button>
-				<!-- ✕×✖🞩x ... which to choose? -->
 			</div>
 		</div>
 		<div class="container">
-			We are using Node.js <script>document.write(process.versions.node)</script>,
-			Chromium <script>document.write(process.versions.chrome)</script>,
-			and Electron <script>document.write(process.versions.electron)</script>.<br>
-
 			<select id="selectGame" class="element">
 				<option id="optionBL1" value="bl1">Borderlands</option>
 				<option id="optionBL2" value="bl2" selected>Borderlands 2</option>
 				<option id="optionBLTPS" value="bltps">Borderlands: The Pre-Sequel</option>
 			</select>
 
+			<button id="buttonPatch" class="element">Patch Borderlands</button>
+
 			<div id="loadingBar" class="element">
 				<div id="loadingBarProgress"></div>
 			</div>
 
-			<button id="buttonPatch" class="element" onclick="testLoadingBar()">Patch Borderlands</button>
+			<div id="statusText"></div>
 		</div>
 	</body>
-	
-	<script src="scripts/titlebar.js"></script>
-	<script src="scripts/loadingbar.js"></script>
-	<script src="scripts/patch.js"></script?
+
+	<script src="scripts/patch.js"></script>
+	<script src="scripts/renderer.js"></script>
 </html>
