@@ -18,10 +18,6 @@ body {
 	overflow: hidden;
 }
 
-.container {
-	padding: 10px;
-}
-
 #titlebar {
 	-webkit-user-select: none;
 	-webkit-app-region: drag;
@@ -60,6 +56,10 @@ body {
 
 #titlebar-buttons button:hover {
 	background: #353b48;
+}
+
+.container {
+	padding: 5px 10px;
 }
 
 .element {
@@ -107,8 +107,11 @@ select {
 
 #statusText {
 	display: none;
-	margin-top: 15px;
+	margin-top: 20px;
 	color: #f5f6fa;
-	font-size: 20px;
+	font-size: 18px;
 	text-align: center;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }

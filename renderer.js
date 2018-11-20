@@ -4,6 +4,7 @@ const electron = require('electron');
 const remote = electron.remote;
 const dialog = remote.dialog;
 const log = require('electron-log');
+const fs = require('fs');
 
 var buttonPatch = document.getElementById("buttonPatch");
 var selectGame = document.getElementById("selectGame");
@@ -19,12 +20,13 @@ const notifications = [
     },
 ];
 
-var game = "";
-var path = "";
-var gameExec = "";
-var gameDir = "";
+var skipCopy = false;
+
+var game; //defined by switch
+var gameExec; //name of executable, defined below in switch
+var gameDir; //name of root directory, defined below in switch
 var cooppatchFile = "cooppatch.txt";
-var fileCopying = "";
+var fileCopying;
 
 function progressChanged(percent){
     loadingBarProgress.style.width = percent + '%';
@@ -73,7 +75,7 @@ function progressChanged(percent){
             break;
 
         case 80:
-            statusText.innerText = "Modifying " + gameExec + ".exe";
+            statusText.innerText = "Modifying " + gameExec;
             break;
 
         case 90:
@@ -94,7 +96,9 @@ function progressChanged(percent){
             });
             */
 
-            new Notification(notifications[0].title, notifications[0]); //finished notification
+            if (!window.isFocused()) { //if not focused, notify
+                new Notification(notifications[0].title, notifications[0]); //finished notification
+            }
 
             break;
     }
@@ -122,7 +126,7 @@ function extractUPK(path){
 function patch(){
     game = selectGame[selectGame.selectedIndex].value; //set game to value of game selector
     buttonPatch.style.display = "none"; //hide patch button
-    selectGame.style.display = "none"; //hide game selector      
+    selectGame.style.display = "none"; //hide game selector
     loadingBar.style.display = "block"; //show loading bar
     statusText.style.display = "block"; //show status text
 
@@ -146,13 +150,42 @@ function patch(){
     }
 
     progressChanged(0);
+    // -- FIND GAME FOLDER --
 
-    dialog.showOpenDialog({ properties: ['openFile'] }, { filters: [{ extensions: ['exe']}]}, function (_path) {
-        path = _path;
-        log.info(path);
-    });
+    iBL = dialog.showOpenDialog({ properties: ['openFile'] }, { filters: [{ extensions: ['exe']}]}, function (fileNames) {
+        if (fileNames == undefined) {
+            log.warn("No file selected");
+            //close patcher?
+        }
+    }); //path to Borderlands exe
+    //check for cancel
+    log.info("Input game path: " + iBL);
 
-    //TODO: check to make sure game exists, did not click cancel
+    var iRootDir = fs.realpath(iBL + '\\..\\..\\..\\..');
+    var oRootDir = fs.realpath(iRootDir + '\\server');
+
+    var oBL;
+    var iWillowGame;
+    var oWillowGame;
+    var iEngine;
+    var oEngine;
+
+    if (game == "bl1") //if Borderlands 1
+    {
+        oBL = fs.realpath(oRootDir + "\\Binaries\\" + gameExec);
+        iWillowGame = fs.realpath(iRootDir + "\\WillowGame\\CookedPC\\WillowGame.u"); // path to WillowGame.upk
+        oWillowGame = fs.realpath(oRootDir + "\\WillowGame\\CookedPC\\WillowGame.u"); // path to WillowGame.upk
+        iEngine = fs.realpath(iRootDir + "\\WillowGame\\CookedPC\\Engine.u"); // path to Engine.upk
+        oEngine = fs.realpath(oRootDir + "\\WillowGame\\CookedPC\\Engine.u"); // path to Engine.upk
+    }
+    else
+    {
+        oBL = fs.realpath(oRootDir + "\\Binaries\\Win32\\" + gameExec);
+        iWillowGame = fs.realpath(iRootDir + "\\WillowGame\\CookedPCConsole\\WillowGame.upk"); // path to WillowGame.upk
+        oWillowGame = fs.realpath(oRootDir + "\\WillowGame\\CookedPCConsole\\\WillowGame.upk"); // path to WillowGame.upk
+        iEngine = fs.realpath(iRootDir + "\\WillowGame\\CookedPCConsole\\Engine.upk"); // path to Engine.upk
+        oEngine = fs.realpath(oRootDir + "\\WillowGame\\CookedPCConsole\\Engine.upk"); // path to Engine.upk
+    }
 
     progressChanged(10);
     //TODO: // -- BACKUP BORDERLANDS --
@@ -161,39 +194,129 @@ function patch(){
     //TODO: // -- COPY PATCHES TO BINARIES --
 
     progressChanged(50);
-    //TODO: // -- RENAME UPK AND DECOMPRESSEDSIZE --
+    // -- RENAME UPK AND DECOMPRESSEDSIZE --
+
+    try {
+        fs.renameSync(oWillowGame + ".uncompressed_size", oWillowGame + ".uncompressed_size.bak");
+        fs.copyFileSync(oWillowGame, oWillowGame + ".bak");
+        fs.renameSync(oEngine + ".uncompressed_size", oEngine + ".uncompressed_size.bak");
+        fs.copyFileSync(oEngine, oEngine + ".bak");
+    } catch (err) {
+        log.error("Failed to back up upks");
+    }
     
     progressChanged(60);
     //TODO: // -- DECOMPRESS UPK FILES --
     //extractUPK("test.upk");
 
+    /*
+    try {
+        fs.copyFileSync();
+        fs.copyFileSync();
+    } catch (err) {
+        log.error("Could not find decompressed UPKs")
+    }
+    */
+
+    // -- DELETE UNPACKED FOLDER --
+
+    /*
+    try {
+        fs.rmdir( => {
+
+        })
+    }
+    */
+
     progressChanged(70);
-    //TODO: // -- HEX EDIT WILLOWGAME --
+    // -- HEX EDIT WILLOWGAME --
+
+    var streamWillowGame = fs.createWriteStream(oWillowGame);
+
+    // -- DEVELOPER MODE
+    fs.write(streamWillowGame, [ 0x27 ], 0, 1, 0x006925C7, (err) => {
+        if (err) {
+            log.error("Failed to enable developer mode in WillowGame.upk");
+            throw err;
+        }
+    });
+
+    // -- EVERY PLAYER GETS THEIR OWN TEAM --
+    fs.write(streamWillowGame, [ 0x04, 0x00, 0xC6, 0x8B, 0x00, 0x00, 0x06, 0x44, 0x00, 0x04, 0x24, 0x00 ], 0, 12, 0x007F9151, (err) => {
+        if (err) {
+            log.error("Failed to give every player their own team in WillowGame.upk");
+            throw err;
+        }
+    });
+
+    // -- PREVENT MENU FROM CANCELLING FAST TRAVEL --
+    fs.write(streamWillowGame, [ 0x27 ], 0, 1, 0x006BEAF6, (err) => {
+        if (err) {
+            log.error("Failed to disable menus cancelling fast travel in WillowGame.upk");
+            throw err;
+        }
+    });
+
+    // -- MORE CACHED PLAYERS --
+    fs.write(streamWillowGame, [ 0x39 ], 0, 1, 0x00832B20, (err) => {
+        if (err) {
+            log.error("Failed to increase cached players size in WillowGame.upk");
+            throw err;
+        }
+    });
+
+    fs.close(streamWillowGame, (err) => {
+        if (err) {
+            log.warn("Failed to close WillowGame.upk");
+            throw err;
+        }
+    })
 
     progressChanged(75);
     //TODO: // -- HEX EDIT ENGINE --
 
     progressChanged(80);
     //TODO: // -- HEX EDIT EXE
+    /*
+    fs.open(fileNames[0], 'rw', (err, fd) => {
+        if (err) {
+            log.error("Could not open file " + fileNames[0]);
+            throw err;
+        }
+        fs.close(fd);
+    });
+    */
     
     progressChanged(90);
     //TODO: // -- ENABLE CONSOLE --
+    //only add hotkey if console is not already enabled
 
     progressChanged(95);
     //TODO: // -- CREATE SHORTCUT ----
 
-    progressChanged(100);
+    //progressChanged(100);
     // -- DONE --
 
     testLoadingBar();
 }
 
 function init() {
+    document.getElementById("buttonHelp").addEventListener("click", function(e) {
+        dialog.showMessageBox({
+            type: "none",
+            buttons: [ "How-to guide and FAQ", "Get additional help", "Report a bug", "Close" ],
+            title: "Help",
+            
+            detail: "Robeth's Unlimited COOP Mod & Patcher made by Rob Chiocchio"
+        });
+    });
+
     document.getElementById("buttonMinimize").addEventListener("click", function(e) {
         const window = remote.getCurrentWindow();
         window.minimize();
     });
 
+    /*
     document.getElementById("buttonMaximize").addEventListener("click", function(e) {
         const window = remote.getCurrentWindow();
         if (!window.isMaximized()) {
@@ -202,6 +325,7 @@ function init() {
             window.unmaximize();
         }
     });
+    */
 
     document.getElementById("buttonClose").addEventListener("click", function(e) {
         const window = remote.getCurrentWindow();
