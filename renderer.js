@@ -3,6 +3,7 @@ const exec = require('child_process');
 const electron = require('electron');
 const remote = electron.remote;
 const dialog = remote.dialog;
+const log = require('electron-log');
 
 var buttonPatch = document.getElementById("buttonPatch");
 var selectGame = document.getElementById("selectGame");
@@ -14,7 +15,7 @@ const notifications = [
     {
         title: "Info",
         body: "Done! A Shortcut was placed on your desktop. Press '~' in game to open up console.",
-        icon: 'images/icon.png',
+        icon: 'static/icon.png',
     },
 ];
 
@@ -98,7 +99,7 @@ function progressChanged(percent){
             break;
     }
 
-    console.info(statusText.innerText);
+    log.info(statusText.innerText);
 }
 
 function testLoadingBar(){
@@ -148,7 +149,7 @@ function patch(){
 
     dialog.showOpenDialog({ properties: ['openFile'] }, { filters: [{ extensions: ['exe']}]}, function (_path) {
         path = _path;
-        console.log(path);
+        log.info(path);
     });
 
     //TODO: check to make sure game exists, did not click cancel

@@ -4,7 +4,23 @@
   "description": "Robeth's Borderlands Unlimited COOP Mod",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "build": {
+    "extraResources": [
+      "bin/**",
+      "CoopPatch/**"
+    ],
+    "icon": "static/icon.png",
+    "win": {
+      "requestedExecutionLevel": "highestAvailable"
+    },
+    "publish": {
+      "provider": "github",
+      "vPrefixedTagName": "true"
+    }
   },
   "repository": {
     "type": "git",
@@ -17,16 +33,16 @@
   "author": "Rob Chiocchio",
   "license": "GPL-3.0-or-later",
   "devDependencies": {
-    "electron": "^3.0.9",
-    "electron-log": "^2.2.17",
-    "electron-squirrel-startup": "^1.0.0",
-    "install": "^0.12.2",
-    "npm": "^6.4.1",
-    "update-electron-app": "^1.3.0"
+    "electron": "^3.0.10",
+    "electron-builder": "^20.36.2",
+    "install": "^0.12.2"
   },
   "bugs": {
     "url": "https://github.com/RobethX/BL2-MP-Mods/issues"
   },
   "homepage": "https://steamcommunity.com/sharedfiles/filedetails/?id=1151711689",
-  "dependencies": {}
+  "dependencies": {
+    "electron-log": "^2.2.17",
+    "electron-updater": "^4.0.4"
+  }
 }

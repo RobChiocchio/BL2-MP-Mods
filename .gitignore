@@ -246,3 +246,6 @@ ModelManifest.xml
 
 # Electron
 node_modules
+**/package-lock.json
+**/yarn.lock
+dist/

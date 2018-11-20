@@ -1,0 +1,19 @@
+image: Visual Studio 2017
+
+platform:
+  - x64
+
+cache:
+  - node_modules
+  - '%USERPROFILE%\.electron'
+
+init:
+  - git config --global core.autocrlf input
+
+install:
+  - yarn
+
+build_script:
+  - yarn dist
+
+test: off
