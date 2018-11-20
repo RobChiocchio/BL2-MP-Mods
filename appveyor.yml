@@ -17,3 +17,7 @@ build_script:
   - yarn dist
 
 test: off
+
+artifacts:
+  - path: dist\*.exe
+    name: Installer
