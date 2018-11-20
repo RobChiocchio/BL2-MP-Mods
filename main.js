@@ -5,11 +5,15 @@ const app = electron.app; // control app
 const BrowserWindow = electron.BrowserWindow; // create native browser window
 const ipcMain = electron.ipcMain;
 
+if (require('electron-squirrel-startup')) return;
+
+require('update-electron-app'); //auto update based off repo in package.json
+
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 
-function createWindow () {
+function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 360,
@@ -19,13 +23,13 @@ function createWindow () {
     frame: false, // remove frame from windows apps
     titleBarStyle: 'hidden', // hide mac titlebar
     transparent: true, //allow rounded corners
-    icon: 'app/images/icon.png',
+    icon: 'images/icon.png',
   });
 
   //mainWindow.setIcon()
 
   // and load the index.html of the app.
-  mainWindow.loadFile('app/index.html');
+  mainWindow.loadFile('index.html');
 
   // Open the DevTools.
   //mainWindow.webContents.openDevTools();

@@ -10,6 +10,14 @@ var loadingBar = document.getElementById("loadingBar");
 var loadingBarProgress = document.getElementById("loadingBarProgress");
 var statusText = document.getElementById("statusText");
 
+const notifications = [
+    {
+        title: "Info",
+        body: "Done! A Shortcut was placed on your desktop. Press '~' in game to open up console.",
+        icon: 'images/icon.png',
+    },
+];
+
 var game = "";
 var path = "";
 var gameExec = "";
@@ -19,6 +27,9 @@ var fileCopying = "";
 
 function progressChanged(percent){
     loadingBarProgress.style.width = percent + '%';
+
+    const window = remote.getCurrentWindow();
+    window.setProgressBar(percent / 100);
 
     switch(percent)
     {
@@ -74,12 +85,16 @@ function progressChanged(percent){
 
         case 100:
             statusText.innerText = "Done!";
+            window.setProgressBar(-1); //Disable task bar loading
             /*
             smalltalk.alert("Info", "Done! A Shortcut was placed on your desktop. Press '~' in game to open up console.").then(() => {
                 const window = remote.getCurrentWindow();
                 window.close();
             });
             */
+
+            new Notification(notifications[0].title, notifications[0]); //finished notification
+
             break;
     }
 
@@ -172,7 +187,35 @@ function patch(){
     testLoadingBar();
 }
 
-    document.onreadystatechange = function () {
+function init() {
+    document.getElementById("buttonMinimize").addEventListener("click", function(e) {
+        const window = remote.getCurrentWindow();
+        window.minimize();
+    });
+
+    document.getElementById("buttonMaximize").addEventListener("click", function(e) {
+        const window = remote.getCurrentWindow();
+        if (!window.isMaximized()) {
+            window.maximize();
+        } else {
+            window.unmaximize();
+        }
+    });
+
+    document.getElementById("buttonClose").addEventListener("click", function(e) {
+        const window = remote.getCurrentWindow();
+        window.close();
+    });
+
+    buttonPatch.addEventListener("click", function(e) {
+        buttonPatch.disabled = true;
+        patch();
+    });
+
+        //check if admin, if not, popup or request restart as admin?
+    }
+
+document.onreadystatechange = function () {
     if (document.readyState == "complete") {
         init();
     }
