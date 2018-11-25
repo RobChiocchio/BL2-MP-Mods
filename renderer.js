@@ -1,4 +1,3 @@
-
 const exec = require('child_process');
 const electron = require('electron');
 const remote = electron.remote;
@@ -103,11 +102,11 @@ function progressChanged(percent){
             break;
     }
 
-    log.info(statusText.innerText);
+    log.info(percent + "% " + statusText.innerText);
 }
 
 function testLoadingBar(){
-	var id = setInterval(frame, 10);
+	var id = setInterval(frame, 20);
 	var width = 0;
 	function frame(){
 		if (width >= 100) {
@@ -129,6 +128,9 @@ function patch(){
     selectGame.style.display = "none"; //hide game selector
     loadingBar.style.display = "block"; //show loading bar
     statusText.style.display = "block"; //show status text
+
+    testLoadingBar();
+    return; //debug
 
     switch (game)
     {
@@ -296,8 +298,6 @@ function patch(){
 
     //progressChanged(100);
     // -- DONE --
-
-    testLoadingBar();
 }
 
 function init() {
