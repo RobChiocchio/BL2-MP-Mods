@@ -18,6 +18,10 @@ body {
 	overflow: hidden;
 }
 
+button {
+	transition: background 0.2s ease-in-out;
+}
+
 #titlebar {
 	-webkit-user-select: none;
 	-webkit-app-region: drag;

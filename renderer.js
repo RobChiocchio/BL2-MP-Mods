@@ -205,6 +205,7 @@ function patch(){
         fs.copyFileSync(oEngine, oEngine + ".bak");
     } catch (err) {
         log.error("Failed to back up upks");
+        log.error(err, err.stack); // does this work with log.error? if not should I use err.message? write a custom function? TODO
     }
     
     progressChanged(60);
