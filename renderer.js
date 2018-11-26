@@ -235,6 +235,7 @@ function patch(){
     // -- HEX EDIT WILLOWGAME --
 
     var streamWillowGame = fs.createWriteStream(oWillowGame);
+    var buff = new Buffer(something, "hex"); //TODO
 
     // -- DEVELOPER MODE
     fs.write(streamWillowGame, [ 0x27 ], 0, 1, 0x006925C7, (err) => {
