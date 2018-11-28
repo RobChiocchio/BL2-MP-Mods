@@ -2,7 +2,8 @@ const exec = require("child_process");
 const electron = require("electron");
 const remote = electron.remote;
 const dialog = remote.dialog;
-const log = require("electron-log");
+//const log = require("electron-log");
+const os = require('os');
 const fs = require("fs");
 
 // Google Analytics
@@ -30,7 +31,11 @@ LogRocket.identify(visitor.cid); // Set LogRocket ID to Google Analytics ID
 
 LogRocket.getSessionURL(function (sessionURL) { // Log LogRocket session URL to console for convenience
     visitor.event("LogRocket", sessionURL); // Log session URL to Google Analytics
-    log.info("LogRocket session URL: " + sessionURL);
+
+    // Log basic information
+    LogRocket.info("Version test: " +  remote.app.getVersion());
+    LogRocket.info(os.type() + " " + os.release());
+    LogRocket.info("LogRocket session URL: " + sessionURL);
 
     Sentry.configureScope(scope => { // Sentry integration
         scope.addEventProcessor(async (event) => {
@@ -149,7 +154,7 @@ function progressChanged(percent){
             break;
     }
 
-    log.info(percent + "% " + statusText.innerText);
+    LogRocket.info(percent + "% " + statusText.innerText);
 }
 
 function testLoadingBar(){
@@ -205,12 +210,12 @@ function patch(){
 
     iBL = dialog.showOpenDialog({ properties: ["openFile"] }, { filters: [{ extensions: ["exe"]}]}, function (fileNames) {
         if (fileNames == undefined) {
-            log.warn("No file selected");
+            LogRocket.warn("No file selected");
             //close patcher?
         }
     }); //path to Borderlands exe
     //check for cancel
-    log.info("Input game path: " + iBL);
+    LogRocket.info("Input game path: " + iBL);
 
     var iRootDir = fs.realpath(iBL + "\\..\\..\\..\\..");
     var oRootDir = fs.realpath(iRootDir + "\\server");
@@ -253,8 +258,8 @@ function patch(){
         fs.renameSync(oEngine + ".uncompressed_size", oEngine + ".uncompressed_size.bak");
         fs.copyFileSync(oEngine, oEngine + ".bak");
     } catch (err) {
-        log.error("Failed to back up upks");
-        log.error(err, err.stack); // does this work with log.error? if not should I use err.message? write a custom function? TODO
+        LogRocket.error("Failed to back up upks");
+        LogRocket.error(err, err.stack); // does this work with log.error? if not should I use err.message? write a custom function? TODO
     }
     
     progressChanged(60);
@@ -266,7 +271,7 @@ function patch(){
         fs.copyFileSync();
         fs.copyFileSync();
     } catch (err) {
-        log.error("Could not find decompressed UPKs")
+        LogRocket.error("Could not find decompressed UPKs")
     }
     */
 
@@ -289,7 +294,7 @@ function patch(){
     // -- DEVELOPER MODE
     fs.write(streamWillowGame, [ 0x27 ], 0, 1, 0x006925C7, (err) => {
         if (err) {
-            log.error("Failed to enable developer mode in WillowGame.upk");
+            LogRocket.error("Failed to enable developer mode in WillowGame.upk");
             throw err;
         }
     });
@@ -297,7 +302,7 @@ function patch(){
     // -- EVERY PLAYER GETS THEIR OWN TEAM --
     fs.write(streamWillowGame, [ 0x04, 0x00, 0xC6, 0x8B, 0x00, 0x00, 0x06, 0x44, 0x00, 0x04, 0x24, 0x00 ], 0, 12, 0x007F9151, (err) => {
         if (err) {
-            log.error("Failed to give every player their own team in WillowGame.upk");
+            LogRocket.error("Failed to give every player their own team in WillowGame.upk");
             throw err;
         }
     });
@@ -305,7 +310,7 @@ function patch(){
     // -- PREVENT MENU FROM CANCELLING FAST TRAVEL --
     fs.write(streamWillowGame, [ 0x27 ], 0, 1, 0x006BEAF6, (err) => {
         if (err) {
-            log.error("Failed to disable menus cancelling fast travel in WillowGame.upk");
+            LogRocket.error("Failed to disable menus cancelling fast travel in WillowGame.upk");
             throw err;
         }
     });
@@ -313,14 +318,14 @@ function patch(){
     // -- MORE CACHED PLAYERS --
     fs.write(streamWillowGame, [ 0x39 ], 0, 1, 0x00832B20, (err) => {
         if (err) {
-            log.error("Failed to increase cached players size in WillowGame.upk");
+            LogRocket.error("Failed to increase cached players size in WillowGame.upk");
             throw err;
         }
     });
 
     fs.close(streamWillowGame, (err) => {
         if (err) {
-            log.warn("Failed to close WillowGame.upk");
+            LogRocket.warn("Failed to close WillowGame.upk");
             throw err;
         }
     });
@@ -333,7 +338,7 @@ function patch(){
     /*
     fs.open(fileNames[0], "rw", (err, fd) => {
         if (err) {
-            log.error("Could not open file " + fileNames[0]);
+            LogRocket.error("Could not open file " + fileNames[0]);
             throw err;
         }
         fs.close(fd);
@@ -358,6 +363,7 @@ function init() {
         dialog.showMessageBox({
             type: "none",
             buttons: [ "How-to guide and FAQ", "Get additional help", "Copy session ID to clipboard", "Close" ], //, "Report a bug"
+            cancelId: 3,
             title: "Help",
             message: "ID: " + visitor.cid, // Analytics ID to give to me to check error logs
             detail: "Robeth's Unlimited COOP Mod & Patcher made by Rob Chiocchio"
@@ -371,6 +377,8 @@ function init() {
                     break;
                 case 2: // Copy Analytics ID to clipboard
                     copyStringToClipboard(visitor.cid);
+                    break;
+                default: // Close dialog is set to 3
                     break;
             }
 
