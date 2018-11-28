@@ -1,9 +1,9 @@
-const exec = require('child_process');
-const electron = require('electron');
+const exec = require("child_process");
+const electron = require("electron");
 const remote = electron.remote;
 const dialog = remote.dialog;
-const log = require('electron-log');
-const fs = require('fs');
+const log = require("electron-log");
+const fs = require("fs");
 
 var buttonPatch = document.getElementById("buttonPatch");
 var selectGame = document.getElementById("selectGame");
@@ -15,7 +15,7 @@ const notifications = [
     {
         title: "Info",
         body: "Done! A Shortcut was placed on your desktop. Press '~' in game to open up console.",
-        icon: 'static/icon.png',
+        icon: "static/icon.png",
     },
 ];
 
@@ -28,7 +28,7 @@ var cooppatchFile = "cooppatch.txt";
 var fileCopying;
 
 function progressChanged(percent){
-    loadingBarProgress.style.width = percent + '%';
+    loadingBarProgress.style.width = percent + "%";
 
     const window = remote.getCurrentWindow();
     window.setProgressBar(percent / 100);
@@ -119,7 +119,7 @@ function testLoadingBar(){
 }
 
 function extractUPK(path){
-    exec.spawnSync("bin/decompress.exe", ["-game=border", '"' + path + '"']);
+    exec.spawnSync("bin/decompress.exe", ["-game=border", "\"" + path + "\""]);
 }
 
 function patch(){
@@ -154,7 +154,7 @@ function patch(){
     progressChanged(0);
     // -- FIND GAME FOLDER --
 
-    iBL = dialog.showOpenDialog({ properties: ['openFile'] }, { filters: [{ extensions: ['exe']}]}, function (fileNames) {
+    iBL = dialog.showOpenDialog({ properties: ["openFile"] }, { filters: [{ extensions: ["exe"]}]}, function (fileNames) {
         if (fileNames == undefined) {
             log.warn("No file selected");
             //close patcher?
@@ -163,8 +163,8 @@ function patch(){
     //check for cancel
     log.info("Input game path: " + iBL);
 
-    var iRootDir = fs.realpath(iBL + '\\..\\..\\..\\..');
-    var oRootDir = fs.realpath(iRootDir + '\\server');
+    var iRootDir = fs.realpath(iBL + "\\..\\..\\..\\..");
+    var oRootDir = fs.realpath(iRootDir + "\\server");
 
     var oBL;
     var iWillowGame;
@@ -274,7 +274,7 @@ function patch(){
             log.warn("Failed to close WillowGame.upk");
             throw err;
         }
-    })
+    });
 
     progressChanged(75);
     //TODO: // -- HEX EDIT ENGINE --
@@ -282,7 +282,7 @@ function patch(){
     progressChanged(80);
     //TODO: // -- HEX EDIT EXE
     /*
-    fs.open(fileNames[0], 'rw', (err, fd) => {
+    fs.open(fileNames[0], "rw", (err, fd) => {
         if (err) {
             log.error("Could not open file " + fileNames[0]);
             throw err;
@@ -340,10 +340,10 @@ function init() {
     });
 
         //check if admin, if not, popup or request restart as admin?
-    }
+}
 
 document.onreadystatechange = function () {
     if (document.readyState == "complete") {
         init();
     }
-}
+};
