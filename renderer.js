@@ -11,7 +11,8 @@ var visitor = ua("UA-130033914-1");
 
 // Sentry crash reporting
 const Sentry = require("@sentry/electron");
-Sentry.init({dsn: 'https://67ebae4288c24fdcb79c7f14cff030ab@sentry.io/1332146'});
+Sentry.init({dsn: "https://67ebae4288c24fdcb79c7f14cff030ab@sentry.io/1332146"});
+// TODO: implement a meaningful crash handler
 
 // LogRocket error reporting
 // import LogRocket from 'logrocket';
@@ -62,14 +63,14 @@ var cooppatchFile = "cooppatch.txt";
 var fileCopying;
 
 function copyStringToClipboard (str) {
-    var element = document.createElement('textarea'); // Create new element
+    var element = document.createElement("textarea"); // Create new element
     element.value = str; // Set value (string to be copied)
     // Set non-editable to avoid focus and move outside of view
-    element.setAttribute('readonly', ''); 
-    element.style = {position: 'absolute', left: '-9999px'};
+    element.setAttribute("readonly", ""); 
+    element.style = {position: "absolute", left: "-9999px"};
     document.body.appendChild(element);
     element.select(); // Select text inside element
-    document.execCommand('copy'); // Copy text to clipboard
+    document.execCommand("copy"); // Copy text to clipboard
     document.body.removeChild(element); // Remove temporary element
 }
 
@@ -220,7 +221,7 @@ function patch(){
     var iEngine;
     var oEngine;
 
-    if (game == "bl1") //if Borderlands 1
+    if (game === "bl1") //if Borderlands 1
     {
         oBL = fs.realpath(oRootDir + "\\Binaries\\" + gameExec);
         iWillowGame = fs.realpath(iRootDir + "\\WillowGame\\CookedPC\\WillowGame.u"); // path to WillowGame.upk
@@ -406,7 +407,7 @@ function init() {
 }
 
 document.onreadystatechange = function () {
-    if (document.readyState == "complete") {
+    if (document.readyState === "complete") {
         init();
     }
 };

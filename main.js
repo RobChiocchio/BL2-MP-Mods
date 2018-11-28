@@ -8,7 +8,7 @@ const {autoUpdater} = require("electron-updater");
 const log = require("electron-log");
 
 const Sentry = require("@sentry/electron");
-Sentry.init({dsn: 'https://67ebae4288c24fdcb79c7f14cff030ab@sentry.io/1332146'});
+Sentry.init({dsn: "https://67ebae4288c24fdcb79c7f14cff030ab@sentry.io/1332146"});
 
 log.transports.file.level = "debug";
 log.transports.console.level = "debug";
@@ -53,22 +53,27 @@ function createWindow() {
 
 autoUpdater.on("checking-for-update", () => {
   log.info("Checking for update...");
-})
+});
+
 autoUpdater.on("update-available", (info) => {
   log.info("Update available.");
-})
+});
+
 autoUpdater.on("update-not-available", (info) => {
   log.info("Update not available.");
-})
+});
+
 autoUpdater.on("error", (err) => {
   log.info("Error in auto-updater. " + err);
-})
+});
+
 autoUpdater.on("download-progress", (progressObj) => {
   let logMessage = "Download speed: " + progressObj.bytesPerSecond;
   logMessage = logMessage + " - Downloaded " + progressObj.percent + "%";
   logMessage = logMessage + " (" + progressObj.transferred + "/" + progressObj.total + ")";
   log.info(logMessage);
-})
+});
+
 autoUpdater.on("update-downloaded", (info) => {
   log.info("Update downloaded");
 });
