@@ -5,6 +5,40 @@ const dialog = remote.dialog;
 const log = require("electron-log");
 const fs = require("fs");
 
+// Google Analytics
+const ua = require("universal-analytics");
+var visitor = ua("UA-130033914-1");
+
+// Sentry crash reporting
+const Sentry = require("@sentry/electron");
+Sentry.init({dsn: 'https://67ebae4288c24fdcb79c7f14cff030ab@sentry.io/1332146'});
+
+// LogRocket error reporting
+// import LogRocket from 'logrocket';
+const LogRocket = require("logrocket");
+LogRocket.init("jy6eo5/borderlands-electron-patcher", {
+    release: remote.app.getVersion(),
+    console: {
+        isEnabled: true,
+        shouldAggregateConsoleErrors: true,
+    },
+    shouldCaptureIP: false, // For security reasons IP capture is disabled
+});
+
+LogRocket.identify(visitor.cid); // Set LogRocket ID to Google Analytics ID
+
+LogRocket.getSessionURL(function (sessionURL) { // Log LogRocket session URL to console for convenience
+    visitor.event("LogRocket", sessionURL); // Log session URL to Google Analytics
+    log.info("LogRocket session URL: " + sessionURL);
+
+    Sentry.configureScope(scope => { // Sentry integration
+        scope.addEventProcessor(async (event) => {
+            event.extra.sessionURL = LogRocket.sessionURL;
+            return event;
+        });
+    });
+});
+
 var buttonPatch = document.getElementById("buttonPatch");
 var selectGame = document.getElementById("selectGame");
 var loadingBar = document.getElementById("loadingBar");
@@ -26,6 +60,18 @@ var gameExec; //name of executable, defined below in switch
 var gameDir; //name of root directory, defined below in switch
 var cooppatchFile = "cooppatch.txt";
 var fileCopying;
+
+function copyStringToClipboard (str) {
+    var element = document.createElement('textarea'); // Create new element
+    element.value = str; // Set value (string to be copied)
+    // Set non-editable to avoid focus and move outside of view
+    element.setAttribute('readonly', ''); 
+    element.style = {position: 'absolute', left: '-9999px'};
+    document.body.appendChild(element);
+    element.select(); // Select text inside element
+    document.execCommand('copy'); // Copy text to clipboard
+    document.body.removeChild(element); // Remove temporary element
+}
 
 function progressChanged(percent){
     loadingBarProgress.style.width = percent + "%";
@@ -128,6 +174,8 @@ function patch(){
     selectGame.style.display = "none"; //hide game selector
     loadingBar.style.display = "block"; //show loading bar
     statusText.style.display = "block"; //show status text
+
+    LogRocket.track("Patching started"); // Track how many times the patcher process is started
 
     testLoadingBar();
     return; //debug
@@ -300,16 +348,31 @@ function patch(){
 
     //progressChanged(100);
     // -- DONE --
+
+    LogRocket.track("Patching finished"); // Track how successful the patching is
 }
 
 function init() {
     document.getElementById("buttonHelp").addEventListener("click", function(e) {
         dialog.showMessageBox({
             type: "none",
-            buttons: [ "How-to guide and FAQ", "Get additional help", "Report a bug", "Close" ],
+            buttons: [ "How-to guide and FAQ", "Get additional help", "Copy session ID to clipboard", "Close" ], //, "Report a bug"
             title: "Help",
-            
+            message: "ID: " + visitor.cid, // Analytics ID to give to me to check error logs
             detail: "Robeth's Unlimited COOP Mod & Patcher made by Rob Chiocchio"
+        }, function(response) {
+            switch(response) {
+                case 0: // Open Steam guide in browser
+                    electron.shell.openExternal("https://steamcommunity.com/sharedfiles/filedetails/?id=1151711689");
+                    break;
+                case 1: // Open Steam group page in browser
+                    electron.shell.openExternal("https://steamcommunity.com/groups/bl2unlimitedcoop");
+                    break;
+                case 2: // Copy Analytics ID to clipboard
+                    copyStringToClipboard(visitor.cid);
+                    break;
+            }
+
         });
     });
 

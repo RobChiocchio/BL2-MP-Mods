@@ -7,8 +7,11 @@ const ipcMain = electron.ipcMain;
 const {autoUpdater} = require("electron-updater");
 const log = require("electron-log");
 
+const Sentry = require("@sentry/electron");
+Sentry.init({dsn: 'https://67ebae4288c24fdcb79c7f14cff030ab@sentry.io/1332146'});
+
 log.transports.file.level = "debug";
-log.transports.console.level = "debug"; //info
+log.transports.console.level = "debug";
 
 autoUpdater.logger = log;
 autoUpdater.logger.transports.file.level = "info"; //does this override the previous setting?
