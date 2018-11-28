@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Robeth's COOP Patcher</title>
+		<link rel="stylesheet" href="styles/index.css">
+	</head>
+	<body>
+		<div id="titlebar">
+			<div id="titlebar-title">Robeth's COOP Patcher</div>
+
+			<div id="titlebar-buttons">
+				<button id="buttonHelp">&#63;</button>
+				<button id="buttonMinimize">&#128469;</button>
+				<!--<button id="buttonMaximize">&#128470;</button>-->
+				<button id="buttonClose">&#128473;</button>
+			</div>
+		</div>
+
+		<div class="container">
+			<div style="text-align: center;"></div>
+
+			<select id="selectGame" class="element">
+				<option id="optionBL1" value="bl1" disabled>Borderlands</option>
+				<option id="optionBL2" value="bl2" selected>Borderlands 2</option>
+				<option id="optionBLTPS" value="bltps" disabled>Borderlands: The Pre-Sequel</option>
+			</select>
+
+			<button id="buttonPatch" class="element">Patch Borderlands</button>
+
+			<div id="loadingBar" class="element">
+				<div id="loadingBarProgress"></div>
+			</div>
+
+			<div id="statusText"></div>
+		</div>
+	</body>
+	<script src="renderer.js"></script>
+</html>

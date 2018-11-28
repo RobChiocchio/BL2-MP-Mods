@@ -1,0 +1,121 @@
+/*
+Palette: 
+Light grey: #f5f6fa, #dcdde1
+Blue grey: #7f8fa6, #718093
+Dark grey: #353b48, #2f3640
+*/
+
+html, body {
+	padding: 0;
+	margin: 0;
+	font-family: -apple-system, 'Roboto', 'Helvetica Neue', Helvetica, sans-serif;
+	border-radius: 5px;
+}
+
+body {
+	background: #353b48;
+	color: #f5f6fa;
+	overflow: hidden;
+}
+
+button {
+	transition: background 0.2s ease-in-out;
+}
+
+#titlebar {
+	-webkit-user-select: none;
+	-webkit-app-region: drag;
+	height: 32px;
+	padding: 0px;
+	margin: 0px;
+	background: #2f3640;
+	color: #7f8fa6;
+}
+
+#titlebar-title {
+	position: fixed;
+	top: 0px;
+	left: 12px;
+	line-height: 32px;
+	font-size: 14px;
+}
+
+#titlebar-buttons {
+	-webkit-app-region: no-drag;
+	position: fixed;
+	right: 0px;
+	margin: auto;
+}
+
+#titlebar-buttons button {
+	height: 32px;
+	width: 32px;
+	border: none;
+	outline: 0px;
+	background: transparent;
+	color: #7f8fa6;
+	text-align: center;
+	font-size: 16px;
+}
+
+#titlebar-buttons button:hover {
+	background: #353b48;
+}
+
+.container {
+	padding: 5px 10px;
+}
+
+.element {
+	width: 100%;
+	height: 40px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	background: #718093;
+	color: #f5f6fa;
+	border: none;
+	outline: 0px;
+	font-size: 16px;
+}
+
+select {
+	outline: none;
+	text-indent: 5px;
+}
+
+#selectConsoleKey {
+	width: 70%;
+	margin-left: 0px;
+}
+
+#labelConsoleKey {
+	display: inline-block;
+	width: 28%;
+	margin-right: 0px;
+	text-align: center;
+}
+
+#buttonPatch:hover {
+	background: #7f8fa6;
+}
+
+#loadingBar {
+	display: none;
+}
+
+#loadingBarProgress {
+	width: 0%;
+	height: 100%;
+	background: #f5f6fa;
+}
+
+#statusText {
+	display: none;
+	margin-top: 20px;
+	color: #f5f6fa;
+	font-size: 18px;
+	text-align: center;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
