@@ -18,8 +18,10 @@ autoUpdater.logger.transports.file.level = "info"; //does this override the prev
 log.info("Starting patcher version " + autoUpdater.currentVersion);
 console.debug("Starting patcher version " + autoUpdater.currentVersion);
 
+/* 
 const Sentry = require("@sentry/electron"); // Do I even care about Sentry? Should I just remove it?
 Sentry.init({dsn: "https://67ebae4288c24fdcb79c7f14cff030ab@sentry.io/1332146"});
+ */
 
 function createWindow() {
     // Create the browser window.

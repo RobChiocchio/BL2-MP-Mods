@@ -10,10 +10,12 @@ const fs = require("fs");
 const ua = require("universal-analytics");
 var visitor = ua("UA-130033914-1");
 
+/* 
 // Sentry crash reporting
 const Sentry = require("@sentry/electron");
 Sentry.init({dsn: "https://67ebae4288c24fdcb79c7f14cff030ab@sentry.io/1332146"});
 // TODO: implement a meaningful crash handler
+ */
 
 // LogRocket error reporting
 // import LogRocket from 'logrocket';
@@ -37,12 +39,12 @@ LogRocket.getSessionURL(function (sessionURL) { // Log LogRocket session URL to 
     LogRocket.info(os.type() + " " + os.release());
     LogRocket.info("LogRocket session URL: " + sessionURL);
 
-    Sentry.configureScope(scope => { // Sentry integration
+    /* Sentry.configureScope(scope => { // Sentry integration
         scope.addEventProcessor(async (event) => {
             event.extra.sessionURL = LogRocket.sessionURL;
             return event;
         });
-    });
+    }); */
 });
 
 var buttonPatch = document.getElementById("buttonPatch");
@@ -288,8 +290,8 @@ function patch(){
     progressChanged(70);
     // -- HEX EDIT WILLOWGAME --
 
-    var streamWillowGame = fs.createWriteStream(oWillowGame);
-    var buff = new Buffer(something, "hex"); //TODO
+    var streamWillowGame = fs.createWriteStream(oWillowGame, "hex");
+    var bufferWillowGame = new Buffer(something, "hex"); //TODO
 
     // -- DEVELOPER MODE
     fs.write(streamWillowGame, [ 0x27 ], 0, 1, 0x006925C7, (err) => {
