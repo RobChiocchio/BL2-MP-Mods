@@ -3,8 +3,10 @@ const electron = require("electron");
 const remote = electron.remote;
 const dialog = remote.dialog;
 //const log = require("electron-log");
-const os = require('os');
+const os = require("os");
 const fs = require("fs");
+
+const defaults = require("./scripts/defaults.js");
 
 // Google Analytics
 const ua = require("universal-analytics");
@@ -63,10 +65,8 @@ const notifications = [
 
 var skipCopy = false;
 
-var game; //defined by switch
-var gameExec; //name of executable, defined below in switch
-var gameDir; //name of root directory, defined below in switch
-var cooppatchFile = "cooppatch.txt";
+var game; // Contains all of the game's info for patching
+var gameExecutableName; // Actual game executable name of selected file
 var fileCopying;
 
 function copyStringToClipboard (str) {
@@ -128,7 +128,7 @@ function progressChanged(percent){
             break;
 
         case 80:
-            statusText.innerText = "Modifying " + gameExec;
+            statusText.innerText = "Modifying " + game;
             break;
 
         case 90:
@@ -173,11 +173,11 @@ function testLoadingBar(){
 }
 
 function extractUPK(path){
-    exec.spawnSync("bin/decompress.exe", ["-game=border", "\"" + path + "\""]);
+    exec.spawnSync("bin\\decompress.exe", ["-game=border", "\"" + path + "\""]);
 }
 
 function patch(){
-    game = selectGame[selectGame.selectedIndex].value; //set game to value of game selector
+    //game = selectGame[selectGame.selectedIndex].value; //set game to value of game selector
     buttonPatch.style.display = "none"; //hide patch button
     selectGame.style.display = "none"; //hide game selector
     loadingBar.style.display = "block"; //show loading bar
@@ -185,26 +185,22 @@ function patch(){
 
     LogRocket.track("Patching started"); // Track how many times the patcher process is started
 
-    testLoadingBar();
-    return; //debug
+    //testLoadingBar();
+    //return; //debug
 
-    switch (game)
+    switch (selectGame.selectedIndex)
     {
-        case "bl1":
-            gameExec = "Borderlands.exe";
-            gameDir = "Borderlands";
-            cooppatchFile = "cooppatch.txt";
+        case defaults.game.bl1.id:
+            game = defaults.game.bl1;
             break;
-        case "bltps":
-            gameExec = "BorderlandsPreSequel.exe";
-            gameDir = "BorderlandsPreSequel";
-            cooppatchFile = "cooppatch.txt";
+        case defaults.game.bl2.id:
+            game = defaults.game.bl2;
             break;
-        default: //borderlands 2 or incase some how there isnt a variable
-            gameExec = "Borderlands2.exe";
-            gameDir = "Borderlands 2";
-            cooppatchFile = "cooppatch.txt";
+        case defaults.game.bltps.id:
+            game = defaults.game.bltps;
             break;
+        default: //throw error
+            throw "InvalidGame";
     }
 
     progressChanged(0);
@@ -219,8 +215,8 @@ function patch(){
     //check for cancel
     LogRocket.info("Input game path: " + iBL);
 
-    var iRootDir = fs.realpath(iBL + "\\..\\..\\..\\..");
-    var oRootDir = fs.realpath(iRootDir + "\\server");
+    var iRootDirectoryPath = fs.realpath(iBL + "\\..\\..\\..\\..");
+    var oRootDirectoryPath = fs.realpath(iRootDirectoryPath + "\\server");
 
     var oBL;
     var iWillowGame;
@@ -228,22 +224,11 @@ function patch(){
     var iEngine;
     var oEngine;
 
-    if (game === "bl1") //if Borderlands 1
-    {
-        oBL = fs.realpath(oRootDir + "\\Binaries\\" + gameExec);
-        iWillowGame = fs.realpath(iRootDir + "\\WillowGame\\CookedPC\\WillowGame.u"); // path to WillowGame.upk
-        oWillowGame = fs.realpath(oRootDir + "\\WillowGame\\CookedPC\\WillowGame.u"); // path to WillowGame.upk
-        iEngine = fs.realpath(iRootDir + "\\WillowGame\\CookedPC\\Engine.u"); // path to Engine.upk
-        oEngine = fs.realpath(oRootDir + "\\WillowGame\\CookedPC\\Engine.u"); // path to Engine.upk
-    }
-    else
-    {
-        oBL = fs.realpath(oRootDir + "\\Binaries\\Win32\\" + gameExec);
-        iWillowGame = fs.realpath(iRootDir + "\\WillowGame\\CookedPCConsole\\WillowGame.upk"); // path to WillowGame.upk
-        oWillowGame = fs.realpath(oRootDir + "\\WillowGame\\CookedPCConsole\\\WillowGame.upk"); // path to WillowGame.upk
-        iEngine = fs.realpath(iRootDir + "\\WillowGame\\CookedPCConsole\\Engine.upk"); // path to Engine.upk
-        oEngine = fs.realpath(oRootDir + "\\WillowGame\\CookedPCConsole\\Engine.upk"); // path to Engine.upk
-    }
+    oBL = fs.realpath(oRootDirectoryPath + game.executablePath);
+    iWillowGame = fs.realpath(iRootDirectoryPath + game.contentDirectoryRelativePath + "WillowGame" + game.packageExtension); // path to WillowGame.upk
+    oWillowGame = fs.realpath(oRootDirectoryPath +  game.contentDirectoryRelativePath + "WillowGame" + game.packageExtension); // path to WillowGame.upk
+    iEngine = fs.realpath(iRootDirectoryPath +  game.contentDirectoryRelativePath + "Engine" + game.packageExtension); // path to Engine.upk
+    oEngine = fs.realpath(oRootDirectoryPath +  game.contentDirectoryRelativePath + "Engine" + game.packageExtension); // path to Engine.upk
 
     progressChanged(10);
     //TODO: // -- BACKUP BORDERLANDS --
