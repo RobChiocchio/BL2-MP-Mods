@@ -29,7 +29,7 @@ button {
 	padding: 0px;
 	margin: 0px;
 	background: #2f3640;
-	color: #7f8fa6;
+    color: #7f8fa6;
 }
 
 #titlebar-title {
@@ -37,7 +37,7 @@ button {
 	top: 0px;
 	left: 12px;
 	line-height: 32px;
-	font-size: 14px;
+    font-size: 14px;
 }
 
 #titlebar-buttons {
