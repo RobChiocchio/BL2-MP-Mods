@@ -21,5 +21,5 @@ function standalone() { // TODO: do standalone script
             $ hexedit \"WillowGame\\CookedPCConsole\\WillowGame.upk\" debugMenu\
     ");
 
-    edit
+    //edit
 }

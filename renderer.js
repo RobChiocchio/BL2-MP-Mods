@@ -7,6 +7,7 @@ const os = require("os");
 const fs = require("fs");
 
 const defaults = require("./scripts/defaults.js");
+const mods = require("./scripts/mods.json");
 
 // Google Analytics
 const ua = require("universal-analytics");
