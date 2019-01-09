@@ -1,0 +1,68 @@
+{ // TODO: make JSON patches one big array and each patch has game and file variables and then autodetect in the code
+    coopPatch: [
+        {
+            game: "bl2",
+            package: "WillowGame",
+            fileOverride: null,
+            originalData: [ 0x00, 0x00, ],
+            modifiedData: [ 0x00, 0x00, ],
+            description: "Enable developer mode"
+        },
+        {
+            game: "bl2",
+            package: "WillowGame",
+            fileOverride: null,
+            originalData: [ 0x00, 0x00, ],
+            modifiedData: [ 0x00, 0x00, ],
+            description: "Every player gets their own team"
+        },
+        {
+            game: "bl2",
+            package: "WillowGame",
+            fileOverride: null,
+            originalData: [ 0x00, 0x00, ],
+            modifiedData: [ 0x00, 0x00, ],
+            description: "Prevent menu from cancelling fast travel"
+        },
+        {
+            game: "bl2",
+            package: "WillowGame",
+            fileOverride: null,
+            originalData: [ 0x00, 0x00, ],
+            modifiedData: [ 0x00, 0x00, ],
+            description: "More cached players"
+        },
+        {
+            game: "bl2",
+            package: "Engine",
+            fileOverride: null,
+            originalData: [ 0x00, 0x00, ],
+            modifiedData: [ 0x00, 0x00, ],
+            description: ""
+        },
+        { // TODO: should all executable modifications be done automatically depending on what packages need to be modified? (also always enable console)
+            game: "bl2",
+            package: null,
+            fileOverride: "\\Binaries\\Win32\\Borderlands2.exe",
+            originalData: [ 0x00, 0x00, ],
+            modifiedData: [ 0x00, 0x00, ],
+            description: "Enable console"
+        }
+        {
+            game: "bl2",
+            package: null,
+            fileOverride: "\\Binaries\\Win32\\Borderlands2.exe",
+            originalData: [ 0x00, 0x00, ],
+            modifiedData: [ 0x00, 0x00, ],
+            description: "Allow decompressed WillowGame UPK"
+        }
+        {
+            game: "bl2",
+            package: null,
+            fileOverride: "\\Binaries\\Win32\\Borderlands2.exe",
+            originalData: [ 0x00, 0x00, ],
+            modifiedData: [ 0x00, 0x00, ],
+            description: "Allow decompressed Engine UPK"
+        }
+    ]
+}

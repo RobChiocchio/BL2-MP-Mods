@@ -6,8 +6,11 @@ const dialog = remote.dialog;
 const os = require("os");
 const fs = require("fs");
 
+const JSON5 = require("json5"); // To parse the patches
+var patches = require("./scripts/patches.json5"); // Load patches from JSON5 file
+
 const defaults = require("./scripts/defaults.js");
-const mods = require("./scripts/mods.json");
+const hexedit = require("./scripts/hexedit.js")
 
 // Google Analytics
 const ua = require("universal-analytics");
@@ -173,8 +176,8 @@ function testLoadingBar(){
 	}
 }
 
-function extractUPK(path){
-    exec.spawnSync("bin\\decompress.exe", ["-game=border", "\"" + path + "\""]);
+function extractUPK(path){ // TODO: why is this here?
+    exec.spawnSync("bin\\decompress.exe", ["-game=border", "\"" + path + "\""]); // TODO: call for each package from patches
 }
 
 function patch(){
@@ -279,6 +282,10 @@ function patch(){
     var streamWillowGame = fs.createWriteStream(oWillowGame, "hex");
     var bufferWillowGame = new Buffer(something, "hex"); //TODO
 
+    for(var patch in patches.WillowGame) { // Run all of the patches for the WillowGame package
+        hexedit(patch, streamWillowGame);
+    }
+
     // -- DEVELOPER MODE
     fs.write(streamWillowGame, [ 0x27 ], 0, 1, 0x006925C7, (err) => {
         if (err) {
@@ -321,6 +328,10 @@ function patch(){
     progressChanged(75);
     //TODO: // -- HEX EDIT ENGINE --
 
+    for(var patch in patches.Engine) { // Run all of the patches for the Engine package
+        //hexedit(patch, streamEngine);
+    }
+
     progressChanged(80);
     //TODO: // -- HEX EDIT EXE
     /*
@@ -332,6 +343,10 @@ function patch(){
         fs.close(fd);
     });
     */
+
+    for(var patch in patches.Executable) { // Run all of the patches for the executable
+        //hexedit(patch, streamExecutable);
+    }
     
     progressChanged(90);
     //TODO: // -- ENABLE CONSOLE --

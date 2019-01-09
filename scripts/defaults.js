@@ -1,4 +1,4 @@
-const game = {
+const game = { // TODO: Should this be a JSON file instead?
     bl1: {
         id: 0,
         executablePath: "\\Binaries\\Borderlands.exe",

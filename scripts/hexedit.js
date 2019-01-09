@@ -5,7 +5,11 @@ if (require.main === module) { // If not just an import
     standalone();
 }
 
-function edit(filePath, modName) { // Check list of mods and apply modName to filePath // (or something like that) TODO
+/**
+ * @param {Object} patch The patch object to apply
+ * @param {WriteStream} fileStream The fileStream to apply the patch
+ */
+export default function edit(patch, fileStream) { // Check list of mods and apply modName to filePath // (or something like that) TODO
 
 }
 
