@@ -7,10 +7,10 @@ const os = require("os");
 const fs = require("fs");
 
 const JSON5 = require("json5"); // To parse the patches
-var patches = require("./scripts/patches.json5"); // Load patches from JSON5 file
+var mods = JSON5.parse(require("./scripts/mods.json5")); // Load patches from JSON5 file
 
 const defaults = require("./scripts/defaults.js");
-const hexedit = require("./scripts/hexedit.js")
+//const hexedit = require("./scripts/hexedit.js");
 
 // Google Analytics
 const ua = require("universal-analytics");
@@ -85,7 +85,12 @@ function copyStringToClipboard (str) {
     document.body.removeChild(element); // Remove temporary element
 }
 
-function progressChanged(percent){
+function reportStatus(status){
+    statusText.innerText = status; // Set loading status info
+    LogRocket.info(status); // Log status with LogRocket 
+}
+
+function progressChanged(percent){ // TODO: delete!
     loadingBarProgress.style.width = percent + "%";
 
     const window = remote.getCurrentWindow();
@@ -163,24 +168,8 @@ function progressChanged(percent){
     LogRocket.info(percent + "% " + statusText.innerText);
 }
 
-function testLoadingBar(){
-	var id = setInterval(frame, 20);
-	var width = 0;
-	function frame(){
-		if (width >= 100) {
-			clearInterval(id);
-		} else {
-			width++; 
-			progressChanged(width); 
-		}
-	}
-}
-
-function extractUPK(path){ // TODO: why is this here?
-    exec.spawnSync("bin\\decompress.exe", ["-game=border", "\"" + path + "\""]); // TODO: call for each package from patches
-}
-
 function patch(){
+    reportStatus("Initializing");
     //game = selectGame[selectGame.selectedIndex].value; //set game to value of game selector
     buttonPatch.style.display = "none"; //hide patch button
     selectGame.style.display = "none"; //hide game selector
@@ -207,8 +196,8 @@ function patch(){
             throw "InvalidGame";
     }
 
-    progressChanged(0);
     // -- FIND GAME FOLDER --
+    reportStatus("Looking for " + selectGame[selectGame.selectedIndex].innerText);
 
     iBL = dialog.showOpenDialog({ properties: ["openFile"] }, { filters: [{ extensions: ["exe"]}]}, function (fileNames) {
         if (fileNames == undefined) {
@@ -234,50 +223,13 @@ function patch(){
     iEngine = fs.realpath(iRootDirectoryPath +  game.contentDirectoryRelativePath + "Engine" + game.packageExtension); // path to Engine.upk
     oEngine = fs.realpath(oRootDirectoryPath +  game.contentDirectoryRelativePath + "Engine" + game.packageExtension); // path to Engine.upk
 
-    progressChanged(10);
     //TODO: // -- BACKUP BORDERLANDS --
+    reportStatus("Backing up game files");
 
-    progressChanged(40);
     //TODO: // -- COPY PATCHES TO BINARIES --
+    reportStatus("Copying patches to the binaries folder");
 
-    progressChanged(50);
-    // -- RENAME UPK AND DECOMPRESSEDSIZE --
-
-    try {
-        fs.renameSync(oWillowGame + ".uncompressed_size", oWillowGame + ".uncompressed_size.bak");
-        fs.copyFileSync(oWillowGame, oWillowGame + ".bak");
-        fs.renameSync(oEngine + ".uncompressed_size", oEngine + ".uncompressed_size.bak");
-        fs.copyFileSync(oEngine, oEngine + ".bak");
-    } catch (err) {
-        LogRocket.error("Failed to back up upks");
-        LogRocket.error(err, err.stack); // does this work with log.error? if not should I use err.message? write a custom function? TODO
-    }
-    
-    progressChanged(60);
-    //TODO: // -- DECOMPRESS UPK FILES --
-    //extractUPK("test.upk");
-
-    /*
-    try {
-        fs.copyFileSync();
-        fs.copyFileSync();
-    } catch (err) {
-        LogRocket.error("Could not find decompressed UPKs")
-    }
-    */
-
-    // -- DELETE UNPACKED FOLDER --
-
-    /*
-    try {
-        fs.rmdir( => {
-
-        })
-    }
-    */
-
-    progressChanged(70);
-    // -- HEX EDIT WILLOWGAME --
+    // ========== OLD!!! ==========
 
     var streamWillowGame = fs.createWriteStream(oWillowGame, "hex");
     var bufferWillowGame = new Buffer(something, "hex"); //TODO
@@ -325,14 +277,6 @@ function patch(){
         }
     });
 
-    progressChanged(75);
-    //TODO: // -- HEX EDIT ENGINE --
-
-    for(var patch in patches.Engine) { // Run all of the patches for the Engine package
-        //hexedit(patch, streamEngine);
-    }
-
-    progressChanged(80);
     //TODO: // -- HEX EDIT EXE
     /*
     fs.open(fileNames[0], "rw", (err, fd) => {
@@ -344,19 +288,86 @@ function patch(){
     });
     */
 
-    for(var patch in patches.Executable) { // Run all of the patches for the executable
-        //hexedit(patch, streamExecutable);
-    }
-    
-    progressChanged(90);
-    //TODO: // -- ENABLE CONSOLE --
-    //only add hotkey if console is not already enabled
+    /* ========== NEW METHOD ========== */
 
-    progressChanged(95);
+   var patchedPackages = []; // Track which packages have been decompressed and pached in the EXE
+
+   for (mod in mods) {
+        if (mod.game == game.id) { // If the mod is for the right game
+            for (patch in mod.patches) {
+                var packagePath = oRootDirectoryPath + game.contentDirectoryRelativePath + package + game.packageExtension;
+                if (!patchedPackages.includes((modification.package).toLowerCase())) { // Check if package is on list yet
+                    // TODO: check if package is already decompressed?
+                    patchedPackages.push((modification.package).toLowerCase()); // Add package to list of packages to fix in exe
+                    reportStatus("Decompressing " + modification.package + game.packageExtension);
+                    exec.spawnSync("bin\\decompress.exe", ["-game=border", "\"" + packagePath + "\""]); // Decompress package
+
+                    reportStatus("Backing up compressed package files");
+                    try { // Back up uncompressed_size and the compressed package
+                        fs.renameSync(packagePath + ".uncompressed_size", packagePath + ".uncompressed_size.bak");
+                        fs.copyFileSync(packagePath, packagePath + ".bak");
+                    } catch (err) {
+                        LogRocket.error("Failed to back up upks");
+                        LogRocket.error(err, err.stack); // does this work with log.error? if not should I use err.message? write a custom function? TODO
+                    }
+
+                    reportStatus("Installing decompressed " + modification.package);
+                    /*
+                    try { // Copy decompressed package to packagePath
+                        fs.copyFileSync();
+                    } catch (err) {
+                        LogRocket.error("Could not find decompressed UPKs")
+                    }
+                    */
+                    
+                }
+
+                reportStatus("Applying patch: \"" + patch.description + "\""); // TODO: is this too much? should I only do this for each mod?
+
+                var streamPackage = fs.createWriteStream(packagePath, "hex"); // Open package filestream TODO: add callback (maybe?)
+
+                // TODO: Patch
+
+                fs.close(streamPackage, (err) => { // Close filestream
+                    if (err) {
+                        LogRocket.warn("Failed to close package"); // TODO: print package name
+                        throw err;
+                    }
+                });
+            }
+        }
+   }
+
+   reportStatus("Enabling console");
+   // TODO: enable console in exe
+   // TODO: add console hotkey to config (if not already there)
+
+   reportStatus("Enabling modified packages");
+   for (package in patchedPackages) {
+       // TODO: change name in exe
+   }
+
+   // TODO: close exe filestream
+
+    reportStatus("Creating shortcuts");
     //TODO: // -- CREATE SHORTCUT ----
 
-    //progressChanged(100);
+    reportStatus("Cleaning up");
+    // TODO: cleanup
+    /*
+    try { // Delete unpacked folder
+        fs.rmdir( => {
+
+        })
+    }
+    */
     // -- DONE --
+
+    reportStatus("Done!");
+
+    if (!window.isFocused()) { //if not focused, notify
+        new Notification(notifications[0].title, notifications[0]); //finished notification
+    }
 
     LogRocket.track("Patching finished"); // Track how successful the patching is
 }

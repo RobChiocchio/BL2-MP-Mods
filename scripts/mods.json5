@@ -1,0 +1,91 @@
+{
+    template: {
+        title: "Example patch", // Title of the modification
+        description: "This is an example patch", // A summary of what the modification does
+        author: "Robeth", // Author of the modification
+        game: "2", // Borderlands = 1, Borderlands 2 = 2, Borderlands: The Pre-Sequel = 3
+        patches: [
+            {
+                package: "WillowGame", // Name of package to modify (without extension). Can be left as null if using the file override
+                fileOverride: null, // Optional: relative path to file to modify - overrides package name set above
+                originalData: [], // Array of hex values representing the original unmodified data. Can be used to locate position if one is not set
+                modifiedData: [], // Must be the same length as originalData
+                position: null, // Optional: absolute position of data to modify (as hex value)
+                optional: false, // true or false
+                description: "An example modification", // A short summary of what the specific patch does
+            }
+        ],
+    },
+    coopPatch: {
+        title: "Robeth's Unlimited COOP Mod (Borderlands 2)",
+        description: "Allows more than 4 players in a COOP game",
+        author: "Robeth",
+        game: "2",
+        patches: [
+            {
+                package: "WillowGame",
+                fileOverride: null,
+                originalData: [ 0x00, 0x00, ],
+                modifiedData: [ 0x00, 0x00, ],
+                position: null,
+                description: "Enable developer mode"
+            },
+            {
+                package: "WillowGame",
+                fileOverride: null,
+                originalData: [ 0x00, 0x00, ],
+                modifiedData: [ 0x00, 0x00, ],
+                position: null,
+                description: "Every player gets their own team"
+            },
+            {
+                package: "WillowGame",
+                fileOverride: null,
+                originalData: [ 0x00, 0x00, ],
+                modifiedData: [ 0x00, 0x00, ],
+                position: null,
+                description: "Prevent menu from cancelling fast travel"
+            },
+            {
+                package: "WillowGame",
+                fileOverride: null,
+                originalData: [ 0x00, 0x00, ],
+                modifiedData: [ 0x00, 0x00, ],
+                position: null,
+                description: "More cached players"
+            },
+            {
+                package: "Engine",
+                fileOverride: null,
+                originalData: [ 0x00, 0x00, ],
+                modifiedData: [ 0x00, 0x00, ],
+                position: null,
+                description: ""
+            },
+            { // TODO: should all executable modifications be done automatically depending on what packages need to be modified? (also always enable console)
+                package: null,
+                fileOverride: "\\Binaries\\Win32\\Borderlands2.exe",
+                originalData: [ 0x00, 0x00, ],
+                modifiedData: [ 0x00, 0x00, ],
+                position: null,
+                description: "Enable console"
+            }
+            {
+                package: null,
+                fileOverride: "\\Binaries\\Win32\\Borderlands2.exe",
+                originalData: [ 0x00, 0x00, ],
+                modifiedData: [ 0x00, 0x00, ],
+                position: null,
+                description: "Allow decompressed WillowGame UPK"
+            }
+            {
+                package: null,
+                fileOverride: "\\Binaries\\Win32\\Borderlands2.exe",
+                originalData: [ 0x00, 0x00, ],
+                modifiedData: [ 0x00, 0x00, ],
+                position: null,
+                description: "Allow decompressed Engine UPK"
+            }
+        ]
+    }
+}
