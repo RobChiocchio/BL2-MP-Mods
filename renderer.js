@@ -7,9 +7,8 @@ const os = require("os");
 const fs = require("fs");
 
 const JSON5 = require("json5"); // To parse the patches
-var mods = JSON5.parse(require("./scripts/mods.json5")); // Load patches from JSON5 file
-
-const defaults = require("./scripts/defaults.js");
+var mods = JSON5.parse(fs.readFileSync("./scripts/mods.json5")); // Load patches from JSON5 file
+var defaults = JSON5.parse(fs.readFileSync("./scripts/defaults.json5"));
 //const hexedit = require("./scripts/hexedit.js");
 
 // Google Analytics
@@ -68,10 +67,7 @@ const notifications = [
 ];
 
 var skipCopy = false;
-
 var game; // Contains all of the game's info for patching
-var gameExecutableName; // Actual game executable name of selected file
-var fileCopying;
 
 function copyStringToClipboard (str) {
     var element = document.createElement("textarea"); // Create new element
@@ -90,93 +86,14 @@ function reportStatus(status){
     LogRocket.info(status); // Log status with LogRocket 
 }
 
-function progressChanged(percent){ // TODO: delete!
-    loadingBarProgress.style.width = percent + "%";
-
-    const window = remote.getCurrentWindow();
-    window.setProgressBar(percent / 100);
-
-    switch(percent)
-    {
-        case 0:
-            statusText.innerText = "Looking for " + selectGame[selectGame.selectedIndex].innerText;
-            break;
-
-        case 5:
-            statusText.innerText = "Removing old patch files";
-            break;
-
-        case 10:
-            statusText.innerText = "Copying " + fileCopying; //current file copying
-            break;
-
-        case 40:
-            statusText.innerText = "Installing patches";
-            break;
-
-        /*
-        case 45:
-            statusText.innerText = "Installing DLL loader";
-            break;
-        */
-
-        case 50:
-            statusText.innerText = "Backing up unmodified UPK files";
-            break;
-
-        case 60:
-            statusText.innerText = "Decompressing UPK files";
-            break;
-
-        case 70:
-            statusText.innerText = "Modifying WillowGame.upk";
-            break;
-
-        case 75:
-            statusText.innerText = "Modifying Engine.upk";
-            break;
-
-        case 80:
-            statusText.innerText = "Modifying " + game;
-            break;
-
-        case 90:
-            statusText.innerText = "Enabling console";
-            break;
-
-        case 95:
-            statusText.innerText = "Finishing up";
-            break;
-
-        case 100:
-            statusText.innerText = "Done!";
-            window.setProgressBar(-1); //Disable task bar loading
-            /*
-            smalltalk.alert("Info", "Done! A Shortcut was placed on your desktop. Press '~' in game to open up console.").then(() => {
-                const window = remote.getCurrentWindow();
-                window.close();
-            });
-            */
-
-            if (!window.isFocused()) { //if not focused, notify
-                new Notification(notifications[0].title, notifications[0]); //finished notification
-            }
-
-            break;
-    }
-
-    LogRocket.info(percent + "% " + statusText.innerText);
-}
-
 function patch(){
-    reportStatus("Initializing");
-    //game = selectGame[selectGame.selectedIndex].value; //set game to value of game selector
-    buttonPatch.style.display = "none"; //hide patch button
-    selectGame.style.display = "none"; //hide game selector
-    loadingBar.style.display = "block"; //show loading bar
-    statusText.style.display = "block"; //show status text
-
     LogRocket.track("Patching started"); // Track how many times the patcher process is started
+    reportStatus("Initializing");
+
+    buttonPatch.style.display = "none"; // Hide patch button
+    selectGame.style.display = "none"; // Hide game selector
+    loadingBar.style.display = "block"; // Show loading bar
+    statusText.style.display = "block"; // Show status text
 
     //testLoadingBar();
     //return; //debug
@@ -211,6 +128,7 @@ function patch(){
     var iRootDirectoryPath = fs.realpath(iBL + "\\..\\..\\..\\..");
     var oRootDirectoryPath = fs.realpath(iRootDirectoryPath + "\\server");
 
+    // TODO: is this all obsolete?
     var oBL;
     var iWillowGame;
     var oWillowGame;

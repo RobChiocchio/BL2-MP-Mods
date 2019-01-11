@@ -69,7 +69,7 @@
                 modifiedData: [ 0x00, 0x00, ],
                 position: null,
                 description: "Enable console"
-            }
+            },
             {
                 package: null,
                 fileOverride: "\\Binaries\\Win32\\Borderlands2.exe",
@@ -77,7 +77,7 @@
                 modifiedData: [ 0x00, 0x00, ],
                 position: null,
                 description: "Allow decompressed WillowGame UPK"
-            }
+            },
             {
                 package: null,
                 fileOverride: "\\Binaries\\Win32\\Borderlands2.exe",
