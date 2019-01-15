@@ -149,6 +149,7 @@ function patch(){
 
     // ========== OLD!!! ==========
 
+    /* OLD!!!! DEBUG, REMOVE ETC
     var streamWillowGame = fs.createWriteStream(oWillowGame, "hex");
     var bufferWillowGame = new Buffer(something, "hex"); //TODO
 
@@ -194,6 +195,7 @@ function patch(){
             throw err;
         }
     });
+    */
 
     //TODO: // -- HEX EDIT EXE
     /*
@@ -213,6 +215,10 @@ function patch(){
    for (mod in mods) {
         if (mod.game == game.id) { // If the mod is for the right game
             for (patch in mod.patches) {
+                if (patch.originalData.length != patch.length || patch.modifiedData.length != patch.length || patch.lengh <= 0) { // Validate patch data
+                    // TODO: ERROR, stop process (revert on error?)
+                } // TODO, catch any other missing non-optionals or invalid values
+
                 var packagePath = oRootDirectoryPath + game.contentDirectoryRelativePath + package + game.packageExtension;
                 if (!patchedPackages.includes((modification.package).toLowerCase())) { // Check if package is on list yet
                     // TODO: check if package is already decompressed?
@@ -242,16 +248,22 @@ function patch(){
 
                 reportStatus("Applying patch: \"" + patch.description + "\""); // TODO: is this too much? should I only do this for each mod?
 
-                var streamPackage = fs.createWriteStream(packagePath, "hex"); // Open package filestream TODO: add callback (maybe?)
+                var position = patch.position; // Because if it is undefined, I can figure out what it is and redefine it
 
-                // TODO: Patch
+                if (patch.position == null) { // If the absolute position property is not set
+                    // TODO, search for original data and get position, seek to position in writeStream
+                    //var buffer = fs.readFileSync(packagePath, "hex"); // Load the package to buffer
+                }
 
-                fs.close(streamPackage, (err) => { // Close filestream
-                    if (err) {
-                        LogRocket.warn("Failed to close package"); // TODO: print package name
-                        throw err;
-                    }
-                });
+                var streamPackage = fs.createWriteStream(packagePath, {flags: "r+", encoding: "hex", start: position, end: position + patch.length}); // Open package filestream TODO: add callback (maybe?)
+                streamPackage.write(patch.modifiedData); // TODO: ADD CALLBACK and Check and revert to original data if necessary
+                streamPackage.end(); // Close filestream
+                // fs.close(streamPackage, (err) => { // Close filestream -- TODO: IS THIS NECESSARY OR IS END ENOUGH?
+                //     if (err) {
+                //         LogRocket.warn("Failed to close package"); // TODO: print package name
+                //         throw err;
+                //     }
+                // });
             }
         }
    }
