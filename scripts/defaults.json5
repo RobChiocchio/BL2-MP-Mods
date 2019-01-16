@@ -1,5 +1,5 @@
 {
-    game: { // TODO: Should this be a JSON file instead?
+    game: {
         bl1: {
             id: 0,
             executablePath: "\\Binaries\\Borderlands.exe",
