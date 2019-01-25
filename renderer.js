@@ -7,8 +7,8 @@ const os = require("os");
 const fs = require("fs");
 
 const JSON5 = require("json5"); // To parse the patches
-var mods = JSON5.parse(fs.readFileSync("./scripts/mods.json5")); // Load patches from JSON5 file
-var defaults = JSON5.parse(fs.readFileSync("./scripts/defaults.json5"));
+var mods = JSON5.parse(fs.readFileSync("./scripts/mods.json5")); // Load patches from JSON5 file TODO: replace sync with async/await
+var defaults = JSON5.parse(fs.readFileSync("./scripts/defaults.json5")); // TODO: replace sync with async/await
 //const hexedit = require("./scripts/hexedit.js");
 
 // Google Analytics
@@ -224,12 +224,12 @@ function patch(){
                     // TODO: check if package is already decompressed?
                     patchedPackages.push((modification.package).toLowerCase()); // Add package to list of packages to fix in exe
                     reportStatus("Decompressing " + modification.package + game.packageExtension);
-                    exec.spawnSync("bin\\decompress.exe", ["-game=border", "\"" + packagePath + "\""]); // Decompress package
+                    exec.spawnSync("bin\\decompress.exe", ["-game=border", "\"" + packagePath + "\""]); // Decompress package TODO: replace sync with async/await
 
                     reportStatus("Backing up compressed package files");
                     try { // Back up uncompressed_size and the compressed package
-                        fs.renameSync(packagePath + ".uncompressed_size", packagePath + ".uncompressed_size.bak");
-                        fs.copyFileSync(packagePath, packagePath + ".bak");
+                        fs.renameSync(packagePath + ".uncompressed_size", packagePath + ".uncompressed_size.bak"); // TODO: replace sync with async/await
+                        fs.copyFileSync(packagePath, packagePath + ".bak"); // TODO: replace sync with async/await
                     } catch (err) {
                         LogRocket.error("Failed to back up upks");
                         LogRocket.error(err, err.stack); // does this work with log.error? if not should I use err.message? write a custom function? TODO
@@ -238,7 +238,7 @@ function patch(){
                     reportStatus("Installing decompressed " + modification.package);
                     /*
                     try { // Copy decompressed package to packagePath
-                        fs.copyFileSync();
+                        fs.copyFileSync(); // TODO: replace sync with async/await
                     } catch (err) {
                         LogRocket.error("Could not find decompressed UPKs")
                     }
@@ -252,7 +252,7 @@ function patch(){
 
                 if (patch.position == null) { // If the absolute position property is not set
                     // TODO, search for original data and get position, seek to position in writeStream
-                    //var buffer = fs.readFileSync(packagePath, "hex"); // Load the package to buffer
+                    //var buffer = fs.readFileSync(packagePath, "hex"); // Load the package to buffer TODO: replace sync with async/await
                 }
 
                 var streamPackage = fs.createWriteStream(packagePath, {flags: "r+", encoding: "hex", start: position, end: position + patch.length}); // Open package filestream TODO: add callback (maybe?)
