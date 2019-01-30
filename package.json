@@ -31,7 +31,7 @@
     "mod"
   ],
   "author": "Rob Chiocchio",
-  "license": "GPL-3.0-or-later",
+  "license": "AGPL-3.0-or-later",
   "devDependencies": {
     "electron": "^3.0.10",
     "electron-builder": "^20.36.2",
