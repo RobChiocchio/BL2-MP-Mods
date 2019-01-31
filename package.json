@@ -5,6 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "electron .",
+    "prepack": "license-checker --direct --relativeLicensePath --json --out src/json/licenses.json5",
     "pack": "electron-builder --dir",
     "dist": "electron-builder --publish never"
   },
@@ -36,6 +37,7 @@
     "electron": "^3.0.10",
     "electron-builder": "^20.36.2",
     "install": "^0.12.2",
+    "license-checker": "^25.0.1",
     "meow": "^5.0.0"
   },
   "bugs": {
