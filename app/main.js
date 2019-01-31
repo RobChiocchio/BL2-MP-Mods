@@ -4,7 +4,9 @@ const BrowserWindow = electron.BrowserWindow; // create native browser window
 const ipcMain = electron.ipcMain;
 const {autoUpdater} = require("electron-updater");
 const log = require("electron-log");
-const util = require('util');
+const util = require("util");
+const path = require("path");
+const url = require("url");
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -33,16 +35,19 @@ function createWindow() {
         frame: false, // remove frame from windows apps
         titleBarStyle: "hidden", // hide mac titlebar
         transparent: true, //allow rounded corners
-        icon: "static/icon.png",
+        icon: path.join(__dirname, "icon.png"),
     });
 
-    //mainWindow.setIcon()
-
-    // and load the index.html of the app.
-    mainWindow.loadFile("index.html");
+    mainWindow.loadURL( // Load the index.html of the app.
+        url.format({
+            pathname: path.join(__dirname, "index.html"), // Get current directory
+            protocol: "file:",
+            slashes: true
+        })
+    );
 
     // Open the DevTools.
-    //mainWindow.webContents.openDevTools();
+    mainWindow.webContents.openDevTools();
 
     // Emitted when the window is closed.
     mainWindow.on("closed", function () {

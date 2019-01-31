@@ -4,12 +4,17 @@ const remote = electron.remote;
 const dialog = remote.dialog;
 //const log = require("electron-log");
 const os = require("os");
-const fs = require("fs");
+const fs = require("fs"); // TODO: replace fs with jetpack
+const path = require("path");
+const jetpack = require("fs-jetpack");
+
+const appDir = jetpack.cwd(remote.app.getAppPath());
+const manifest = appDir.read("package.json", "json"); // TODO: use JSON5 parsing to keep consistent
 
 const JSON5 = require("json5"); // To parse the patches
-var mods = JSON5.parse(fs.readFileSync("./scripts/mods.json5")); // Load patches from JSON5 file TODO: replace sync with async/await
-var defaults = JSON5.parse(fs.readFileSync("./scripts/defaults.json5")); // TODO: replace sync with async/await
-//const hexedit = require("./scripts/hexedit.js");
+var defaults = JSON5.parse(fs.readFileSync(path.join(__dirname, "json", "defaults.json5"))); // TODO: replace sync with async/await
+var mods = JSON5.parse(fs.readFileSync(path.join(__dirname, "json", "mods.json5"))); // Load patches from JSON5 file TODO: replace sync with async/await
+var licenses = JSON5.parse(fs.readFileSync(path.join(__dirname, "json", "licenses.json"))); // TODO: move to preferences
 
 // Google Analytics
 const ua = require("universal-analytics");
