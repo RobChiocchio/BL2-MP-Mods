@@ -36,9 +36,11 @@
   "devDependencies": {
     "electron": "^3.0.10",
     "electron-builder": "^20.36.2",
+    "eslint": "^5.13.0",
     "install": "^0.12.2",
     "license-checker": "^25.0.1",
-    "meow": "^5.0.0"
+    "meow": "^5.0.0",
+    "mocha": "^5.2.0"
   },
   "bugs": {
     "url": "https://github.com/RobethX/BL2-MP-Mods/issues"
