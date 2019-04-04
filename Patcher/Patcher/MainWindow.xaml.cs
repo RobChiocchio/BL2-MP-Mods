@@ -147,6 +147,7 @@ namespace Patcher
 
             switch (gameID) //depending on game, set variables accordingly
             {
+                /*
                 case 3: //tps
                     gameExec = "BorderlandsPreSequel.exe";
                     gameDir = "BorderlandsPreSequel";
@@ -158,6 +159,7 @@ namespace Patcher
                     gameDir = "Borderlands";
                     cooppatchFile = "cooppatch.txt";
                     break;
+                */
 
                 default: //2 or incase some how there isnt a variable
                     gameExec = "Borderlands2.exe";
@@ -445,8 +447,8 @@ namespace Patcher
                 {
                     System.IO.File.Move(oWillowGame.FullName + ".uncompressed_size", oWillowGame.FullName + ".uncompressed_size.bak"); //backup WillowGame.upk.uncompressed_size
                     System.IO.File.Copy(oWillowGame.FullName, oWillowGame.FullName + ".bak"); //backup upk
-                    System.IO.File.Move(oEngine.FullName + ".uncompressed_size", oEngine.FullName + ".uncompressed_size.bak"); //backup Engine.upk.uncompressed_size
-                    System.IO.File.Copy(oEngine.FullName, oEngine.FullName + ".bak"); //backup upk
+                    //System.IO.File.Move(oEngine.FullName + ".uncompressed_size", oEngine.FullName + ".uncompressed_size.bak"); //backup Engine.upk.uncompressed_size
+                    //System.IO.File.Copy(oEngine.FullName, oEngine.FullName + ".bak"); //backup upk
                 }
                 catch (IOException)
                 {
@@ -460,15 +462,15 @@ namespace Patcher
                 //var decompressing = System.Diagnostics.Process.Start(decompress, "-game=border -out=" + outputDir + @"\WillowGame\CookedPCConsole\ " + iUPK.FullName); //decompress WillowGame.UPK
                 var decompressingWillowGame = System.Diagnostics.Process.Start(decompress, "-game=border -log=decompress.log " + '"' + iWillowGame.FullName + '"'); //decompress WillowGame.UPK
                 decompressingWillowGame.WaitForExit(); //wait for decompress.exe to finish
-                var decompressingEngine = System.Diagnostics.Process.Start(decompress, "-game=border -log=decompress.log " + '"' + iEngine.FullName + '"'); //decompress Engine.UPK
-                decompressingEngine.WaitForExit(); //wait for decompress.exe to finish
+                //var decompressingEngine = System.Diagnostics.Process.Start(decompress, "-game=border -log=decompress.log " + '"' + iEngine.FullName + '"'); //decompress Engine.UPK
+                //FdecompressingEngine.WaitForExit(); //wait for decompress.exe to finish
                 FileInfo decompressedWillowGame = new FileInfo(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), @"unpacked\", iWillowGame.Name));
-                FileInfo decompressedEngine = new FileInfo(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), @"unpacked\", iEngine.Name));
+                //FileInfo decompressedEngine = new FileInfo(System.IO.Path.Combine(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location), @"unpacked\", iEngine.Name));
 
                 try
                 {
                     decompressedWillowGame.CopyTo(oWillowGame.FullName, true); //move upk to cookedpcconsole
-                    decompressedEngine.CopyTo(oEngine.FullName, true); //move upk to cookedpcconsole
+                    //decompressedEngine.CopyTo(oEngine.FullName, true); //move upk to cookedpcconsole
                 }
                 catch (IOException)
                 {
@@ -492,90 +494,6 @@ namespace Patcher
 
                 switch (gameID)
                 {
-                    case 3: //tps
-                        try
-                        {
-                            var streamWillowGameUPKTPS = new FileStream(oWillowGame.FullName, FileMode.Open, FileAccess.ReadWrite);
-
-                            // -- DEVELOPER MODE --
-                            streamWillowGameUPKTPS.Position = 0x0079ACE7;
-                            streamWillowGameUPKTPS.WriteByte(0x27);
-
-                            // -- EVERY PLAYER GETS THEIR OWN TEAM --
-                            streamWillowGameUPKTPS.Position = 0x0099D50F;
-                            streamWillowGameUPKTPS.WriteByte(0x04);
-                            streamWillowGameUPKTPS.Position = 0x0099D510;
-                            streamWillowGameUPKTPS.WriteByte(0x00);
-                            streamWillowGameUPKTPS.Position = 0x0099D511;
-                            streamWillowGameUPKTPS.WriteByte(0x82);
-                            streamWillowGameUPKTPS.Position = 0x0099D512;
-                            streamWillowGameUPKTPS.WriteByte(0xB1);
-                            streamWillowGameUPKTPS.Position = 0x0099D513;
-                            streamWillowGameUPKTPS.WriteByte(0x00);
-                            streamWillowGameUPKTPS.Position = 0x0099D514;
-                            streamWillowGameUPKTPS.WriteByte(0x00);
-                            streamWillowGameUPKTPS.Position = 0x0099D515;
-                            streamWillowGameUPKTPS.WriteByte(0x06);
-                            streamWillowGameUPKTPS.Position = 0x0099D516;
-                            streamWillowGameUPKTPS.WriteByte(0x44);
-                            streamWillowGameUPKTPS.Position = 0x0099D517;
-                            streamWillowGameUPKTPS.WriteByte(0x00);
-                            streamWillowGameUPKTPS.Position = 0x0099D518;
-                            streamWillowGameUPKTPS.WriteByte(0x04);
-                            streamWillowGameUPKTPS.Position = 0x0099D519;
-                            streamWillowGameUPKTPS.WriteByte(0x24);
-                            streamWillowGameUPKTPS.Position = 0x0099D51A;
-                            streamWillowGameUPKTPS.WriteByte(0x00);
-
-                            streamWillowGameUPKTPS.Close();
-                        }
-                        catch (IOException)
-                        {
-                            Popup.Show("ERROR: Could not modify upk files");
-                        }
-
-                        patcherWorker.ReportProgress(75); //set loadingprogress to 75%
-
-                        // -- HEX EDIT ENGINE.UPK --
-
-                        try
-                        {
-                            var streamEngineTPS = new FileStream(oBL.FullName, FileMode.Open, FileAccess.ReadWrite);
-                            // -- DON'T UPDATE PLAYERCOUNT --
-
-                            //streamEngineTPS.Position = 0x003F69A4;
-                            //streamEngineTPS.WriteByte(0x1E);
-                            streamEngineTPS.Close();
-                        }
-                        catch (IOException)
-                        {
-                            Popup.Show("ERROR: Could not modify upk files");
-                        }
-
-                        patcherWorker.ReportProgress(80); //set loadingprogress to 80%
-
-                        // -- HEX EDIT BORDERLANDSPRESEQUEL.EXE --
-
-                        try
-                        {
-                            var streamBLTPS = new FileStream(oBL.FullName, FileMode.Open, FileAccess.ReadWrite);
-                            streamBLTPS.Position = 0x00D8BD1F;
-                            streamBLTPS.WriteByte(0xFF);
-                            for (long i = 0x018E9C33; i <= 0x018E9C39; i++)
-                            {
-                                streamBLTPS.Position = i;
-                                streamBLTPS.WriteByte(0x00);
-                            }
-                            streamBLTPS.Position = 0x01D3D699; //find willowgame.upk
-                            streamBLTPS.WriteByte(0x78); //willowgame.upk > xillowgame.upk
-                            streamBLTPS.Close();
-                        }
-                        catch (IOException)
-                        {
-                            Popup.Show("ERROR: Could not modify executable");
-                        }
-                        break;
-
                     case 2: //bl2
 
                         // -- HEX EDIT WILLOWGAME --
@@ -585,42 +503,42 @@ namespace Patcher
                             var streamWillowGame2 = new FileStream(oWillowGame.FullName, FileMode.Open, FileAccess.ReadWrite);
 
                             // -- DEVELOPER MODE --
-                            streamWillowGame2.Position = 0x006924C7;
-                            streamWillowGame2.WriteByte(0x27);
+                            //streamWillowGame2.Position = 0x006924C7;
+                            //streamWillowGame2.WriteByte(0x27);
 
                             // -- EVERY PLAYER GETS THEIR OWN TEAM --
-                            streamWillowGame2.Position = 0x007F9151;
+                            streamWillowGame2.Position = 0x00834F20;
                             streamWillowGame2.WriteByte(0x04);
-                            streamWillowGame2.Position = 0x007F9152;
+                            streamWillowGame2.Position = 0x00834F21;
                             streamWillowGame2.WriteByte(0x00);
-                            streamWillowGame2.Position = 0x007F9153;
-                            streamWillowGame2.WriteByte(0xC6);
-                            streamWillowGame2.Position = 0x007F9154;
-                            streamWillowGame2.WriteByte(0x8B);
-                            streamWillowGame2.Position = 0x007F9155;
+                            streamWillowGame2.Position = 0x00834F22;
+                            streamWillowGame2.WriteByte(0xF6);
+                            streamWillowGame2.Position = 0x00834F23;
+                            streamWillowGame2.WriteByte(0x94);
+                            streamWillowGame2.Position = 0x00834F24;
                             streamWillowGame2.WriteByte(0x00);
-                            streamWillowGame2.Position = 0x007F9156;
+                            streamWillowGame2.Position = 0x00834F25;
                             streamWillowGame2.WriteByte(0x00);
-                            streamWillowGame2.Position = 0x007F9157;
+                            streamWillowGame2.Position = 0x00834F26;
                             streamWillowGame2.WriteByte(0x06);
-                            streamWillowGame2.Position = 0x007F9158;
+                            streamWillowGame2.Position = 0x00834F27;
                             streamWillowGame2.WriteByte(0x44);
-                            streamWillowGame2.Position = 0x007F9159;
+                            streamWillowGame2.Position = 0x00834F28;
                             streamWillowGame2.WriteByte(0x00);
-                            streamWillowGame2.Position = 0x007F915A;
+                            streamWillowGame2.Position = 0x00834F29;
                             streamWillowGame2.WriteByte(0x04);
-                            streamWillowGame2.Position = 0x007F915B;
+                            streamWillowGame2.Position = 0x00834F2A;
                             streamWillowGame2.WriteByte(0x24);
-                            streamWillowGame2.Position = 0x007F915C;
+                            streamWillowGame2.Position = 0x00834F2B;
                             streamWillowGame2.WriteByte(0x00);
 
                             // -- PREVENT MENU FROM CANCELLING FAST TRAVEL --
-                            streamWillowGame2.Position = 0x006BEAF6;
-                            streamWillowGame2.WriteByte(0x27);
+                            //streamWillowGame2.Position = 0x006BEAF6;
+                            //streamWillowGame2.WriteByte(0x27);
 
                             // -- MORE CACHED PLAYERS --
-                            streamWillowGame2.Position = 0x00832B20;
-                            streamWillowGame2.WriteByte(0x39);
+                            //streamWillowGame2.Position = 0x00832B20;
+                            //streamWillowGame2.WriteByte(0x39);
 
                             streamWillowGame2.Close();
                         }
@@ -628,6 +546,8 @@ namespace Patcher
                         {
                             Popup.Show("ERROR: Could not modify upk files");
                         }
+
+                        /*
 
                         patcherWorker.ReportProgress(75); //set loadingprogress to 75%
 
@@ -638,22 +558,18 @@ namespace Patcher
                             var streamEngine2 = new FileStream(oBL.FullName, FileMode.Open, FileAccess.ReadWrite);
 
                             // -- EffectiveNumPlayers --> NumSpectators --
-                            /*
-                            streamEngine2.Position = 0x003F699F;
-                            streamEngine2.WriteByte(0x22);
-                            streamEngine2.Position = 0x003F7085;
-                            streamEngine2.WriteByte(0x22);
-                            */
+                            //streamEngine2.Position = 0x003F699F;
+                            //streamEngine2.WriteByte(0x22);
+                            //streamEngine2.Position = 0x003F7085;
+                            //streamEngine2.WriteByte(0x22);
                             streamEngine2.Position = 0x003FC015;
                             streamEngine2.WriteByte(0x22);
 
                             // -- NumPlayers --> EffectiveNumPlayers --
-                            /*
-                            streamEngine2.Position = 0x003F69A4;
-                            streamEngine2.WriteByte(0x1E);
-                            streamEngine2.Position = 0x003F708A;
-                            streamEngine2.WriteByte(0x1E);
-                            */
+                            //streamEngine2.Position = 0x003F69A4;
+                            //streamEngine2.WriteByte(0x1E);
+                            //streamEngine2.Position = 0x003F708A;
+                            //streamEngine2.WriteByte(0x1E);
                             streamEngine2.Position = 0x003FC01A;
                             streamEngine2.WriteByte(0x1E);
 
@@ -664,20 +580,22 @@ namespace Patcher
                             Popup.Show("ERROR: Could not modify upk files");
                         }
 
+                        */
+
                         patcherWorker.ReportProgress(80); //set loadingprogress to 80%
 
                         // -- HEX EDIT BORDERLANDS2.EXE --
                         try
                         {
                             var streamBL2 = new FileStream(oBL.FullName, FileMode.Open, FileAccess.ReadWrite);
-                            streamBL2.Position = 0x004F2590;
+                            streamBL2.Position = 0x0042C160;
                             streamBL2.WriteByte(0xFF);
-                            for (long i = 0x01B94B0C; i <= 0x01B94B10; i++)
+                            for (long i = 0x012F52B0; i <= 0x012F52B4; i++)
                             {
                                 streamBL2.Position = i;
                                 streamBL2.WriteByte(0x00);
                             }
-                            streamBL2.Position = 0x01EF17F9; //find upk
+                            streamBL2.Position = 0x016570DD; //find upk
                             streamBL2.WriteByte(0x78); //willowgame.upk > xillowgame.upk
                             streamBL2.Close();
                         }
@@ -685,69 +603,6 @@ namespace Patcher
                         {
                             Popup.Show("ERROR: Could not modify executable");
                         }
-                        break;
-
-                    case 1: //bl1
-
-                        // -- HEX EDIT WILLOWGAME.U --
-
-                        /*
-                        try
-                        {
-                            var streamWillowGame1 = new FileStream(oWillowGame.FullName, FileMode.Open, FileAccess.ReadWrite);
-
-                            streamWillowGame1.Close();
-                        }
-                        catch (IOException)
-                        {
-                            Popup.Show("ERROR: Could not modify upk files");
-                        }
-                        */
-
-                        patcherWorker.ReportProgress(75); //set loadingprogress to 75%
-
-                        // -- HEX EDIT ENGINE.U --
-
-                        try
-                        {
-                            var streamEngine1 = new FileStream(oBL.FullName, FileMode.Open, FileAccess.ReadWrite);
-
-                            // -- Enable Console --
-                            streamEngine1.Position = 0x00396938;
-                            streamEngine1.WriteByte(0x06);
-                            streamEngine1.Position = 0x00396939;
-                            streamEngine1.WriteByte(0x52);
-                            streamEngine1.Close();
-                        }
-                        catch (IOException)
-                        {
-                            Popup.Show("ERROR: Could not modify upk files");
-                        }
-
-                        patcherWorker.ReportProgress(80); //set loadingprogress to 80%
-
-                        // -- HEX EDIT BORDERLANDS.EXE --
-
-                        /*
-                        try
-                        {
-                            var streamBL1 = new FileStream(oBL.FullName, FileMode.Open, FileAccess.ReadWrite);
-                            streamBL1.Position = 0x004F2590;
-                            streamBL1.WriteByte(0xFF);
-                            for (long i = 0x01B94B0C; i <= 0x01B94B10; i++)
-                            {
-                                streamBL1.Position = i;
-                                streamBL1.WriteByte(0x00);
-                            }
-                            streamBL1.Position = 0x01EF17F9; //find upk
-                            streamBL1.WriteByte(0x78); //willowgame.upk > xillowgame.upk
-                            streamBL1.Close();
-                        }
-                        catch (IOException)
-                        {
-                            Popup.Show("ERROR: Could not modify executable");
-                        }
-                        */
                         break;
 
                     default: //if not bl1, bl2, or tps

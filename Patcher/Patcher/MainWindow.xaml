@@ -62,7 +62,7 @@
             <ComboBoxItem Content="F11" IsEnabled="True" />
             <ComboBoxItem Content="F12" IsEnabled="True" />
         </ComboBox>
-        <CheckBox x:Name="checkBoxCommunityPatch" Content="Enable Community Patch" Margin="10,85,10,0" VerticalAlignment="Top" Height="15" />
+        <CheckBox x:Name="checkBoxCommunityPatch" Content="Enable Community Patch" Margin="10,85,10,0" VerticalAlignment="Top" Height="15" IsEnabled="False" />
         <Label x:Name="labelConsoleKey" Content="Console Key" Margin="0,52,10,0" Height="25" VerticalAlignment="Top" HorizontalAlignment="Right" Width="78" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" />
         <Label x:Name="labelProgressText"  Visibility="Hidden" Content="Looking for Borderlands" Margin="10,45,10,0" Height="30" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" />
     </Grid>
