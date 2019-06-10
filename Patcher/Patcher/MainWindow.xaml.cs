@@ -507,29 +507,30 @@ namespace Patcher
                             //streamWillowGame2.WriteByte(0x27);
 
                             // -- EVERY PLAYER GETS THEIR OWN TEAM --
-                            streamWillowGame2.Position = 0x00834F20;
+                            // Code changed: https://imgur.com/AwqxIgh
+                            streamWillowGame2.Position = 0x00839D2B;
                             streamWillowGame2.WriteByte(0x04);
-                            streamWillowGame2.Position = 0x00834F21;
+                            streamWillowGame2.Position = 0x00839D2C;
                             streamWillowGame2.WriteByte(0x00);
-                            streamWillowGame2.Position = 0x00834F22;
+                            streamWillowGame2.Position = 0x00839D2D;
                             streamWillowGame2.WriteByte(0xF6);
-                            streamWillowGame2.Position = 0x00834F23;
+                            streamWillowGame2.Position = 0x00839D2E;
                             streamWillowGame2.WriteByte(0x94);
-                            streamWillowGame2.Position = 0x00834F24;
+                            streamWillowGame2.Position = 0x00839D2F;
                             streamWillowGame2.WriteByte(0x00);
-                            streamWillowGame2.Position = 0x00834F25;
+                            streamWillowGame2.Position = 0x00839D30;
                             streamWillowGame2.WriteByte(0x00);
-                            streamWillowGame2.Position = 0x00834F26;
+                            streamWillowGame2.Position = 0x00839D31;
                             streamWillowGame2.WriteByte(0x06);
-                            streamWillowGame2.Position = 0x00834F27;
+                            streamWillowGame2.Position = 0x00839D32;
                             streamWillowGame2.WriteByte(0x44);
-                            streamWillowGame2.Position = 0x00834F28;
+                            streamWillowGame2.Position = 0x00839D33;
                             streamWillowGame2.WriteByte(0x00);
-                            streamWillowGame2.Position = 0x00834F29;
+                            streamWillowGame2.Position = 0x00839D34;
                             streamWillowGame2.WriteByte(0x04);
-                            streamWillowGame2.Position = 0x00834F2A;
+                            streamWillowGame2.Position = 0x00839D35;
                             streamWillowGame2.WriteByte(0x24);
-                            streamWillowGame2.Position = 0x00834F2B;
+                            streamWillowGame2.Position = 0x00839D36;
                             streamWillowGame2.WriteByte(0x00);
 
                             // -- PREVENT MENU FROM CANCELLING FAST TRAVEL --
@@ -588,14 +589,14 @@ namespace Patcher
                         try
                         {
                             var streamBL2 = new FileStream(oBL.FullName, FileMode.Open, FileAccess.ReadWrite);
-                            streamBL2.Position = 0x0042C160;
+                            streamBL2.Position = 0x0042D740;
                             streamBL2.WriteByte(0xFF);
-                            for (long i = 0x012F52B0; i <= 0x012F52B4; i++)
+                            for (long i = 0x012F8B90; i <= 0x012F8B94; i++)
                             {
                                 streamBL2.Position = i;
                                 streamBL2.WriteByte(0x00);
                             }
-                            streamBL2.Position = 0x016570DD; //find upk
+                            streamBL2.Position = 0x0165B2DD; //find upk
                             streamBL2.WriteByte(0x78); //willowgame.upk > xillowgame.upk
                             streamBL2.Close();
                         }
