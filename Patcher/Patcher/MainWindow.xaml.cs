@@ -513,9 +513,9 @@ namespace Patcher
                             streamWillowGame2.Position = 0x00839D2C;
                             streamWillowGame2.WriteByte(0x00);
                             streamWillowGame2.Position = 0x00839D2D;
-                            streamWillowGame2.WriteByte(0xF6);
+                            streamWillowGame2.WriteByte(0x51);
                             streamWillowGame2.Position = 0x00839D2E;
-                            streamWillowGame2.WriteByte(0x94);
+                            streamWillowGame2.WriteByte(0x95);
                             streamWillowGame2.Position = 0x00839D2F;
                             streamWillowGame2.WriteByte(0x00);
                             streamWillowGame2.Position = 0x00839D30;
@@ -589,13 +589,16 @@ namespace Patcher
                         try
                         {
                             var streamBL2 = new FileStream(oBL.FullName, FileMode.Open, FileAccess.ReadWrite);
-                            streamBL2.Position = 0x0042D740;
+
+                            streamBL2.Position = 0x0042D740; // 83 C4 0C 85 C0 75 1A 6A -> 83 C4 0C 85 FF 75 1A 6A
                             streamBL2.WriteByte(0xFF);
-                            for (long i = 0x012F8B90; i <= 0x012F8B94; i++)
+
+                            for (long i = 0x012F8B90; i <= 0x012F8B94; i++) // s a y, 73 00 61 00 79 -> 00 00 00 00 00
                             {
                                 streamBL2.Position = i;
                                 streamBL2.WriteByte(0x00);
                             }
+
                             streamBL2.Position = 0x0165B2DD; //find upk
                             streamBL2.WriteByte(0x78); //willowgame.upk > xillowgame.upk
                             streamBL2.Close();
