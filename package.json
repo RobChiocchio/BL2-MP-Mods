@@ -7,7 +7,9 @@
     "start": "electron .",
     "prepack": "license-checker --direct --relativeLicensePath --json --out src/json/licenses.json",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder --publish never"
+    "dist": "electron-builder --publish never",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "build": {
     "extraResources": [
@@ -56,6 +58,8 @@
     "json5": "^2.1.0",
     "lodash": "^4.17.11",
     "logrocket": "^0.6.17",
-    "universal-analytics": "^0.4.20"
-  }
+    "universal-analytics": "^0.4.20",
+    "snyk": "^1.189.0"
+  },
+  "snyk": true
 }
