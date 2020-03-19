@@ -429,6 +429,7 @@ namespace Patcher
                     }
                 }
 
+                /*
                 if (!(System.IO.File.Exists(outputDir.FullName + @"\Binaries\Win32\binkw23.dll"))) //if the patch is not already installed
                 {
                     patcherWorker.ReportProgress(45); //set loadingprogress to 45%
@@ -440,6 +441,7 @@ namespace Patcher
                     System.IO.File.Copy(@"bin\bink32.dll", outputDir.FullName + @"\Binaries\Win32\binkw32.dll", true); //copy patched dll to win32 - overwrite
                     CopyFilesRecursively(iPlugins, oPlugins); //copy plugins to borderlands
                 }
+                */
 
                 patcherWorker.ReportProgress(50); //set loadingprogress to 50%
                                                   // -- RENAME UPK AND DECOMPRESSEDSIZE --
