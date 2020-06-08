@@ -510,29 +510,29 @@ namespace Patcher
 
                             // -- EVERY PLAYER GETS THEIR OWN TEAM --
                             // Code changed: https://imgur.com/AwqxIgh
-                            streamWillowGame2.Position = 0x0084EA0F;
+                            streamWillowGame2.Position = 0x0084EE79;
                             streamWillowGame2.WriteByte(0x04);
-                            streamWillowGame2.Position = 0x0084EA10;
+                            streamWillowGame2.Position = 0x0084EE7A;
                             streamWillowGame2.WriteByte(0x00);
-                            streamWillowGame2.Position = 0x0084EA11;
-                            streamWillowGame2.WriteByte(0x51);
-                            streamWillowGame2.Position = 0x0084EA12;
-                            streamWillowGame2.WriteByte(0x95);
-                            streamWillowGame2.Position = 0x0084EA13;
+                            streamWillowGame2.Position = 0x0084EE7B;
+                            streamWillowGame2.WriteByte(0x2A); // 0x51
+                            streamWillowGame2.Position = 0x0084EE7C;
+                            streamWillowGame2.WriteByte(0x96); // 0x95
+                            streamWillowGame2.Position = 0x0084EE7D;
                             streamWillowGame2.WriteByte(0x00);
-                            streamWillowGame2.Position = 0x0084EA14;
+                            streamWillowGame2.Position = 0x0084EE7E;
                             streamWillowGame2.WriteByte(0x00);
-                            streamWillowGame2.Position = 0x0084EA15;
+                            streamWillowGame2.Position = 0x0084EE7F;
                             streamWillowGame2.WriteByte(0x06);
-                            streamWillowGame2.Position = 0x0084EA16;
+                            streamWillowGame2.Position = 0x0084EE80;
                             streamWillowGame2.WriteByte(0x44);
-                            streamWillowGame2.Position = 0x0084EA17;
+                            streamWillowGame2.Position = 0x0084EE81;
                             streamWillowGame2.WriteByte(0x00);
-                            streamWillowGame2.Position = 0x0084EA18;
+                            streamWillowGame2.Position = 0x0084EE82;
                             streamWillowGame2.WriteByte(0x04);
-                            streamWillowGame2.Position = 0x0084EA19;
+                            streamWillowGame2.Position = 0x0084EE83;
                             streamWillowGame2.WriteByte(0x24);
-                            streamWillowGame2.Position = 0x0084EA1A;
+                            streamWillowGame2.Position = 0x0084EE84;
                             streamWillowGame2.WriteByte(0x00);
 
                             // -- PREVENT MENU FROM CANCELLING FAST TRAVEL --
