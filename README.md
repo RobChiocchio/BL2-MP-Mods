@@ -13,6 +13,8 @@ The patcher might act like it's frozen after you press the patch button, but it'
 - All the cool people in the Borderlands 2 CO-OP Discord, Shadow's Evil Hideout Discord, and Unlimited CO-OP Steam group for helping me test the mods
 - Everyone who's provided me with useful feedback
 
-[![Discord](https://img.shields.io/discord/385988823861166080?color=%237289DA&label=Discord&logo=Discord)](https://discord.gg/p6CQ75F)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/6c3b99d6864742fb9261f291bac3fd4a)](https://www.codacy.com/app/Robeth/BL2-MP-Mods?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=RobethX/BL2-MP-Mods&amp;utm_campaign=Badge_Grade)
+[![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/RobethX/BL2-MP-Mods?include_prereleases&label=latest%20version)](https://github.com/RobethX/BL2-MP-Mods/releases/)
+[![GitHub All Releases](https://img.shields.io/github/downloads/RobethX/BL2-MP-Mods/total)](https://github.com/RobethX/BL2-MP-Mods/releases/)
+[![Discord](https://img.shields.io/discord/385988823861166080?color=%237289DA&label=discord%20server&logo=Discord)](https://discord.gg/p6CQ75F)
 [![Build status](https://ci.appveyor.com/api/projects/status/lhow6u9e4qaqsiqi/branch/latest-csharp?svg=true)](https://ci.appveyor.com/project/Robeth/bl2-mp-mods/branch/master)
+<!---[![Codacy Badge](https://api.codacy.com/project/badge/Grade/6c3b99d6864742fb9261f291bac3fd4a)](https://www.codacy.com/app/Robeth/BL2-MP-Mods?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=RobethX/BL2-MP-Mods&amp;utm_campaign=Badge_Grade)-->
