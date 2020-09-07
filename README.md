@@ -15,4 +15,4 @@ The patcher might act like it's frozen after you press the patch button, but it'
 
 [![Discord](https://img.shields.io/discord/385988823861166080?color=%237289DA&label=Discord&logo=Discord)](https://discord.gg/p6CQ75F)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/6c3b99d6864742fb9261f291bac3fd4a)](https://www.codacy.com/app/Robeth/BL2-MP-Mods?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=RobethX/BL2-MP-Mods&amp;utm_campaign=Badge_Grade)
-[![Build status](https://ci.appveyor.com/api/projects/status/lhow6u9e4qaqsiqi/branch/master?svg=true)](https://ci.appveyor.com/project/Robeth/bl2-mp-mods/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/lhow6u9e4qaqsiqi/branch/latest-csharp?svg=true)](https://ci.appveyor.com/project/Robeth/bl2-mp-mods/branch/master)
