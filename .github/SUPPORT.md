@@ -1,0 +1,1 @@
+The written installation guide can be found by [clicking here](https://steamcommunity.com/sharedfiles/filedetails/?id=1151711689). For additional support, join our [Discord server](https://discord.gg/p6CQ75F). Please make sure to read the rules and FAQ before asking any questions!
