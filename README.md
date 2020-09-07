@@ -4,14 +4,17 @@ A tool to patch Borderlands 2 to support 5+ players in game
 The patcher might act like it's frozen after you press the patch button, but it's just making a copy of your entire Borderlands 2 folder for safety. The tool will place a patched verion of Borderlands 2 on your desktop that you need to run to use my COOP mod. To execute the COOP patch in game, press '~' and type exec cooppatch.txt.
 
 ## Thanks To
-- c0dycode for help with hex editing & the custom autoexec.dll
+- Matt Hurd (and [all the other contributors](https://github.com/bl-sdk/PythonSDK/graphs/contributors)) for continuing the development of the [PythonSDK](https://github.com/bl-sdk/PythonSDK) (formerly [BL2-SDK](https://github.com/RobethX/BL2-SDK))
 - Shadowevil & the rest of the team for the UCP
 - LightChaosman for the FilterTool
 - Bugworm for Borderlands2Patcher
 - Gildor for his Unreal Package Decompressor
 - theNocturni for letting me use his Badassify mod
+- c0dycode for help with hex editing & the custom autoexec.dll
 - All the cool people in the Borderlands 2 CO-OP Discord, Shadow's Evil Hideout Discord, and Unlimited CO-OP Steam group for helping me test the mods
 - Everyone who's provided me with useful feedback
+
+I appreciate you guys :heart:
 
 [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/RobethX/BL2-MP-Mods?include_prereleases&label=latest%20version)](https://github.com/RobethX/BL2-MP-Mods/releases/)
 [![GitHub All Releases](https://img.shields.io/github/downloads/RobethX/BL2-MP-Mods/total)](https://github.com/RobethX/BL2-MP-Mods/releases/)
