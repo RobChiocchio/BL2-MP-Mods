@@ -408,7 +408,7 @@ namespace Patcher
                 {
                     try
                     {
-                        myWebClient.DownloadFile("https://raw.githubusercontent.com/RobethX/BL2-MP-Mods/master/CoopPatch/" + cooppatchFile, outputDir.FullName + @"\Binaries\" + cooppatchFile);
+                        myWebClient.DownloadFile("https://raw.githubusercontent.com/RobChiocchio/BL2-MP-Mods/master/CoopPatch/" + cooppatchFile, outputDir.FullName + @"\Binaries\" + cooppatchFile);
                     }
                     catch (WebException)
                     {
